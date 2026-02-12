@@ -6,11 +6,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
+
+builder.Services.AddWebOptimizer(pipeline =>
+{
+    pipeline.AddCssBundle("/css/bundle.css",
+        "site.css",
+        "paragraph-custom-style.css",
+        "title-custom-style.css");
+});
+
 var app = builder.Build();
 
 app.UseLogOrigin();
 app.UseReverseProxy();
 app.UseExceptionHandler("/Error");
+app.UseWebOptimizer();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
