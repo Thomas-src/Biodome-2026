@@ -1,3 +1,4 @@
+using BioDomes.Infrastructures;
 using BioDomes.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
+builder.Services.AddSingleton<IRepository, SqlRepository>();
 
 builder.Services.AddWebOptimizer(pipeline =>
 {
@@ -17,32 +19,30 @@ builder.Services.AddWebOptimizer(pipeline =>
 
 var app = builder.Build();
 
-app.UseLogOrigin();
-app.UseReverseProxy();
-app.UseExceptionHandler("/Error");
-app.UseWebOptimizer();
-
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
     app.UseExceptionHandler("/Error"); // Quand je suis en production
+    app.UseHsts();
 }
 else
 {
     app.UseDeveloperExceptionPage();
 }
 
-app.UseStaticFiles(); // Pour utiliser le CSS...
-
 app.UseForwardedHeaders(new ForwardedHeadersOptions());
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
+app.UseWebOptimizer();
 
+app.UseStaticFiles(); // Pour utiliser le CSS...
+
+app.UseLogOrigin();
+app.UseReverseProxy();
+
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
