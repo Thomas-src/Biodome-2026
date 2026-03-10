@@ -4,5 +4,5 @@ namespace BioDomes.Infrastructures;
 
 public interface IRepository
 {
-    IList<Espece> getallEspece();
+    IList<Espece> GetallEspece();
 }

@@ -1,0 +1,36 @@
+@page "/Species"
+@using BioDomes.Domains.Extensions
+@model BioDomes.Web.Pages.SpeciesModel
+
+@{
+    ViewData["Title"] = "Species";
+}
+
+<h1>Les espèces</h1>
+
+<div class="container">
+    <a class="btn btn-sm btn-outline-primary mb-2" asp-page="/Species/Create">Create new</a>
+</div>
+
+<div class="container">
+    <div class="row g-3">
+        @foreach (var espece in Model.Especes)
+        {
+            <div class="col-4">
+                <div class="card shadow-sm h-100">
+
+                    <partial name="_SpeciesCard" model="espece"/>
+
+                    <div class="card-body pt-0">
+                        <a class="btn btn-sm btn-outline-primary mb-2"
+                           asp-page="/Species/Edit"
+                           asp-route-slug="@espece.Nom">
+                            Edit
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>

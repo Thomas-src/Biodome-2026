@@ -1,5 +1,7 @@
 using BioDomes.Infrastructures;
 using BioDomes.Web.Middlewares;
+using BioDomes.Web.Transformers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,11 @@ builder.Services.AddWebOptimizer(pipeline =>
         "site.css",
         "paragraph-custom-style.css",
         "title-custom-style.css");
+});
+
+builder.Services.AddRouting(options =>
+{
+    options.ConstraintMap["slug"] = typeof(SlugTransformer);
 });
 
 var app = builder.Build();

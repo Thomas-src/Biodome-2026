@@ -6,11 +6,17 @@ namespace BioDomes.Web.Pages;
 
 public class SpeciesModel : PageModel
 {
-    public IList<Espece> especes;
+    public IList<Espece> _especes;
+
+    public IList<Espece> Especes
+    {
+        get { return _especes; }
+        set { _especes = value; }
+    }
 
     public void OnGet()
     {
         IRepository repository = new SqlRepository();
-        especes = repository.getallEspece();
+        _especes = repository.GetallEspece();
     }
 }
