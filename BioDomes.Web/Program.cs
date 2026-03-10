@@ -19,8 +19,11 @@ builder.Services.AddWebOptimizer(pipeline =>
         "title-custom-style.css");
 });
 
-builder.Services.AddRouting(options =>
+builder.Services.Configure<RouteOptions>(options =>
 {
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
+
     options.ConstraintMap["slug"] = typeof(SlugTransformer);
 });
 

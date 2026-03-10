@@ -15,6 +15,12 @@ public class SqlRepository : IRepository
 
         especes.Add(new Espece("Lion","Panthera Leo", "Carnivore", 200));
         especes.Add(new Espece("Zèbre","Equus Quagga", "Herbivore", 130));
+        especes.Add(new Espece("Mammiferes","Chat", "Poisson", 90));
         return especes;
+    }
+
+    public void Save(Espece espece)
+    {
+        //TODO
     }
 }

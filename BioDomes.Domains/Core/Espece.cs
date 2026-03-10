@@ -20,4 +20,23 @@ public class Espece
     public string Regime => _regime;
     public int Taille => _taille;
 
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        if (obj == this)
+        {
+            return true;
+        }
+
+        Espece other = (Espece)obj;
+
+        return _type == other._type
+               && _nom == other._nom
+               && _regime == other._regime
+               && _taille == other._taille;
+    }
 }

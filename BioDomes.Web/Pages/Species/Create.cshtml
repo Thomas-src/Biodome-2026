@@ -1,7 +1,47 @@
 @page "/Species/create"
-@model BioDomes.Web.Pages.Create
+@model BioDomes.Web.Pages.Species.Create
 
 @{
     ViewData["Title"] = "Create Species";
 }
-<h1>Create</h1>
+
+<h1 class="mb-4">Créer une espèce</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+
+            <form method="post">
+
+                <div class="mb-3">
+                    <label asp-for="Species.Type" class="form-label">Type</label>
+                    <input asp-for="Species.Type" class="form-control" />
+                    <span asp-validation-for="Species.Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Name" class="form-label">Nom</label>
+                    <input asp-for="Species.Name" class="form-control" />
+                    <span asp-validation-for="Species.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Regime" class="form-label">Régime</label>
+                    <input asp-for="Species.Regime" class="form-control" />
+                    <span asp-validation-for="Species.Regime" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Taille" class="form-label">Taille</label>
+                    <input asp-for="Species.Taille" class="form-control" type="number" step="0.01"/>
+                    <span asp-validation-for="Species.Taille" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Créer</button>
+                <a href="./Species" class="btn btn-secondary ms-2">Annuler</a>
+
+            </form>
+
+        </div>
+    </div>
+</div>

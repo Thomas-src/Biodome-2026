@@ -7,6 +7,10 @@
 }
 
 <h1>Les espèces</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
 
 <div class="container">
     <a class="btn btn-sm btn-outline-primary mb-2" asp-page="/Species/Create">Create new</a>
