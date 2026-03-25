@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains;
+using BioDomes.Domains.Core;
 using BioDomes.Infrastructures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

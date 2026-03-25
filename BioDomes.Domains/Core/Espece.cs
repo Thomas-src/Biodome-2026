@@ -1,4 +1,4 @@
-namespace BioDomes.Domains;
+namespace BioDomes.Domains.Core;
 
 public class Espece
 {
