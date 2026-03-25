@@ -8,4 +8,5 @@ public interface IRepository
     IList<Espece> GetallEspece();
     IList<Biodome> GetBestThreeBiodome();
     void Save(Espece e);
+    IList<Biodome> GetAllDomes();
 }
