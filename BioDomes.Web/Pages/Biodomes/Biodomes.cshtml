@@ -2,18 +2,12 @@
 @model BioDomes.Web.Pages.Biodomes.Biodomes
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Biodomes";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
-</div>
-</body>
-</html>
+<h1>Page des biodomes TODO</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}

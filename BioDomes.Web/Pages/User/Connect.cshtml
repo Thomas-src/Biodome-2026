@@ -2,18 +2,12 @@
 @model BioDomes.Web.Pages.User.Connect
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Connection";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
-</div>
-</body>
-</html>
+<h1>Page de connection TODO</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
