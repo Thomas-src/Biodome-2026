@@ -1,7 +1,7 @@
 using BioDomes.Domains;
 using BioDomes.Domains.Core;
 
-namespace BioDomes.Infrastructures;
+namespace BioDomes.Domains.Extensions;
 
 public interface IRepository
 {
