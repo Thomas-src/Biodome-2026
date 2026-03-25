@@ -13,9 +13,9 @@ public class SqlRepository : IRepository
     public IList<Biodome> GetBestThreeBiodome()
     {
         IList<Biodome> biodomes = new List<Biodome>();
-        biodomes.Add(new Biodome("Terre", 33,33.4,GetallEspece()));
-        biodomes.Add(new Biodome("Lune", 33,25.4,GetallEspece()));
-        biodomes.Add(new Biodome("Mars", 300,100,GetallEspece()));
+        biodomes.Add(new Biodome("123546546","Terre", 33,33.4,GetallEspece()));
+        biodomes.Add(new Biodome("123546548","Lune", 33,25.4,GetallEspece()));
+        biodomes.Add(new Biodome("123546547","Mars", 300,100,GetallEspece()));
 
         return biodomes;
     }
