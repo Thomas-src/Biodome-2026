@@ -1,3 +1,6 @@
+using BioDomes.Domains.Core;
+using BioDomes.Domains.Extensions;
+using BioDomes.Infrastructures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,7 +15,17 @@ public class IndexModel : PageModel
         _logger = logger;
     }
 
+    public IList<Biodome> _biodomes;
+
+    public IList<Biodome> Biodomes
+    {
+        get { return _biodomes; }
+        set { _biodomes = value; }
+    }
+
     public void OnGet()
     {
+        IRepository repository = new SqlRepository();
+        _biodomes = repository.GetBestThreeBiodome();
     }
 }
