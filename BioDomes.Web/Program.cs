@@ -1,3 +1,4 @@
+using BioDomes.Domains.Extensions;
 using BioDomes.Infrastructures;
 using BioDomes.Web.Middlewares;
 using BioDomes.Web.Transformers;
