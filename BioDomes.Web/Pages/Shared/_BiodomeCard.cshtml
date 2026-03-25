@@ -1,11 +1,12 @@
 @model BioDomes.Domains.Core.Biodome
 
-<article class="card-body">
+<article class="card-body box-shadow">
+    <img src="images/biodomes/@Model.Image" alt="Biodome de @Model.Nom" style="max-width:150px;" />
     <a href="biodomes/@Model.Id">
-    <h5 class="card-title">@Model.Nom</h5>
+        <h5 class="card-title">@Model.Nom</h5>
     </a>
     <p class="card-text">
-        <strong>Nombre d'espèces : </strong> @Model._especes.Count <br/>
+        <strong>Nombre d'espèces : </strong> @Model.Especes.Count <br/>
         <strong>Température :</strong> @Model.Temperature°C <br/>
         <strong>Humidité :</strong> @Model.Humidite g/m³ <br/>
         <strong>Etat :</strong> @Model.Etat <br/>
