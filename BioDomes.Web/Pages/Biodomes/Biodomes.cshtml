@@ -8,7 +8,7 @@
 
 <h1>Page des biodomes TODO</h1>
 
-<div class="d-flex flex-row">
+<div class="d-flex flex-row justify-content-around" style="border: 1px red solid">
     @foreach (var biodome in Model.AllBiodomes)
     {
         <partial name="Shared/_BiodomeCard" model="biodome"/>

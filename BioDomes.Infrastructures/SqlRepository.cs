@@ -38,10 +38,10 @@ public class SqlRepository : IRepository
     public IList<Biodome> GetAllDomes()
     {
         IList<Biodome> biodomes = new List<Biodome>();
-        biodomes.Add(new Biodome("1","Terre", 33,33.4,GetallEspece()));
-        biodomes.Add(new Biodome("2","Lune", 33,25.4,GetallEspece()));
-        biodomes.Add(new Biodome("3","Lune", 33,25.4,GetallEspece()));
-        biodomes.Add(new Biodome("4","Jupiter", 198,5,GetallEspece()));
+        biodomes.Add(new Biodome("1","Terre", 33,33.4,GetallEspece(), "1.webp"));
+        biodomes.Add(new Biodome("2","Lune", 33,25.4,GetallEspece(),"1.webp"));
+        biodomes.Add(new Biodome("3","Lune", 33,25.4,GetallEspece(),"1.webp"));
+        biodomes.Add(new Biodome("4","Jupiter", 198,5,GetallEspece(),"1.webp"));
 
         return biodomes;
     }
