@@ -1,0 +1,61 @@
+@page
+@model Register
+
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<section class="rounded-4 m-auto p-3" style="background-color: aliceblue; width: 40%">
+    <h1 class="title text-center">Inscription</h1>
+
+    <form method="post" enctype="multipart/form-data" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Nom du chercheur :</label>
+            <input class="form-control" name="Nom" placeholder="Ex John Doe"/>
+            <span></span>
+        </div>
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Email :</label>
+            <input class="form-control" type="email" name="Email" placeholder="Ex johndoe@gmail.com"/>
+            <span></span>
+        </div>
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Mot de passe :</label>
+            <input class="form-control" type="password" name="Password"/>
+            <span></span>
+        </div>
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Date de naissance :</label>
+            <input class="form-control" type="date" name="DateNaissance"/>
+            <span></span>
+        </div>
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Avatar :</label>
+            <input class="form-control" type="file" name="Avatar" accept="image/*"/>
+            <span></span>
+        </div>
+
+        <div class="d-flex flex-column">
+            <label class="form-label">Organisme de recherche :</label>
+            <select class="form-control" name="Organisme">
+                <option value="">-- Choisir un organisme --</option>
+                @foreach (var organisme in Model.Organismes)
+                {
+                    <option value="@organisme">@organisme</option>
+
+                }
+            </select>
+            <span></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-2">S'inscrire</button>
+
+        <a href="/user/connect">Déjà un compte ? Se connecter</a>
+
+    </form>
+</section>

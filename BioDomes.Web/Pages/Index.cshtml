@@ -19,7 +19,7 @@
     </p>
 
     <h2 class="mt-5">Biomes les plus équilibrés</h2>
-    <div class="d-flex flex-row">
+    <div class="d-flex justify-content-evenly">
     @foreach (var biodome in Model.Biodomes)
     {
         <partial name="Shared/_BiodomeCard" model="biodome"/>
