@@ -5,6 +5,7 @@ using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.repository;
 using BioDomes.Web.Middlewares;
 using BioDomes.Web.Transformers;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -16,8 +17,8 @@ builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
 //
 
-builder.Services.AddDbContext<BiodomeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Server=192.168.132.200,11433;Database=Q240206")));
-builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 
 
 builder.Services.AddWebOptimizer(pipeline =>
