@@ -1,7 +1,11 @@
 using BioDomes.Domains.Extensions;
+using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures;
+using BioDomes.Infrastructures.context;
+using BioDomes.Infrastructures.repository;
 using BioDomes.Web.Middlewares;
 using BioDomes.Web.Transformers;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
-builder.Services.AddSingleton<IRepository, SqlRepository>();
+//
+
+builder.Services.AddDbContext<BiodomeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Server=192.168.132.200,11433;Database=Q240206")));
+builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+
 
 builder.Services.AddWebOptimizer(pipeline =>
 {

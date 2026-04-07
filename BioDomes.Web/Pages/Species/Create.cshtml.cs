@@ -17,7 +17,7 @@ public class Create : PageModel
     {
         
     }
-
+/*
     public IActionResult OnPost()
     {
         if (!ModelState.IsValid)
@@ -25,7 +25,7 @@ public class Create : PageModel
             return Page();
         }
 
-        SqlRepository sqlRepository = new SqlRepository();
+      SqlRepository sqlRepository = new SqlRepository();
         IList<Espece> especes = sqlRepository.GetallEspece();
 
         Espece created = new Espece(
@@ -50,23 +50,27 @@ public class Create : PageModel
 
     }
 }
+*/
+    public class InputModel
+    {
+        [Required(ErrorMessage = "Le nom est obligatoire")]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
+        public string Name { get; set; }
 
-public class InputModel
-{
-    [Required(ErrorMessage = "Le nom est obligatoire")]
-    [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-    public string Name { get; set; }
+        [Required(ErrorMessage = "Le type est obligatoire")]
+        [IsSpeciesClassification]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
+        public string Type { get; set; }
 
-    [Required(ErrorMessage = "Le type est obligatoire")]
-    [IsSpeciesClassification]
-    [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
-    public string Type { get; set; }
+        [Required(ErrorMessage = "Le régime est obligatoire")]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
+        public string Regime { get; set; }
 
-    [Required(ErrorMessage = "Le régime est obligatoire")]
-    [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
-    public string Regime { get; set; }
-
-    [Required(ErrorMessage = "La taille est obligatoire")]
-    [Range(0, 10000, ErrorMessage = "La taille doit être entre 0 et 10000")]
-    public int? Taille { get; set; }
+        [Required(ErrorMessage = "La taille est obligatoire")]
+        [Range(0, 10000, ErrorMessage = "La taille doit être entre 0 et 10000")]
+        public int? Taille { get; set; }
+    }
 }

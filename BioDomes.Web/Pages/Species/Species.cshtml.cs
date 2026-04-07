@@ -18,7 +18,7 @@ public class SpeciesModel : PageModel
 
     public void OnGet()
     {
-        IRepository repository = new SqlRepository();
-        _especes = repository.GetallEspece();
+       // IRepository repository = new SqlRepository();
+       // _especes = repository.GetallEspece();
     }
 }

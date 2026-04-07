@@ -5,7 +5,6 @@ public record Biodome(
     string Nom,
     double Temperature,
     double Humidite,
-    IList<Espece> Especes,
     string Image
 )
 {

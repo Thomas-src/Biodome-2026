@@ -17,8 +17,10 @@ public class Biodomes : PageModel
 
     public void OnGet()
     {
+        /*
         IRepository repository = new SqlRepository();
 
         AllBiodomes = repository.GetAllDomes();
+        */
     }
 }
