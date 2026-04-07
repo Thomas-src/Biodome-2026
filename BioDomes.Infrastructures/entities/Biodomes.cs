@@ -2,6 +2,7 @@
 
 public class Biodomes
 {
+    public string idBiodomes { get; set; }
     public string Biodome { get; set; }
     public double Temperature { get; set; }
     public double Humidity { get; set; }
