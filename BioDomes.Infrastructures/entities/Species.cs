@@ -12,4 +12,11 @@ public class Species
     public double Size { get; set; }
     public double Weight { get; set; } 
     public bool Visible { get; set; }
+
+    // Lien avec User
+    public string? UserId { get; set; }
+    public User? User { get; set; }
+
+    // Lien avec Biodomes
+    public IList<Biodomes>  Biodomes { get; set; } = new List<Biodomes>();
 }
