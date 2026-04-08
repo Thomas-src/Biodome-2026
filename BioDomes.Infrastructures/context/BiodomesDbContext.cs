@@ -20,9 +20,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
-        // =========================
-        // 🔑 Clés primaires
-        // =========================
+        // Les clés primaire
         modelBuilder.Entity<Biodomes>()
             .HasKey(b => b.idBiodomes);
 
@@ -35,46 +33,35 @@ public class BioDomesDbContext : IdentityDbContext<User>
         modelBuilder.Entity<ResearchOrganism>()
             .HasKey(r => r.IdOrgansim);
 
-        // =========================
-        // 🔗 User → Biodomes (1-N)
-        // =========================
+        // User -> Biodomes
         modelBuilder.Entity<Biodomes>()
             .HasOne(b => b.user)
             .WithMany(u => u.Biodomes)
             .HasForeignKey(b => b.userId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // =========================
-        // 🔗 User → Equipment (1-N)
-        // =========================
+        // User -> Equipement
         modelBuilder.Entity<Equipment>()
             .HasOne(e => e.User)
             .WithMany(u => u.Equipments)
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        // =========================
-        // 🔗 User → Species (1-N)
-        // =========================
+        // User -> Species
         modelBuilder.Entity<Species>()
             .HasOne(s => s.User)
             .WithMany(u => u.Species)
             .HasForeignKey(s => s.UserId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        // =========================
-        // 🔗 ResearchOrganism → User (1-N)
-        // Plusieurs Users peuvent partager le même organisme
-        // =========================
+        // ResearchOrganism -> User
         modelBuilder.Entity<User>()
             .HasOne(u => u.ResearchOrganism)
             .WithMany(r => r.Users)
             .HasForeignKey(u => u.ResearchOrganismeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // =========================
-        // 🔗 Biodomes ↔ Species (N-N)
-        // =========================
+        // Biodomes <-> Species
         modelBuilder.Entity<Biodomes>()
             .HasMany(b => b.Species)
             .WithMany(s => s.Biodomes)
@@ -92,9 +79,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                     .OnDelete(DeleteBehavior.Cascade)
             );
 
-        // =========================
-        // 🔗 Biodomes ↔ Equipment (N-N)
-        // =========================
+        // Biodomes <-> Equipment
         modelBuilder.Entity<Biodomes>()
             .HasMany(b => b.Equipment)
             .WithMany(e => e.Biodomes)
@@ -109,5 +94,55 @@ public class BioDomesDbContext : IdentityDbContext<User>
                     .WithMany()
                     .HasForeignKey("BiodomeId")
             );
+
+        SeedData(modelBuilder);
+    }
+
+    public static void SeedData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Biodomes>().HasData(
+            new Biodomes
+            {
+                idBiodomes = "1",
+                Name = "Biodome Alpha",
+                Temperature = 22.5,
+                Humidity = 60,
+                Avatar = "alpha.png",
+                userId = null
+            },
+            new Biodomes
+            {
+                idBiodomes = "2",
+                Name = "Biodome Lune",
+                Temperature = -10,
+                Humidity = 5,
+                Avatar = "moon.png",
+                userId = null
+            },
+            new Biodomes
+            {
+                idBiodomes = "3",
+                Name = "Biodome Mars",
+                Temperature = -20,
+                Humidity = 2,
+                Avatar = "mars.png",
+                userId = null
+            }
+        );
+
+        modelBuilder.Entity<Species>().HasData(
+            new Species
+            {
+                IdSpecies = "E220291",
+                Name = "Chien",
+                Regim = "Carnivore",
+                Visible = true,
+                Avatar = "chien.webp",
+                Size = 2,
+                Type = "Canin",
+                Weight = 20,
+                UserId = null
+            }
+        );
     }
 }

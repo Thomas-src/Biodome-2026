@@ -9,8 +9,8 @@ public class Biodomes
     public string Avatar  { get; set; } = string.Empty;
 
     // Lien avec User
-    public string userId { get; set; }
-    public User user { get; set; }
+    public string? userId { get; set; }
+    public User? user { get; set; }
 
     // Lien avec Species
     public IList<Species> Species { get; set; } = new List<Species>();

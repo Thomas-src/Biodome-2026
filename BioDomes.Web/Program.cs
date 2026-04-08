@@ -18,7 +18,7 @@ builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
 //
 
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-// builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 
 
 builder.Services.AddWebOptimizer(pipeline =>

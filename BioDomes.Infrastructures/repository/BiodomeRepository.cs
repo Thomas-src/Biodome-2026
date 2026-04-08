@@ -7,9 +7,9 @@ namespace BioDomes.Infrastructures.repository;
 public class BiodomeRepository : IBiodomeRepository
 {
     
-    private readonly BiodomeContext _context;
+    private readonly BioDomesDbContext _context;
     
-    public BiodomeRepository(BiodomeContext context)
+    public BiodomeRepository(BioDomesDbContext context)
     {
         _context = context;
     }
