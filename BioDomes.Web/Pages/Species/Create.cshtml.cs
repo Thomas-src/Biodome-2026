@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,12 +11,22 @@ namespace BioDomes.Web.Pages.Species;
 
 public class Create : PageModel
 {
+    private readonly ISpeciesRepository _repository;
+
     [BindProperty]
     public InputModel Species { get; set; }
 
+    [BindProperty]
+    public IList<string> AllTypes { get; set; } = new List<string>();
+
+    public Create(ISpeciesRepository repository)
+    {
+        _repository = repository;
+    }
+
     public void OnGet()
     {
-        
+        _repository.GetAllSpeiesTypes();
     }
 /*
     public IActionResult OnPost()

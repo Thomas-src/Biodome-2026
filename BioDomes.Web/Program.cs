@@ -32,6 +32,7 @@ var connectionString = builder.Environment.IsDevelopment()
     : builder.Configuration.GetConnectionString("ProdConnection");
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>
