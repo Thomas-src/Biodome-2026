@@ -4,6 +4,7 @@ using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.repository;
+using BioDomes.Infrastructures.Repository;
 using BioDomes.Web.Middlewares;
 using BioDomes.Web.Transformers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -32,6 +33,7 @@ var connectionString = builder.Environment.IsDevelopment()
     : builder.Configuration.GetConnectionString("ProdConnection");
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>

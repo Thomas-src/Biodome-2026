@@ -131,16 +131,16 @@ namespace BioDomes.Infrastructures.Data
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Regim")
+                    b.Property<string>("RegimId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Size")
                         .HasColumnType("float");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("TypeId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -153,6 +153,10 @@ namespace BioDomes.Infrastructures.Data
 
                     b.HasKey("IdSpecies");
 
+                    b.HasIndex("RegimId");
+
+                    b.HasIndex("TypeId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Species");
@@ -163,11 +167,73 @@ namespace BioDomes.Infrastructures.Data
                             IdSpecies = "E220291",
                             Avatar = "chien.webp",
                             Name = "Chien",
-                            Regim = "Carnivore",
+                            RegimId = "1",
                             Size = 2.0,
-                            Type = "Canin",
+                            TypeId = "1",
                             Visible = true,
                             Weight = 20.0
+                        });
+                });
+
+            modelBuilder.Entity("BioDomes.Infrastructures.entities.SpeciesRegime", b =>
+                {
+                    b.Property<string>("IdRegime")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdRegime");
+
+                    b.ToTable("SpeciesRegim");
+
+                    b.HasData(
+                        new
+                        {
+                            IdRegime = "1",
+                            Name = "Carnivore"
+                        },
+                        new
+                        {
+                            IdRegime = "2",
+                            Name = "Herbivore"
+                        },
+                        new
+                        {
+                            IdRegime = "3",
+                            Name = "Omnivore"
+                        });
+                });
+
+            modelBuilder.Entity("BioDomes.Infrastructures.entities.SpeciesType", b =>
+                {
+                    b.Property<string>("IdType")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdType");
+
+                    b.ToTable("SpeciesTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            IdType = "1",
+                            Name = "Canin"
+                        },
+                        new
+                        {
+                            IdType = "2",
+                            Name = "Félin"
+                        },
+                        new
+                        {
+                            IdType = "3",
+                            Name = "Reptile"
                         });
                 });
 
@@ -431,10 +497,26 @@ namespace BioDomes.Infrastructures.Data
 
             modelBuilder.Entity("BioDomes.Infrastructures.entities.Species", b =>
                 {
+                    b.HasOne("BioDomes.Infrastructures.entities.SpeciesRegime", "Regim")
+                        .WithMany("Species")
+                        .HasForeignKey("RegimId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BioDomes.Infrastructures.entities.SpeciesType", "Type")
+                        .WithMany("Species")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BioDomes.Infrastructures.entities.User", "User")
                         .WithMany("Species")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Regim");
+
+                    b.Navigation("Type");
 
                     b.Navigation("User");
                 });
@@ -534,6 +616,16 @@ namespace BioDomes.Infrastructures.Data
             modelBuilder.Entity("BioDomes.Infrastructures.entities.ResearchOrganism", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("BioDomes.Infrastructures.entities.SpeciesRegime", b =>
+                {
+                    b.Navigation("Species");
+                });
+
+            modelBuilder.Entity("BioDomes.Infrastructures.entities.SpeciesType", b =>
+                {
+                    b.Navigation("Species");
                 });
 
             modelBuilder.Entity("BioDomes.Infrastructures.entities.User", b =>

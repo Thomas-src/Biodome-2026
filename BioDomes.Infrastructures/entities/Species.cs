@@ -6,8 +6,11 @@ public class Species
     public string Name { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
    
-    public string Type { get; set; } = string.Empty;
-    public string Regim { get; set; } = string.Empty;
+    public string TypeId { get; set; } = string.Empty;
+    public SpeciesType Type { get; set; }
+
+    public string RegimId { get; set; } = string.Empty;
+    public SpeciesRegime Regim { get; set; }
    
     public double Size { get; set; }
     public double Weight { get; set; } 

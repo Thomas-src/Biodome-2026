@@ -15,6 +15,8 @@ public class BioDomesDbContext : IdentityDbContext<User>
     public DbSet<Species> Species { get; set; }
     public DbSet<Equipment> Equipment { get; set; }
     public DbSet<ResearchOrganism> ResearchOrganisms { get; set; }
+    public DbSet<SpeciesType> SpeciesTypes { get; set; }
+    public DbSet<SpeciesRegime> SpeciesRegim { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +34,12 @@ public class BioDomesDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<ResearchOrganism>()
             .HasKey(r => r.IdOrgansim);
+
+        modelBuilder.Entity<SpeciesRegime>()
+            .HasKey(r => r.IdRegime);
+
+        modelBuilder.Entity<SpeciesType>()
+            .HasKey(r => r.IdType);
 
         // User -> Biodomes
         modelBuilder.Entity<Biodomes>()
@@ -95,6 +103,18 @@ public class BioDomesDbContext : IdentityDbContext<User>
                     .HasForeignKey("BiodomeId")
             );
 
+        modelBuilder.Entity<Species>()
+            .HasOne(r => r.Regim)
+            .WithMany(s => s.Species)
+            .HasForeignKey(r => r.RegimId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Species>()
+            .HasOne(r => r.Type)
+            .WithMany(s => s.Species)
+            .HasForeignKey(r => r.TypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         SeedData(modelBuilder);
     }
 
@@ -130,16 +150,28 @@ public class BioDomesDbContext : IdentityDbContext<User>
             }
         );
 
+        modelBuilder.Entity<SpeciesRegime>().HasData(
+            new SpeciesRegime { IdRegime = "1", Name = "Carnivore" },
+            new SpeciesRegime { IdRegime = "2", Name = "Herbivore" },
+            new SpeciesRegime { IdRegime = "3", Name = "Omnivore" }
+        );
+
+        modelBuilder.Entity<SpeciesType>().HasData(
+            new SpeciesType { IdType = "1", Name = "Canin" },
+            new SpeciesType { IdType = "2", Name = "Félin" },
+            new SpeciesType { IdType = "3", Name = "Reptile" }
+        );
+
         modelBuilder.Entity<Species>().HasData(
             new Species
             {
                 IdSpecies = "E220291",
                 Name = "Chien",
-                Regim = "Carnivore",
+                RegimId = "1",   // Carnivore
+                TypeId = "1",    // Canin
                 Visible = true,
                 Avatar = "chien.webp",
                 Size = 2,
-                Type = "Canin",
                 Weight = 20,
                 UserId = null
             }

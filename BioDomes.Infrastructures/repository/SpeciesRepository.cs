@@ -16,7 +16,8 @@ public class SpeciesRepository : ISpeciesRepository
 
     public IReadOnlyList<SpeciesClassification> GetAllSpeiesTypes()
     {
-
         return null;
+        // return _context.SpeciesTypes.Select(
+        //     s => s.Name);
     }
 }
