@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures;
@@ -20,6 +21,20 @@ builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 
+// Code reprit de la lecon8
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
 
 builder.Services.AddWebOptimizer(pipeline =>
 {
@@ -64,6 +79,7 @@ app.UseReverseProxy();
 
 app.UseRouting();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapRazorPages();
 
