@@ -1,6 +1,7 @@
 using System.Threading.RateLimiting;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services;
 using BioDomes.Infrastructures;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.repository;
@@ -27,11 +28,11 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108/");
         });
 });
-var connectionString = builder.Environment.IsDevelopment()
-    ? builder.Configuration.GetConnectionString("DevConnection")
-    : builder.Configuration.GetConnectionString("ProdConnection");
+var connectionString = builder.Environment.IsDevelopment() ? builder.Configuration.GetConnectionString("DevConnection") : builder.Configuration.GetConnectionString("ProdConnection");
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
+builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>

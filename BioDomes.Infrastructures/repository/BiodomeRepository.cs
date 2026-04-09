@@ -16,18 +16,16 @@ public class BiodomeRepository : IBiodomeRepository
     
     public IReadOnlyList<Biodome> GetBestThreeBiodome()
     {
-        return _context.Biodomes.Select(b => new Biodome
-            (b.idBiodomes, b.Name, b.Temperature,
-                b.Humidity, b.Avatar))
+        return _context.Biodomes
+            .Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar))
+            .OrderByDescending(b => b.Etat)
+            .Take(3)
             .ToList<Biodome>();
 
     }
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {
-        return _context.Biodomes.Select(b => new Biodome
-            (b.idBiodomes, b.Name, b.Temperature,
-                b.Humidity, b.Avatar))
-            .ToList<Biodome>();
+        return _context.Biodomes.Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar)).ToList<Biodome>();
     }
 }

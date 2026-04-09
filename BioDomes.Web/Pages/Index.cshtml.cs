@@ -1,22 +1,23 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly IBiodomeRepository _repository;
+    private readonly IBiodomeService _service;
 
-    public IndexModel(IBiodomeRepository repository)
+    public IndexModel(IBiodomeService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     public IReadOnlyList<Biodome> Biodomes { get; set; } = new List<Biodome>();
 
     public void OnGet()
     {
-        Biodomes = _repository.GetBestThreeBiodome();
+        Biodomes = _service.GetBestThreeBiodome();
     }
 }
