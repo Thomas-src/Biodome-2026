@@ -59,11 +59,13 @@ if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseExceptionHandler("/Error"); // Quand je suis en production
+    builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProdConnection")));
     app.UseHsts();
 }
 else
 {
     app.UseDeveloperExceptionPage();
+    builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
 }
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions());
