@@ -54,6 +54,7 @@ else
 app.UseForwardedHeaders(new ForwardedHeadersOptions());
 
 app.UseHttpsRedirection();
+app.UseHsts();
 
 app.UseWebOptimizer();
 
