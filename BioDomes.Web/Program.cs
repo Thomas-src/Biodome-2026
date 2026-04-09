@@ -27,8 +27,10 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108/");
         });
 });
-
-builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = builder.Environment.IsDevelopment()
+    ? builder.Configuration.GetConnectionString("DevConnection")
+    : builder.Configuration.GetConnectionString("ProdConnection");
+builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 
 // Code reprit de la lecon8
@@ -69,13 +71,11 @@ if (!app.Environment.IsDevelopment())
 {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseExceptionHandler("/Error"); // Quand je suis en production
-    builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProdConnection")));
     app.UseHsts();
 }
 else
 {
     app.UseDeveloperExceptionPage();
-    builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
 }
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions());
