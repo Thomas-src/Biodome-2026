@@ -9,7 +9,7 @@ using BioDomes.Web.Transformers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +17,16 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
 //
+
+ 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy  =>
+        {
+            policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108/");
+        });
+});
 
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
@@ -80,6 +90,7 @@ app.UseLogOrigin();
 app.UseReverseProxy();
 
 app.UseRouting();
+app.UseCors(MyAllowSpecificOrigins); 
 app.UseAuthorization();
 app.UseRateLimiter();
 
