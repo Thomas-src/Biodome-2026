@@ -1,6 +1,7 @@
 using System.Threading.RateLimiting;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services;
 using BioDomes.Infrastructures;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.repository;
@@ -34,6 +35,7 @@ var connectionString = builder.Environment.IsDevelopment()
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
+builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>
