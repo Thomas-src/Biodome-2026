@@ -1,4 +1,4 @@
-@page
+    @page
 @model BioDomes.Web.Pages.User.Connect
 
 @{
@@ -7,22 +7,27 @@
 
 <section class="rounded-4 m-auto p-3" style="background-color: aliceblue; width: 40%">
     <h1 class="title text-center">Authentification</h1>
-    <form class="d-flex flex-column m-auto w-75 mt-3 gap-2">
+    <form method="post" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
+    
         <div class="d-flex flex-column">
-            <label class="form-label">
-                Email ou username :
-            </label>
-            <input name="Username" class="form-control" placeholder="Ex johndoe@gmail.com"/>
-            <span></span>
+            <label asp-for="EmailOrUsername" class="form-label">Email ou nom d'utilisateur*</label>
+            <input asp-for="EmailOrUsername" class="form-control" placeholder="Ex johndoe@gmail.com" />
+            <span asp-validation-for="EmailOrUsername" class="text-danger"></span>
         </div>
+
         <div class="d-flex flex-column mb-1">
-            <label class="form-label">
-                Mot de passe :
-            </label>
-            <input name="password" class="form-control" type="password"/>
-            <span></span>
+            <label asp-for="Password" class="form-label">Mot de passe*</label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <button class="btn btn-primary" >Se connecter</button>
-        <a href="/user/register">Pas encore de compte ? Creer un compte</a>
+
+        <div class="form-check">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label"></label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+
+        <a id="register" asp-page="./Register">Pas encore de compte ? Créer un compte</a>
     </form>
 </section>

@@ -4,10 +4,12 @@ using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Infrastructures;
 using BioDomes.Infrastructures.context;
+using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.repository;
 using BioDomes.Infrastructures.Repository;
 using BioDomes.Web.Middlewares;
 using BioDomes.Web.Transformers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,23 +20,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
-//
-
  
 builder.Services.AddCors(options => 
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy  =>
         {
-            policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108/");
+            policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108");
         });
 });
 var connectionString = builder.Environment.IsDevelopment()
     ? builder.Configuration.GetConnectionString("DevConnection")
     : builder.Configuration.GetConnectionString("ProdConnection");
+// context
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+    })
+    .AddEntityFrameworkStores<BioDomesDbContext>()
+    .AddDefaultTokenProviders();
+
+// Repositories
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
+builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepository>();
+// Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 
 // Code reprit de la lecon8
@@ -42,7 +54,7 @@ builder.Services.AddRateLimiter(options =>
 {
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString() ?? "anonymous",
             factory: partition => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
@@ -95,6 +107,7 @@ app.UseReverseProxy();
 
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins); 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
 

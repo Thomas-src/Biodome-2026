@@ -9,4 +9,7 @@ public interface IBiodomeRepository
     
     IReadOnlyList<Biodome> GetAllBiodomes();
     
+    void Create(Biodome biodome);
+    void Update(Biodome biodome);
+    void Delete(string id);
 }
