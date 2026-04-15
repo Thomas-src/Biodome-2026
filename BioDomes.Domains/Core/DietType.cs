@@ -6,5 +6,8 @@ public enum DietType
     Carnivore,
     Omnivore,
     Coprophage,
-    Herbivore
+    Herbivore,
+    Détritivores,
+    Hétérotrophie,
+    Coprophages
 }

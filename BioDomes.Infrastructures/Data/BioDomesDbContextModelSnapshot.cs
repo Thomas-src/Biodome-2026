@@ -54,26 +54,42 @@ namespace BioDomes.Infrastructures.Data
                         new
                         {
                             idBiodomes = "1",
-                            Avatar = "alpha.png",
-                            Humidity = 60.0,
-                            Name = "Biodome Alpha",
-                            Temperature = 22.5
+                            Avatar = "/wwwroot/images/biodomes/1.wepb",
+                            Humidity = 70.0,
+                            Name = "Forêt Tempérée",
+                            Temperature = 18.0
                         },
                         new
                         {
                             idBiodomes = "2",
-                            Avatar = "moon.png",
-                            Humidity = 5.0,
-                            Name = "Biodome Lune",
-                            Temperature = -10.0
+                            Avatar = "/wwwroot/images/biodomes/1.wepb",
+                            Humidity = 90.0,
+                            Name = "Forêt Tropicale",
+                            Temperature = 28.0
                         },
                         new
                         {
                             idBiodomes = "3",
-                            Avatar = "mars.png",
-                            Humidity = 2.0,
-                            Name = "Biodome Mars",
-                            Temperature = -20.0
+                            Avatar = "/wwwroot/images/biodomes/1.wepb",
+                            Humidity = 40.0,
+                            Name = "Savane",
+                            Temperature = 32.0
+                        },
+                        new
+                        {
+                            idBiodomes = "4",
+                            Avatar = "/wwwroot/images/biodomes/1.wepb",
+                            Humidity = 55.0,
+                            Name = "Prairie Tempérée",
+                            Temperature = 20.0
+                        },
+                        new
+                        {
+                            idBiodomes = "5",
+                            Avatar = "/wwwroot/images/biodomes/1.wepb",
+                            Humidity = 60.0,
+                            Name = "Laboratoire Contrôlé",
+                            Temperature = 22.0
                         });
                 });
 
@@ -164,14 +180,113 @@ namespace BioDomes.Infrastructures.Data
                     b.HasData(
                         new
                         {
-                            IdSpecies = "E220291",
-                            Avatar = "chien.webp",
-                            Name = "Chien",
-                            RegimId = "1",
-                            Size = 2.0,
+                            IdSpecies = "1",
+                            Avatar = "lion.webp",
+                            Name = "Lion",
+                            RegimId = "2",
+                            Size = 180.0,
                             TypeId = "1",
                             Visible = true,
-                            Weight = 20.0
+                            Weight = 150000.0
+                        },
+                        new
+                        {
+                            IdSpecies = "2",
+                            Avatar = "boa.webp",
+                            Name = "Boa",
+                            RegimId = "2",
+                            Size = 225.0,
+                            TypeId = "4",
+                            Visible = true,
+                            Weight = 13000.0
+                        },
+                        new
+                        {
+                            IdSpecies = "3",
+                            Avatar = "hetre.webp",
+                            Name = "Hetre",
+                            RegimId = "1",
+                            Size = 600.0,
+                            TypeId = "16",
+                            Visible = true,
+                            Weight = 830000.0
+                        },
+                        new
+                        {
+                            IdSpecies = "4",
+                            Avatar = "chene.webp",
+                            Name = "Chene",
+                            RegimId = "1",
+                            Size = 2500.0,
+                            TypeId = "16",
+                            Visible = true,
+                            Weight = 2100000.0
+                        },
+                        new
+                        {
+                            IdSpecies = "5",
+                            Avatar = "mouche.webp",
+                            Name = "Mouche",
+                            RegimId = "4",
+                            Size = 1.0,
+                            TypeId = "8",
+                            Visible = true,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            IdSpecies = "6",
+                            Avatar = "araignee.webp",
+                            Name = "Araignée",
+                            RegimId = "2",
+                            Size = 4.0,
+                            TypeId = "7",
+                            Visible = true,
+                            Weight = 95.0
+                        },
+                        new
+                        {
+                            IdSpecies = "7",
+                            Avatar = "hirondelle.webp",
+                            Name = "Hirondelle",
+                            RegimId = "2",
+                            Size = 18.0,
+                            TypeId = "2",
+                            Visible = true,
+                            Weight = 45.0
+                        },
+                        new
+                        {
+                            IdSpecies = "8",
+                            Avatar = "lievre.webp",
+                            Name = "Lievre",
+                            RegimId = "5",
+                            Size = 50.0,
+                            TypeId = "1",
+                            Visible = true,
+                            Weight = 4000.0
+                        },
+                        new
+                        {
+                            IdSpecies = "9",
+                            Avatar = "paturin.webp",
+                            Name = "Pâturin des prés",
+                            RegimId = "1",
+                            Size = 23.0,
+                            TypeId = "16",
+                            Visible = true,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            IdSpecies = "10",
+                            Avatar = "souris.webp",
+                            Name = "Souris",
+                            RegimId = "3",
+                            Size = 9.0,
+                            TypeId = "1",
+                            Visible = true,
+                            Weight = 25.0
                         });
                 });
 
@@ -192,17 +307,42 @@ namespace BioDomes.Infrastructures.Data
                         new
                         {
                             IdRegime = "1",
-                            Name = "Carnivore"
+                            Name = "Photosynthèse"
                         },
                         new
                         {
                             IdRegime = "2",
-                            Name = "Herbivore"
+                            Name = "Carnivore"
                         },
                         new
                         {
                             IdRegime = "3",
                             Name = "Omnivore"
+                        },
+                        new
+                        {
+                            IdRegime = "4",
+                            Name = "Coprophage"
+                        },
+                        new
+                        {
+                            IdRegime = "5",
+                            Name = "Herbivore"
+                        },
+                        new
+                        {
+                            IdRegime = "6",
+                            Name = "Détritivores"
+                        },
+                        new
+                        {
+                            IdRegime = "7",
+                            Name = "Hétérotrophie"
+                        },
+                        new
+                        {
+                            IdRegime = "8",
+                            Name = "Coprophages"
                         });
                 });
 
@@ -223,17 +363,102 @@ namespace BioDomes.Infrastructures.Data
                         new
                         {
                             IdType = "1",
-                            Name = "Canin"
+                            Name = "Mammiferes"
                         },
                         new
                         {
                             IdType = "2",
-                            Name = "Félin"
+                            Name = "Oiseaux"
                         },
                         new
                         {
                             IdType = "3",
-                            Name = "Reptile"
+                            Name = "Poissons"
+                        },
+                        new
+                        {
+                            IdType = "4",
+                            Name = "Reptiles"
+                        },
+                        new
+                        {
+                            IdType = "5",
+                            Name = "Amphibiens"
+                        },
+                        new
+                        {
+                            IdType = "6",
+                            Name = "Crustaces"
+                        },
+                        new
+                        {
+                            IdType = "7",
+                            Name = "Arachnides"
+                        },
+                        new
+                        {
+                            IdType = "8",
+                            Name = "Insectes"
+                        },
+                        new
+                        {
+                            IdType = "9",
+                            Name = "Myriapodes"
+                        },
+                        new
+                        {
+                            IdType = "10",
+                            Name = "Mollusques"
+                        },
+                        new
+                        {
+                            IdType = "11",
+                            Name = "Echinodermes"
+                        },
+                        new
+                        {
+                            IdType = "12",
+                            Name = "Anelides"
+                        },
+                        new
+                        {
+                            IdType = "13",
+                            Name = "Cnidaires"
+                        },
+                        new
+                        {
+                            IdType = "14",
+                            Name = "Plathelminthes"
+                        },
+                        new
+                        {
+                            IdType = "15",
+                            Name = "Poriferes"
+                        },
+                        new
+                        {
+                            IdType = "16",
+                            Name = "Plantes"
+                        },
+                        new
+                        {
+                            IdType = "17",
+                            Name = "Mousses"
+                        },
+                        new
+                        {
+                            IdType = "18",
+                            Name = "Algues"
+                        },
+                        new
+                        {
+                            IdType = "19",
+                            Name = "Lichen"
+                        },
+                        new
+                        {
+                            IdType = "20",
+                            Name = "Champignons"
                         });
                 });
 
