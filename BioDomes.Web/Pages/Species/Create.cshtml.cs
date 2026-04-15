@@ -26,7 +26,7 @@ public class Create : PageModel
 
     public void OnGet()
     {
-        _repository.GetAllSpeiesTypes();
+        _repository.GetAllSpecies();
     }
 /*
     public IActionResult OnPost()

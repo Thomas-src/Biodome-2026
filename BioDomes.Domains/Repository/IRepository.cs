@@ -5,8 +5,8 @@ namespace BioDomes.Domains.Extensions;
 
 public interface IRepository
 {
-    IList<Espece> GetallEspece();
+    IList<Species> GetallEspece();
     IList<Biodome> GetBestThreeBiodome();
-    void Save(Espece e);
+    void Save(Species e);
     IList<Biodome> GetAllDomes();
 }

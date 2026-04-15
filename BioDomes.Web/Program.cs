@@ -45,6 +45,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 // Repositories
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();
 builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
+builder.Services.AddTransient<ISpeciesClassificationRepository, SpeciesClassificationRepository>();
+builder.Services.AddTransient<IDietTypeRepository, DietTypeRepository>();
 builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepository>();
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();

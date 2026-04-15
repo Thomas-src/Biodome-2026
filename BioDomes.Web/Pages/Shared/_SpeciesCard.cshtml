@@ -1,12 +1,13 @@
-@model BioDomes.Domains.Core.Espece
+@model BioDomes.Domains.Core.Species
 
 <div>
     <div class="card-body">
         <h5 class="card-title">@Model.Nom</h5>
         <p class="card-text">
-            <strong>Type : </strong> @Model.Type <br/>
-            <strong>Régime :</strong> @Model.Regime <br/>
-            <strong>Taille : </strong> @Model.Taille cm
+            <strong>Type : </strong> @Model.SpeciesClassification <br/>
+            <strong>Régime :</strong> @Model.DietType <br/>
+            <strong>Taille : </strong> @Model.Taille cm <br/>
+            <strong>Poids : </strong> @Model.Poids
         </p>
     </div>
 </div>

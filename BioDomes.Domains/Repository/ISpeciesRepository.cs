@@ -4,5 +4,5 @@ namespace BioDomes.Domains.Repository;
 
 public interface ISpeciesRepository
 {
-    IReadOnlyList<SpeciesClassification> GetAllSpeiesTypes();
+    IReadOnlyList<Species> GetAllSpecies();
 }

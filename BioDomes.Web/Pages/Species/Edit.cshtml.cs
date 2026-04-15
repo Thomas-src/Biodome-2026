@@ -10,9 +10,9 @@ public class Edit : PageModel
 {
     private readonly IRepository _repository;
 
-    private Espece? _espece;
+    private Domains.Core.Species? _espece;
 
-    public Espece? Espece
+    public Domains.Core.Species? Espece
     {
         get { return _espece;}
         set { _espece = value; }
