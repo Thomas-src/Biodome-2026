@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages;
 
+/*
+ * TODO, Faire une liste d'espece que le user as (diviser en deux) et une liste des autres especes
+ */
 public class SpeciesModel : PageModel
 {
     private readonly ISpeciesRepository _repository;
