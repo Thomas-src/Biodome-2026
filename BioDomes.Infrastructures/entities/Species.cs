@@ -2,7 +2,7 @@
 
 public class Species
 {
-    public String IdSpecies { get; set; }
+    public string IdSpecies { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
    

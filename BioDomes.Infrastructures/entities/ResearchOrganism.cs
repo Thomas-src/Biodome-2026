@@ -2,9 +2,9 @@
 
 public class ResearchOrganism
 {
-    public string IdOrgansim { get; set; }
+    public string ResearchOrganismId { get; set; }
     public string Name { get; set; }
 
     // Lien avec User
-    public IList<User> Users { get; set; } = new List<User>();
+    public IList<User>? Users { get; set; } = new List<User>();
 }

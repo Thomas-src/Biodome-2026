@@ -23,14 +23,10 @@ public class BioDomesDbContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.ApplyConfiguration(new ResearchOrganismConfiguration());
         modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
-
-        modelBuilder.Entity<IdentityUserRole<string>>().HasData
-        (
-            new IdentityUserRole<string> { RoleId = IdentityRoleConfiguration.AdminId, UserId = UserConfiguration.AdminId},
-            new IdentityUserRole<string> { RoleId = IdentityRoleConfiguration.ResearchID, UserId = UserConfiguration.ResearchId}
-        );
 
         
         // Les clés primaire
@@ -44,7 +40,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             .HasKey(e => e.IdEquipment);
 
         modelBuilder.Entity<ResearchOrganism>()
-            .HasKey(r => r.IdOrgansim);
+            .HasKey(r => r.ResearchOrganismId);
 
         modelBuilder.Entity<SpeciesRegime>()
             .HasKey(r => r.IdRegime);
@@ -74,11 +70,15 @@ public class BioDomesDbContext : IdentityDbContext<User>
             .OnDelete(DeleteBehavior.SetNull);
 
         // ResearchOrganism -> User
-        modelBuilder.Entity<User>()
+        /*
+         * 
+         */
+     modelBuilder.Entity<User>()
             .HasOne(u => u.ResearchOrganism)
             .WithMany(r => r.Users)
-            .HasForeignKey(u => u.ResearchOrganismeId)
+            //.HasForeignKey(u => u.ResearchOrganismId)
             .OnDelete(DeleteBehavior.Restrict);
+       
 
         // Biodomes <-> Species
         modelBuilder.Entity<Biodomes>()

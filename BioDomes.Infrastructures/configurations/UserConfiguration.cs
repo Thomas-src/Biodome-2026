@@ -29,7 +29,8 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
             EmailConfirmed = true, 
             UserName = "Admin",
             NormalizedUserName = "Admin".ToUpper(),
-            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1))
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
+            ResearchOrganismId = "1",
         };
         admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
         
@@ -40,7 +41,8 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
             EmailConfirmed = true, 
             UserName = "Chercheur",
             NormalizedUserName = "Chercheur".ToUpper(),
-            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1))
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
+            ResearchOrganismId = "1",
         };
         admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
 

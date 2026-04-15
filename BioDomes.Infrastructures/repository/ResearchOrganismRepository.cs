@@ -8,6 +8,6 @@ public class ResearchOrganismRepository(BioDomesDbContext context) : IResearchOr
 {
     public IReadOnlyList<ResearchOrganism> GetAll()
         => context.ResearchOrganisms
-            .Select(r => new ResearchOrganism(r.IdOrgansim, r.Name))
+            .Select(r => new ResearchOrganism(r.ResearchOrganismId, r.Name))
             .ToList();
 }
