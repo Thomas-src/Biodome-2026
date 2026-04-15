@@ -1,6 +1,8 @@
+using BioDomes.Infrastructures.configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using BioDomes.Infrastructures.entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace BioDomes.Infrastructures.context;
 
@@ -21,7 +23,16 @@ public class BioDomesDbContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
 
+        modelBuilder.Entity<IdentityUserRole<string>>().HasData
+        (
+            new IdentityUserRole<string> { RoleId = IdentityRoleConfiguration.AdminId, UserId = UserConfiguration.AdminId},
+            new IdentityUserRole<string> { RoleId = IdentityRoleConfiguration.ResearchID, UserId = UserConfiguration.ResearchId}
+        );
+
+        
         // Les clés primaire
         modelBuilder.Entity<Biodomes>()
             .HasKey(b => b.idBiodomes);
