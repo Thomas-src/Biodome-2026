@@ -18,23 +18,23 @@
 
 <div class="container">
     <div class="row g-3">
-        @* @foreach (var espece in Model.Especes) *@
-        @* { *@
-        @*     <div class="col-4"> *@
-        @*         <div class="card shadow-sm h-100"> *@
-        @* *@
-        @*             <partial name="_SpeciesCard" model="espece"/> *@
-        @* *@
-        @*             <div class="card-body pt-0"> *@
-        @*                 <a class="btn btn-sm btn-outline-primary mb-2" *@
-        @*                    asp-page="/Species/Edit" *@
-        @*                    asp-route-slug="@espece.Nom"> *@
-        @*                     Edit *@
-        @*                 </a> *@
-        @*             </div> *@
-        @* *@
-        @*         </div> *@
-        @*     </div> *@
-        @* } *@
+        @foreach (var espece in Model.Especes)
+        {
+            <div class="col-4">
+                <div class="card shadow-sm h-100">
+
+                    <partial name="_SpeciesCard" model="espece"/>
+
+                    <div class="card-body pt-0">
+                        <a class="btn btn-sm btn-outline-primary mb-2"
+                           asp-page="/Species/Edit"
+                           asp-route-slug="@espece.Nom">
+                            Edit
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        }
     </div>
 </div>
