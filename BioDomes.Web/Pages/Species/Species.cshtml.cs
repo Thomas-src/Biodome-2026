@@ -8,9 +8,9 @@ namespace BioDomes.Web.Pages;
 
 public class SpeciesModel : PageModel
 {
-    public IList<Espece> _especes;
+    public IList<Domains.Core.Species> _especes;
 
-    public IList<Espece> Especes
+    public IList<Domains.Core.Species> Especes
     {
         get { return _especes; }
         set { _especes = value; }

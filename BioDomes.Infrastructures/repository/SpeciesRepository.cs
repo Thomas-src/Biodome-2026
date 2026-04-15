@@ -1,7 +1,7 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures.context;
-using Microsoft.EntityFrameworkCore;
+using BioDomes.Infrastructures.repository;
 
 namespace BioDomes.Infrastructures.Repository;
 
@@ -14,10 +14,14 @@ public class SpeciesRepository : ISpeciesRepository
         _context = context;
     }
 
-    public IReadOnlyList<SpeciesClassification> GetAllSpeiesTypes()
+    public IReadOnlyList<Species> GetAllSpecies()
     {
-        return null;
-        // return _context.SpeciesTypes.Select(
-        //     s => s.Name);
+        return _context.Species.Select(s => new Species(s.Name,
+            s.Size,
+            s.Weight,
+            Enum.Parse<DietType>(s.Regim.Name),
+            Enum.Parse<SpeciesClassification>(s.Type.Name),
+            s.Avatar)
+        ).ToList();
     }
 }
