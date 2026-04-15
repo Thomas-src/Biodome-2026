@@ -2,6 +2,12 @@ namespace BioDomes.Domains.Core;
 
 public enum DietType
 {
+    Photosynthèse,
     Carnivore,
-    Herbivore
+    Omnivore,
+    Coprophage,
+    Herbivore,
+    Détritivores,
+    Hétérotrophie,
+    Coprophages
 }
