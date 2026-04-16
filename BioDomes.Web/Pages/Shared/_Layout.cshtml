@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using BioDomes.Domains.Core
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -38,9 +39,32 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Equipements/Equipements">Equipements</a>
                     </li>
-                    <li class="nav-item ms-auto">
-                        <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/User/Connect">Se connecter</a>
-                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole(Roles.Admin.ToRoleName()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Admin/Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        
+                        if (User.IsInRole(Roles.Research.ToRoleName()))
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark fs-5 text-decoration-underline" asp-page="/User/Profile">Mon profil</a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fs-5 text-decoration-underline" asp-page="/Account/Logout">Se déconnecter</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item ms-auto">
+                            <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Account/Login">Se connecter</a>
+                        </li> 
+                    }
                 </ul>
             </div>
         </div>

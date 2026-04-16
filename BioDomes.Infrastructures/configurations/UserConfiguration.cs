@@ -44,7 +44,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
             ResearchOrganismId = "1",
         };
-        admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
+        admin.PasswordHash = ph.HashPassword(research, "Test1234$"); // todo mettre mdp, email et nom dans la config
 
         builder.HasData(admin,research);
     }

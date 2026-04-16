@@ -14,7 +14,7 @@ public class IdentityRoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
         var adminRole = new IdentityRole()
         {
-            Id = AdminId, ConcurrencyStamp = AdminId, Name = "Admin", NormalizedName = "ADMIN"
+            Id = AdminId, ConcurrencyStamp = AdminId, Name = "Admin", NormalizedName = "ADMIN", 
         };
         
         var researchRole = new IdentityRole()

@@ -1,4 +1,5 @@
 using System.Threading.RateLimiting;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
@@ -16,8 +17,13 @@ using Microsoft.EntityFrameworkCore;
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(AppRoles.Admin));
+});
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options => {
+    options.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+});
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
  

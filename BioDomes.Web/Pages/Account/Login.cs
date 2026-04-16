@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-namespace BioDomes.Web.Pages.User;
-public class Connect(SignInManager<Infrastructures.entities.User> signInManager) : PageModel
+
+namespace BioDomes.Web.Pages.Account;
+public class LoginModel(SignInManager<Infrastructures.entities.User> signInManager) : PageModel
 {
     public string? ReturnUrl { get; set; }
 

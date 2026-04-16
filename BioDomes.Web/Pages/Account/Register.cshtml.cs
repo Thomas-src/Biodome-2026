@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using BioDomes.Web.Pages.Species;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BioDomes.Web.Pages.User;
+namespace BioDomes.Web.Pages.Account;
 
 public class Register : PageModel
 {

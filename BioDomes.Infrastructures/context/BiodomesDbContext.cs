@@ -28,7 +28,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
         modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 
-        
+        SeedUsersData(modelBuilder);
         // Les clés primaire
         modelBuilder.Entity<Biodomes>()
             .HasKey(b => b.idBiodomes);
@@ -335,6 +335,22 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Humidity = 60,
                 Avatar = "/wwwroot/images/biodomes/1.wepb",
                 userId = null
+            }
+        );
+    }
+
+    private static void SeedUsersData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            new IdentityUserRole<string>
+            {
+                UserId = UserConfiguration.AdminId,
+                RoleId = IdentityRoleConfiguration.AdminId
+            },
+            new IdentityUserRole<string>
+            {
+                UserId = UserConfiguration.ResearchId,
+                RoleId = IdentityRoleConfiguration.ResearchID
             }
         );
     }
