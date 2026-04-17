@@ -175,7 +175,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 RegimId = "2", // Carnivore
                 TypeId = "1", // Mammifere
                 Visible = true,
-                Avatar = "lion.webp",
+                Avatar = "/images/species/lion.jpg",
                 Size = 180,
                 Weight = 150000,
                 UserId = null

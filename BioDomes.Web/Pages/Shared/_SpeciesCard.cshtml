@@ -1,13 +1,36 @@
 @model BioDomes.Domains.Core.Species
 
-<div>
-    <div class="card-body">
-        <h5 class="card-title">@Model.Nom</h5>
-        <p class="card-text">
-            <strong>Type : </strong> @Model.SpeciesClassification <br/>
-            <strong>Régime :</strong> @Model.DietType <br/>
-            <strong>Taille : </strong> @Model.Taille cm <br/>
-            <strong>Poids : </strong> @Model.Poids g
-        </p>
+<div class="mb-3">
+    <div class="row g-0 align-items-center">
+        
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Nom</h5>
+                <p class="card-text mb-1">
+                    <strong>Type :</strong> @Model.SpeciesClassification
+                </p>
+                <p class="card-text mb-1">
+                    <strong>Régime :</strong> @Model.DietType
+                </p>
+                <p class="card-text mb-1">
+                    <strong>Taille :</strong> @Model.Taille cm
+                </p>
+                <p class="card-text">
+                    <strong>Poids :</strong> @Model.Poids g
+                </p>
+                @if (User.Identity.Name != null && User.Identity.Name.Equals(Model.OwnerName))
+                {
+                    <p class="card-text">
+                        <strong>Visible :</strong> @Model.IsVisible
+                    </p>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <img src="@Model.Avatar" 
+                 class="img-fluid rounded p-2" />
+        </div>
+
     </div>
 </div>

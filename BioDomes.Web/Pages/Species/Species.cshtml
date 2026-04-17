@@ -1,4 +1,5 @@
 @page "/Species"
+@using BioDomes.Domains.Core
 @using BioDomes.Domains.Extensions
 @model BioDomes.Web.Pages.Species.SpeciesModel
 
@@ -15,46 +16,56 @@
     </div>
 }
 
-<h2>Vos espèces :</h2>
-
-@if (Model.OwnSpecies.Count > 0)
+@if (User.IsInRole(Roles.Research.ToRoleName()) || User.IsInRole(Roles.Admin.ToRoleName()))
 {
+    
+    <h2>Vos espèces :</h2>
+
     <div class="container">
-        <div class="row g-3">
-            @foreach (var espece in Model.OwnSpecies)
-            {
-                <div class="col-4">
-                    <div class="card shadow-sm h-100">
-
-                        <partial name="_SpeciesCard" model="espece"/>
-
-                        <div class="card-body pt-0">
-                            <a class="btn btn-sm btn-outline-primary mb-2"
-                               asp-page="/Species/Edit"
-                               asp-route-slug="@espece.Nom">
-                                Edit
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-            }
-        </div>
+        <a class="btn btn-sm btn-outline-primary mb-2"
+           asp-page="/Species/Create">
+            Créer
+        </a>
     </div>
+
+    @if (Model.OwnSpecies.Count > 0)
+    {
+        <div class="container">
+            <div class="row g-3">
+                @foreach (var espece in Model.OwnSpecies)
+                {
+                    <div class="col-4">
+                        <div class="card shadow-sm h-100">
+
+                            <partial name="_SpeciesCard" model="espece"/>
+
+                            <div class="card-body pt-0">
+                                <a class="btn btn-sm btn-outline-primary mb-2"
+                                   asp-page="/Species/Edit"
+                                   asp-route-slug="@espece.Nom">
+                                    Edit
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Vous n'avez créé aucune espèce</p>
+    }
+
+    <h2>Autres espèces disponibles :</h2>
 }
 else
 {
-    <p>Vous n'avez créé aucune espèce</p>
+    <h2>Toutes les espèces disponible :</h2>
 }
 
-<div class="container">
-    <a class="btn btn-sm btn-outline-primary mb-2"
-       asp-page="/Species/Create">
-        Créer
-    </a>
-</div>
 
-<h2>Autres espèces disponibles :</h2>
 
 @if (Model.OtherSpecies.Count > 0)
 {
@@ -66,15 +77,6 @@ else
                     <div class="card shadow-sm h-100">
 
                         <partial name="_SpeciesCard" model="espece"/>
-
-                        <div class="card-body pt-0">
-                            <a class="btn btn-sm btn-outline-primary mb-2"
-                               asp-page="/Species/Edit"
-                               asp-route-slug="@espece.Nom">
-                                Edit
-                            </a>
-                        </div>
-
                     </div>
                 </div>
             }

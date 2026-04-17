@@ -12,7 +12,7 @@ public class SpeciesService : ISpeciesService
         {
             if (sp.OwnerName != null)
             {
-                if (sp.OwnerName.ToUpper() != ownerSpecies.ToUpper())
+                if (sp.OwnerName.ToUpper() == ownerSpecies.ToUpper())
                 {
                     result.Add(sp);
                 }

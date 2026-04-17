@@ -39,7 +39,15 @@ public class SpeciesModel : PageModel
     {
         IReadOnlyList<Domains.Core.Species> speciesList = _repository.GetAllSpecies();
 
-        OwnSpecies = _speciesService.FilterOwnerSpecies("Admin", speciesList);
-        OtherSpecies = _speciesService.FilterSpecies("Admin", speciesList);
+        if (User.Identity.IsAuthenticated)
+        {
+            OwnSpecies = _speciesService.FilterOwnerSpecies(User.Identity.Name, speciesList);
+            OtherSpecies = _speciesService.FilterSpecies(User.Identity.Name, speciesList);            
+        }
+        else
+        {
+            OtherSpecies = speciesList;
+        }
+
     }
 }

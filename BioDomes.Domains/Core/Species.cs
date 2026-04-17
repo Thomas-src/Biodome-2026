@@ -22,6 +22,7 @@ public class Species
         this._speciesClassification = speciesClassification;
         this._avatar = avatar;
         this._IsVisible = visible;
+        this._ownerName = ownerName;
     }
 
     public string Nom
