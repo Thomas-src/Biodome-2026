@@ -56,6 +56,7 @@ builder.Services.AddTransient<IDietTypeRepository, DietTypeRepository>();
 builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepository>();
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
+builder.Services.AddTransient<ISpeciesService, SpeciesService>();
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>

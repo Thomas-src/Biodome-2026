@@ -1,41 +1,87 @@
 @page "/Species"
 @using BioDomes.Domains.Extensions
-@model BioDomes.Web.Pages.SpeciesModel
+@model BioDomes.Web.Pages.Species.SpeciesModel
 
 @{
     ViewData["Title"] = "Species";
 }
 
-<h1>Vos espèces</h1>
+<h1 class="text-center">Les espèces</h1>
+
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h2>Vos espèces :</h2>
+
+@if (Model.OwnSpecies.Count > 0)
+{
+    <div class="container">
+        <div class="row g-3">
+            @foreach (var espece in Model.OwnSpecies)
+            {
+                <div class="col-4">
+                    <div class="card shadow-sm h-100">
+
+                        <partial name="_SpeciesCard" model="espece"/>
+
+                        <div class="card-body pt-0">
+                            <a class="btn btn-sm btn-outline-primary mb-2"
+                               asp-page="/Species/Edit"
+                               asp-route-slug="@espece.Nom">
+                                Edit
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>Vous n'avez créé aucune espèce</p>
 }
 
 <div class="container">
-    <a class="btn btn-sm btn-outline-primary mb-2" asp-page="/Species/Create">Créer</a>
+    <a class="btn btn-sm btn-outline-primary mb-2"
+       asp-page="/Species/Create">
+        Créer
+    </a>
 </div>
 
-<div class="container">
-    <div class="row g-3">
-        @foreach (var espece in Model.Especes)
-        {
-            <div class="col-4">
-                <div class="card shadow-sm h-100">
+<h2>Autres espèces disponibles :</h2>
 
-                    <partial name="_SpeciesCard" model="espece"/>
+@if (Model.OtherSpecies.Count > 0)
+{
+    <div class="container">
+        <div class="row g-3">
+            @foreach (var espece in Model.OtherSpecies)
+            {
+                <div class="col-4">
+                    <div class="card shadow-sm h-100">
 
-                    <div class="card-body pt-0">
-                        @* TODO faire qu'uniquement le membre concerné peut modifier *@
-                        <a class="btn btn-sm btn-outline-primary mb-2"
-                           asp-page="/Species/Edit"
-                           asp-route-slug="@espece.Nom">
-                            Edit
-                        </a>
+                        <partial name="_SpeciesCard" model="espece"/>
+
+                        <div class="card-body pt-0">
+                            <a class="btn btn-sm btn-outline-primary mb-2"
+                               asp-page="/Species/Edit"
+                               asp-route-slug="@espece.Nom">
+                                Edit
+                            </a>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
+}
+else
+{
+    <p>Aucune autre espèce disponible</p>
+}

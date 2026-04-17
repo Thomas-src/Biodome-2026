@@ -21,7 +21,9 @@ public class SpeciesRepository : ISpeciesRepository
             s.Weight,
             Enum.Parse<DietType>(s.Regim.Name),
             Enum.Parse<SpeciesClassification>(s.Type.Name),
-            s.Avatar)
+            s.Avatar,
+            s.Visible,
+            s.User.UserName)
         ).ToList();
     }
 }
