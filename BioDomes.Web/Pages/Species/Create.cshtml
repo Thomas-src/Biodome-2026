@@ -11,10 +11,16 @@
     <div class="row">
         <div class="col-md-6">
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
+                
+                <div class="mb-3">
+                    <label asp-for="Species.Name" class="form-label">Nom*</label>
+                    <input asp-for="Species.Name" class="form-control" />
+                    <span asp-validation-for="Species.Name" class="text-danger"></span>
+                </div>
 
                 <div class="mb-3">
-                    <label asp-for="Species.Type" class="form-label">Type</label>
+                    <label asp-for="Species.Type" class="form-label">Type*</label>
                     <select class="form-control" name="Organisme">
                         <option value="">-- Choisir un organisme --</option>
                         @foreach (var organisme in Model.AllTypes)
@@ -22,27 +28,39 @@
                             <option value="@organisme">@organisme</option>
 
                         }
-                    </select>                    <span asp-validation-for="Species.Type" class="text-danger"></span>
+                    </select> <span asp-validation-for="Species.Type" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Species.Name" class="form-label">Nom</label>
-                    <input asp-for="Species.Name" class="form-control" />
-                    <span asp-validation-for="Species.Name" class="text-danger"></span>
+                    <label asp-for="Species.Regime" class="form-label">Régime*</label>
+                    <select class="form-control" name="Regime">
+                        <option value="">-- Choisir un régime --</option>
+                        @foreach (var regime in Model.Regime)
+                        {
+                            <option value="@regime">@regime</option>
+
+                        }
+                    </select> <span asp-validation-for="Species.Regime" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Species.Regime" class="form-label">Régime</label>
-                    <input asp-for="Species.Regime" class="form-control" />
-                    <span asp-validation-for="Species.Regime" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Species.Taille" class="form-label">Taille</label>
+                    <label asp-for="Species.Taille" class="form-label">Taille*</label>
                     <input asp-for="Species.Taille" class="form-control" type="number" step="0.01"/>
                     <span asp-validation-for="Species.Taille" class="text-danger"></span>
                 </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Species.Poids" class="form-label">Poids*</label>
+                    <input asp-for="Species.Poids" class="form-control" type="number" step="1"/>
+                    <span asp-validation-for="Species.Poids" class="text-danger"></span>
+                </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Avatar*</label>
+                    <input type="file" asp-for="Species.Avatar" class="form-control" />
+                    <span asp-validation-for="Species.Avatar" class="text-danger"></span>
+                </div>
+                
                 <button type="submit" class="btn btn-primary">Créer</button>
                 <a href="./Species" class="btn btn-secondary ms-2">Annuler</a>
 

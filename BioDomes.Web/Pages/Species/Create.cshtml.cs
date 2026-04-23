@@ -1,3 +1,4 @@
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains;
 using BioDomes.Domains.Core;
@@ -12,21 +13,29 @@ namespace BioDomes.Web.Pages.Species;
 public class Create : PageModel
 {
     private readonly ISpeciesRepository _repository;
+    private readonly ISpeciesClassificationRepository _repositoryClassification;
+    private readonly IDietTypeRepository _dietTypeRepository;
 
     [BindProperty]
     public InputModel Species { get; set; }
 
     [BindProperty]
-    public IList<string> AllTypes { get; set; } = new List<string>();
+    public IReadOnlyList<string> AllTypes { get; set; } = new List<string>();
 
-    public Create(ISpeciesRepository repository)
+    [BindProperty]
+    public IReadOnlyList<string> Regime { get; set; } = new List<string>();
+
+    public Create(ISpeciesRepository repository, ISpeciesClassificationRepository repositoryClassification, IDietTypeRepository dietTypeRepository)
     {
         _repository = repository;
+        _repositoryClassification = repositoryClassification;
+        _dietTypeRepository = dietTypeRepository;
     }
 
     public void OnGet()
     {
-        _repository.GetAllSpecies();
+        AllTypes = _repositoryClassification.GetAllSpeciesClassifications().Select(s => s.ToString()).ToList();
+        Regime = _dietTypeRepository.GetAllDietTypes().Select(s => s.ToString()).ToList();
     }
 /*
     public IActionResult OnPost()
@@ -83,5 +92,11 @@ public class Create : PageModel
         [Required(ErrorMessage = "La taille est obligatoire")]
         [Range(0, 10000, ErrorMessage = "La taille doit être entre 0 et 10000")]
         public int? Taille { get; set; }
+        
+        [Required(ErrorMessage = "Le poids est obligatoire")]
+        public int? Poids { get; set; }
+
+        [Required(ErrorMessage = "Un avatar est obligatoire")]
+        public IFormFile Avatar { get; set; }
     }
 }
