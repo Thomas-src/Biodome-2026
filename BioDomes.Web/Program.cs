@@ -1,4 +1,5 @@
 using System.Threading.RateLimiting;
+using BioDomes.Domains;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
@@ -43,7 +44,7 @@ var connectionString = builder.Environment.IsDevelopment()
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = false; // todo configurer la confirmation des mails => mdp ? resend bloqué par l'école
+        options.SignIn.RequireConfirmedAccount = true; // todo configurer la confirmation des mails => mdp ? resend bloqué par l'école
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
     })
@@ -63,8 +64,8 @@ builder.Services.AddTransient<IResearchService, ResearchOrganismService>();
 
 
 // Mail service
-builder.Services.AddSingleton(sp => builder.Configuration.GetSection("NetMail").Get<MailConfig>());
-builder.Services.AddTransient<IMyEmailSender, MyEmailSender>();
+builder.Services.AddSingleton(sp => builder.Configuration.GetSection("ApiMailToken").Get<MailConfig>());
+builder.Services.AddHttpClient<IMyEmailSender, PhpMailSender>();
 
 
 
