@@ -6,7 +6,7 @@ namespace BioDomes.Infrastructures.repository;
 
 public class ResearchOrganismRepository(BioDomesDbContext context) : IResearchOrganismRepository
 {
-    public IReadOnlyList<ResearchOrganism> GetAll()
+    public IReadOnlyList<ResearchOrganism> GetAllOrganisms()
         => context.ResearchOrganisms
             .Select(r => new ResearchOrganism(r.ResearchOrganismId, r.Name))
             .ToList();

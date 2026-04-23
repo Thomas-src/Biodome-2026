@@ -4,5 +4,5 @@ namespace BioDomes.Domains.Repository;
 
 public interface IResearchOrganismRepository
 {
-    IReadOnlyList<ResearchOrganism> GetAll();
+    IReadOnlyList<ResearchOrganism> GetAllOrganisms();
 }

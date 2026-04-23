@@ -10,7 +10,7 @@ public class BiodomeService : IBiodomeService
     {
         _repository = repository;
     }
-    public IReadOnlyList<Biodome> GetBestThreeBiodome() 
+    public IReadOnlyList<Biodome> GetBestThreeBiodome()  // todo nb espèces le plus haut
         => _repository.GetAllBiodomes().OrderByDescending(b => b.Etat).Take(3).ToList();
     
 
