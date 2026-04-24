@@ -25,6 +25,27 @@ public class Species
         this._ownerName = ownerName;
     }
 
+    public override bool Equals(Object other)
+    {
+        if (other == null || !(other is Species) || other == this)
+        {
+            return false;
+        }
+        
+        Species otherSpecies = (Species)other;
+
+        if (otherSpecies.Nom == this.Nom 
+            &&  otherSpecies.Taille == this.Taille 
+            && otherSpecies.Poids == this.Poids 
+            && otherSpecies.DietType == this.DietType 
+            && otherSpecies.SpeciesClassification == this.SpeciesClassification)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public string Nom
     {
         get { return _nom; }

@@ -10,8 +10,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-
+            
             <form method="post" enctype="multipart/form-data">
+                
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                }
                 
                 <div class="mb-3">
                     <label asp-for="Species.Name" class="form-label">Nom*</label>
@@ -21,26 +26,29 @@
 
                 <div class="mb-3">
                     <label asp-for="Species.Type" class="form-label">Type*</label>
-                    <select class="form-control" name="Organisme">
+                    <select class="form-control" name="Species.Type">
                         <option value="">-- Choisir un organisme --</option>
                         @foreach (var organisme in Model.AllTypes)
                         {
                             <option value="@organisme">@organisme</option>
-
                         }
-                    </select> <span asp-validation-for="Species.Type" class="text-danger"></span>
+                    </select>
+                    <span asp-validation-for="Species.Type" class="text-danger"></span>
+
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Species.Regime" class="form-label">Régime*</label>
-                    <select class="form-control" name="Regime">
+
+                    <select class="form-control" name="Species.Regime">
                         <option value="">-- Choisir un régime --</option>
                         @foreach (var regime in Model.Regime)
                         {
                             <option value="@regime">@regime</option>
-
                         }
-                    </select> <span asp-validation-for="Species.Regime" class="text-danger"></span>
+                    </select>
+                    <span asp-validation-for="Species.Regime" class="text-danger"></span>
+
                 </div>
 
                 <div class="mb-3">

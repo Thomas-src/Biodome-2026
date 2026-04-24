@@ -12,7 +12,7 @@ public class Species
     public string RegimId { get; set; } = string.Empty;
     public SpeciesRegime Regim { get; set; }
    
-    public double Size { get; set; }
+    public int Size { get; set; }
     public double Weight { get; set; } 
     public bool Visible { get; set; }
 

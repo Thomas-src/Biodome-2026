@@ -26,4 +26,10 @@ public class SpeciesRepository : ISpeciesRepository
             s.User.UserName)
         ).ToList();
     }
+
+    public void Save(Species created)
+    {
+
+        
+    }
 }
