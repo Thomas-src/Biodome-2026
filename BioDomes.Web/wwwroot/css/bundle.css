@@ -1,0 +1,11 @@
+﻿
+.avatar-option { transition: border-color .2s, transform .2s; }
+.avatar-option.selected {
+    border-color: #0d6efd !important;
+    transform: scale(1.1);
+}
+.avatar-radio:checked + img {
+    border-color: #0d6efd !important;
+    transform: scale(1.05);
+    transition: 0.2s;
+}

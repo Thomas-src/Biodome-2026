@@ -50,6 +50,10 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<BioDomesDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Lockout.AllowedForNewUsers = false;
+});
 
 // Repositories
 builder.Services.AddTransient<IBiodomeRepository, BiodomeRepository>();

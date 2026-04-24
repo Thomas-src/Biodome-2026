@@ -40,33 +40,70 @@
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        if (User.IsInRole(Roles.Admin.ToRoleName()))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Admin/Dashboard">Dashboard</a>
-                            </li>
-                        }
-                        
-                        if (User.IsInRole(Roles.Research.ToRoleName()))
-                        {
-                            <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark fs-5 text-decoration-underline" asp-page="/User/Profile">Mon profil</a>
-                            </li>
-                        }
+                        <li class="nav-item dropdown ms-auto">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
 
-                        <li class="nav-item ms-auto">
-                            <form method="post" asp-page="/Account/Logout"  class="d-flex align-items-center m-0">
-                                <button type="submit" class="nav-link text-dark fs-5 text-decoration-underline btn btn-link p-0">
-                                    Se déconnecter
-                                </button>
-                            </form>
+                                <img src="/images/avatars/@(User.FindFirst("Avatar")?.Value ?? "1.png")"
+                                     class="rounded-circle"
+                                     style="width:32px; height:32px; object-fit:cover;"  alt="avatar"/>
+
+                                <span class="text-dark">Mon compte</span>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                @if (User.IsInRole(Roles.Research.ToRoleName()))
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/User/Dashboard">
+                                            Mon tableau de bord
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/Edit">
+                                            Modifier mon profil
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (User.IsInRole(Roles.Admin.ToRoleName()))
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Admin/Dashboard">
+                                            Tableau de bord admin
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/Edit">
+                                            Modifier mon profil
+                                        </a>
+                                    </li>
+                                }
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                <li>
+                                    <form method="post" asp-page="/Account/Logout">
+                                        <button type="submit" class="dropdown-item">
+                                            Déconnexion
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     }
                     else
                     {
                         <li class="nav-item ms-auto">
-                            <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Account/Login">Se connecter</a>
-                        </li> 
+                            <a class="nav-link text-dark fs-5 text-decoration-underline" asp-page="/Account/Login">
+                                Se connecter
+                            </a>
+                        </li>
                     }
                 </ul>
             </div>
