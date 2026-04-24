@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,12 +8,41 @@ namespace BioDomes.Web.Pages.Biodomes;
 
 public class Create : PageModel
 {
+    private readonly IBiodomeService _service;
+
+    public Create(IBiodomeService service)
+    {
+        _service = service;
+    }
+
     [BindProperty]
     public InputModel Biome { get; set; }
 
     public void OnGet()
     {
         
+    }
+
+    public IActionResult OnPost()
+    {
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+
+        Biodome created = new Biodome(
+            -1,
+            Biome.Name,
+            Biome.temperature,
+            Biome.humidite,
+            ""
+            );
+
+        _service.SavePicture(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
+
+        _service.Save(created);
+
+        return RedirectToPage("Biodomes");
     }
 
     public class InputModel
