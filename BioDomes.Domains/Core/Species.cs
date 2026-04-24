@@ -73,6 +73,7 @@ public class Species
 
     public string Avatar{
         get { return _avatar; }
+        set { _avatar = value; }
     }
 
     public bool IsVisible

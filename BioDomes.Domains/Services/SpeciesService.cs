@@ -72,9 +72,30 @@ public class SpeciesService : ISpeciesService
             _repository.Save(created);
         } catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("==============\nEXCPETION : " +e + "==============");
             return false;
         }
         return true;
+    }
+
+    public void SavePicture(Species created, string fileName, Stream fileStream)
+    {
+        var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
+
+        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "species");
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, newFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            fileStream.CopyTo(stream);
+        }
+
+        created.Avatar = "/images/species/" + newFileName;
     }
 }

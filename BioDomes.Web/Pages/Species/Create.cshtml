@@ -52,13 +52,13 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Species.Taille" class="form-label">Taille*</label>
+                    <label asp-for="Species.Taille" class="form-label">Taille* (cm)</label>
                     <input asp-for="Species.Taille" class="form-control" type="number" step="0.01"/>
                     <span asp-validation-for="Species.Taille" class="text-danger"></span>
                 </div>
                 
                 <div class="mb-3">
-                    <label asp-for="Species.Poids" class="form-label">Poids*</label>
+                    <label asp-for="Species.Poids" class="form-label">Poids* (g)</label>
                     <input asp-for="Species.Poids" class="form-control" type="number" step="1"/>
                     <span asp-validation-for="Species.Poids" class="text-danger"></span>
                 </div>
@@ -76,4 +76,5 @@
 
         </div>
     </div>
+    <p>* indique un champ obligatoire</p>
 </div>

@@ -10,4 +10,6 @@ public interface ISpeciesService
     
     public bool SpeciesExists(Species species);
     bool Save(Species created);
+
+    void SavePicture(Species created, string fileName, Stream fileStream);
 }

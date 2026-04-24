@@ -48,7 +48,6 @@ public class Create : PageModel
             return Page();
         }
 
-        // TODO deplacer dans un service
         if (!Enum.TryParse<DietType>(Species.Regime, out var diet))
         {
             ModelState.AddModelError("Species.Regime", "Régime invalide");
@@ -63,7 +62,7 @@ public class Create : PageModel
             return Page();
         }
 
-        string avatarPath = "/images/species/" + Species.Avatar.FileName;
+        // "/images/species/lion.jpg"
 
         var created = new Domains.Core.Species(
             Species.Name,
@@ -71,7 +70,7 @@ public class Create : PageModel
             Species.Poids.Value,
             diet,
             type,
-            avatarPath,
+            "",
             false,
             User.Identity.Name
         );
@@ -83,13 +82,15 @@ public class Create : PageModel
             return Page();
         }
 
+        _speciesService.SavePicture(created, Species.Avatar.FileName, Species.Avatar.OpenReadStream());
+
         if (!_speciesService.Save(created))
         {
             ModelState.AddModelError("", $"Erreur lors de la création de l'espèce");
             LoadSelect();
             return Page();
         }
-        
+
         TempData["SuccessMessage"] = $"L'espèce {Species.Name} a été ajoutée avec succès !";
         return RedirectToPage("Species");
     }
@@ -117,13 +118,13 @@ public class Create : PageModel
 
         [Required(ErrorMessage = "Le type est obligatoire")]
         [IsSpeciesClassification]
-        [RegularExpression(@"^[a-zA-Z\s\-]+$",
-            ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
+        // [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            // ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
         public string Type { get; set; }
 
         [Required(ErrorMessage = "Le régime est obligatoire")]
-        [RegularExpression(@"^[a-zA-Z\s\-]+$",
-            ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
+        // [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            // ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
         public string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]
