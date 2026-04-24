@@ -35,7 +35,8 @@ public class Create : PageModel
             Biome.Name,
             Biome.temperature,
             Biome.humidite,
-            ""
+            "",
+            new List<Domains.Core.Species>()
             );
 
         _service.SavePicture(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());

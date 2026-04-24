@@ -15,27 +15,45 @@ public class BiodomeRepository : IBiodomeRepository
         _context = context;
     }
     
-   /*
-    * public IReadOnlyList<Biodome> GetBestThreeBiodome()
-    {
-        return _context.Biodomes
-            .Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar))
-            .OrderByDescending(b => b.Etat)
-            .Take(3)
-            .ToList<Biodome>();
+    /*
+     * public IReadOnlyList<Biodome> GetBestThreeBiodome()
+     {
+         return _context.Biodomes
+             .Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar))
+             .OrderByDescending(b => b.Etat)
+             .Take(3)
+             .ToList<Biodome>();
 
-    }
-    */
+     }
+     */
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {
-        return _context.Biodomes.Select(b => new Biodome(Convert.ToInt32(b.idBiodomes), b.Name, b.Temperature, b.Humidity, b.Avatar)).ToList<Biodome>();
+        return _context.Biodomes
+            .Select(b => new Biodome(
+                b.idBiodomes,
+                b.Name,
+                b.Temperature,
+                b.Humidity,
+                b.Avatar,
+                b.Species.Select(s => new Species(
+                    s.Name,
+                    s.Size,
+                    s.Weight,
+                    Enum.Parse<DietType>(s.Regim.Name),
+                    Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
+                    s.Avatar,
+                    s.Visible,
+                    s.User != null ? s.User.UserName : "unknown"
+                )).ToList()
+            ))
+            .ToList();
     }
-
     public void Create(Biodome biodome)
     {
         var entity = new BiodomeEntity
         {
+            idBiodomes = biodome.Id,
             Name = biodome.Nom,
             Temperature = biodome.Temperature,
             Humidity = biodome.Humidite,
