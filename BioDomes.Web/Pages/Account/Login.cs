@@ -13,7 +13,9 @@ public class LoginModel(SignInManager<Infrastructures.entities.User> signInManag
     public string? ErrorMessage { get; set; }
 
     [BindProperty]
-    [Required] // todo faire validateur customisé
+    [Required]
+    [DataType(DataType.Text)]
+    [MinLength(5)]
     public string? EmailOrUsername { get; set; }
 
     [BindProperty]
@@ -55,7 +57,7 @@ public class LoginModel(SignInManager<Infrastructures.entities.User> signInManag
             return Page();
         }
 
-            var result = await signInManager.PasswordSignInAsync(
+        var result = await signInManager.PasswordSignInAsync(
                 user.UserName,
                 Password,
                 RememberMe,

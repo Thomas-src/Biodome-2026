@@ -8,59 +8,100 @@
 <section class="rounded-4 m-auto p-3" style="background-color: aliceblue; width: 40%">
     <h1 class="title text-center">Inscription</h1>
 
-   <form method="post" enctype="multipart/form-data" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
+    <form method="post" enctype="multipart/form-data" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
 
-    <div asp-validation-summary="All" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.Nom" class="form-label"></label>
-        <input asp-for="Input.Nom" class="form-control"/>
-        <span asp-validation-for="Input.Nom" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.Nom" class="form-label"></label>
+            <input asp-for="Input.Nom" class="form-control"/>
+            <span asp-validation-for="Input.Nom" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.Email" class="form-label"></label>
-        <input asp-for="Input.Email" class="form-control"/>
-        <span asp-validation-for="Input.Email" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.Email" class="form-label"></label>
+            <input asp-for="Input.Email" class="form-control"/>
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.Password" class="form-label"></label>
-        <input asp-for="Input.Password" class="form-control"/>
-        <span asp-validation-for="Input.Password" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.Password" class="form-label"></label>
+            <input asp-for="Input.Password" class="form-control"/>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.ConfirmPassword" class="form-label"></label>
-        <input asp-for="Input.ConfirmPassword" class="form-control"/>
-        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+            <input asp-for="Input.ConfirmPassword" class="form-control"/>
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.DateNaissance" class="form-label"></label>
-        <input asp-for="Input.DateNaissance" class="form-control"/>
-        <span asp-validation-for="Input.DateNaissance" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.DateNaissance" class="form-label"></label>
+            <input asp-for="Input.DateNaissance" class="form-control"/>
+            <span asp-validation-for="Input.DateNaissance" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.Avatar" class="form-label"></label>
-        <input asp-for="Input.Avatar" class="form-control"/>
-        <span asp-validation-for="Input.Avatar" class="text-danger"></span>
-    </div>
+        <div class="d-flex flex-column gap-2">
+            <label class="form-label">Avatar</label>
+            <div class="d-flex flex-wrap gap-3 justify-content-between">
+                @for (int i = 1; i <= 4; i++)
+                {
+                    var img = $"{i}.png";
+                    <label class="d-flex flex-column align-items-center gap-1" style="cursor:pointer">
+                        <input type="radio" name="Input.SelectedAvatar" value=@img
+                               class="d-none avatar-radio" />
+                        <img src="/images/avatars/@img" alt="Avatar @i"
+                             class="rounded-circle avatar-option border border-2"
+                             style="width:64px; height:64px; object-fit:cover; border-color: transparent !important;" />
+                    </label>
+                }
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="text-muted small">ou</span>
+                <input asp-for="Input.Avatar" class="form-control form-control-sm" id="avatarUpload" />
+            </div>
+            <span asp-validation-for="Input.Avatar" class="text-danger"></span>
+        </div>
+        <div class="d-flex flex-column">
+            <label asp-for="Input.ResearchOrganism" class="form-label"></label>
+            <select asp-for="Input.ResearchOrganism" class="form-control">
+                <option value="">-- Choisir un organisme --</option>
+                @foreach (var organisme in Model.Organismes)
+                {
+                    <option value="@organisme.Id">@organisme.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Input.ResearchOrganism" class="text-danger"></span>
+        </div>
 
-    <div class="d-flex flex-column">
-        <label asp-for="Input.ResearchOrganism" class="form-label"></label>
-        <select asp-for="Input.ResearchOrganism" class="form-control">
-            <option value="">-- Choisir un organisme --</option>
-            @foreach (var organisme in Model.Organismes)
-            {
-                <option value="@organisme.Id">@organisme.Name</option>
-            }
-        </select>
-        <span asp-validation-for="Input.ResearchOrganism" class="text-danger"></span>
-    </div>
+        <button type="submit" class="btn btn-primary mt-2">S'inscrire</button>
 
-    <button type="submit" class="btn btn-primary mt-2">S'inscrire</button>
-
-</form>
+    </form>
 </section>
+
+<script>
+    const radios = document.querySelectorAll('.avatar-radio');
+    const upload = document.getElementById('avatarUpload');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            // Désélectionne visuellement tous les avatars
+            document.querySelectorAll('.avatar-option').forEach(img =>
+                img.classList.remove('selected'));
+
+            // Sélectionne visuellement l'avatar choisi
+            radio.nextElementSibling.classList.add('selected');
+
+            // Vide l'upload si un avatar prédéfini est choisi
+            upload.value = '';
+        });
+    });
+
+    // Si l'utilisateur uploade un fichier, désélectionne les avatars prédéfinis
+    upload.addEventListener('change', () => {
+        radios.forEach(r => r.checked = false);
+        document.querySelectorAll('.avatar-option').forEach(img =>
+            img.classList.remove('selected'));
+    });
+</script>

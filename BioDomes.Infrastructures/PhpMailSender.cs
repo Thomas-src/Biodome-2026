@@ -33,7 +33,7 @@ public class PhpMailSender : IMyEmailSender
         _logger.LogInformation("📧 Envoi email vers {Email} | Subject: {Subject}", email, subject);
 
         var response = await _http.PostAsJsonAsync(
-            "https://panoramix.cg.helmo.be/~q240206/EVAL_V4/send-mail.php",
+            "https://panoramix.cg.helmo.be/~q240206/EVAL_V4/api.php",
             payload
         );
 

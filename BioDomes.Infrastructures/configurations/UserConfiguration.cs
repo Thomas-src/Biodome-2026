@@ -31,6 +31,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
             NormalizedUserName = "Admin".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
             ResearchOrganismId = "1",
+            Avatar = "3.png"
         };
         admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
         
@@ -43,6 +44,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
             NormalizedUserName = "Chercheur".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
             ResearchOrganismId = "1",
+            Avatar = "1.png"
         };
         admin.PasswordHash = ph.HashPassword(research, "Test1234$"); // todo mettre mdp, email et nom dans la config
 
