@@ -6,19 +6,19 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BioDomes.Infrastructures.context;
 
-public class BioDomesDbContext : IdentityDbContext<User>
+public class BioDomesDbContext : IdentityDbContext<UserEntity>
 {
     public BioDomesDbContext(DbContextOptions<BioDomesDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Biodomes> Biodomes { get; set; }
-    public DbSet<Species> Species { get; set; }
-    public DbSet<Equipment> Equipment { get; set; }
-    public DbSet<ResearchOrganism> ResearchOrganisms { get; set; }
-    public DbSet<SpeciesType> SpeciesTypes { get; set; }
-    public DbSet<SpeciesRegime> SpeciesRegim { get; set; }
+    public DbSet<BiodomeEntity> Biodomes { get; set; }
+    public DbSet<SpeciesEntity> Species { get; set; }
+    public DbSet<EquipmentEntity> Equipment { get; set; }
+    public DbSet<ResearchOrganismEntity> ResearchOrganisms { get; set; }
+    public DbSet<SpeciesTypeEntity> SpeciesTypes { get; set; }
+    public DbSet<SpeciesRegimeEntity> SpeciesRegim { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,40 +30,40 @@ public class BioDomesDbContext : IdentityDbContext<User>
 
         SeedUsersData(modelBuilder);
         // Les clés primaire
-        modelBuilder.Entity<Biodomes>()
+        modelBuilder.Entity<BiodomeEntity>()
             .HasKey(b => b.idBiodomes);
 
-        modelBuilder.Entity<Species>()
+        modelBuilder.Entity<SpeciesEntity>()
             .HasKey(s => s.IdSpecies);
 
-        modelBuilder.Entity<Equipment>()
+        modelBuilder.Entity<EquipmentEntity>()
             .HasKey(e => e.IdEquipment);
 
-        modelBuilder.Entity<ResearchOrganism>()
+        modelBuilder.Entity<ResearchOrganismEntity>()
             .HasKey(r => r.ResearchOrganismId);
 
-        modelBuilder.Entity<SpeciesRegime>()
+        modelBuilder.Entity<SpeciesRegimeEntity>()
             .HasKey(r => r.IdRegime);
 
-        modelBuilder.Entity<SpeciesType>()
+        modelBuilder.Entity<SpeciesTypeEntity>()
             .HasKey(r => r.IdType);
 
         // User -> Biodomes
-        modelBuilder.Entity<Biodomes>()
+        modelBuilder.Entity<BiodomeEntity>()
             .HasOne(b => b.user)
             .WithMany(u => u.Biodomes)
             .HasForeignKey(b => b.userId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // User -> Equipement
-        modelBuilder.Entity<Equipment>()
+        modelBuilder.Entity<EquipmentEntity>()
             .HasOne(e => e.User)
             .WithMany(u => u.Equipments)
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.SetNull);
 
         // User -> Species
-        modelBuilder.Entity<Species>()
+        modelBuilder.Entity<SpeciesEntity>()
             .HasOne(s => s.User)
             .WithMany(u => u.Species)
             .HasForeignKey(s => s.UserId)
@@ -73,7 +73,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
         /*
          * 
          */
-     modelBuilder.Entity<User>()
+     modelBuilder.Entity<UserEntity>()
             .HasOne(u => u.ResearchOrganism)
             .WithMany(r => r.Users)
             //.HasForeignKey(u => u.ResearchOrganismId)
@@ -81,47 +81,47 @@ public class BioDomesDbContext : IdentityDbContext<User>
        
 
         // Biodomes <-> Species
-        modelBuilder.Entity<Biodomes>()
+        modelBuilder.Entity<BiodomeEntity>()
             .HasMany(b => b.Species)
             .WithMany(s => s.Biodomes)
             .UsingEntity<Dictionary<string, object>>(
                 "BiodomeSpecies",
                 j => j
-                    .HasOne<Species>()
+                    .HasOne<SpeciesEntity>()
                     .WithMany()
                     .HasForeignKey("SpeciesId")
                     .OnDelete(DeleteBehavior.Cascade),
                 j => j
-                    .HasOne<Biodomes>()
+                    .HasOne<BiodomeEntity>()
                     .WithMany()
                     .HasForeignKey("BiodomeId")
                     .OnDelete(DeleteBehavior.Cascade)
             );
 
         // Biodomes <-> Equipment
-        modelBuilder.Entity<Biodomes>()
+        modelBuilder.Entity<BiodomeEntity>()
             .HasMany(b => b.Equipment)
             .WithMany(e => e.Biodomes)
             .UsingEntity<Dictionary<string, object>>(
                 "BiodomeEquipment",
                 j => j
-                    .HasOne<Equipment>()
+                    .HasOne<EquipmentEntity>()
                     .WithMany()
                     .HasForeignKey("EquipmentId"),
                 j => j
-                    .HasOne<Biodomes>()
+                    .HasOne<BiodomeEntity>()
                     .WithMany()
                     .HasForeignKey("BiodomeId")
             );
 
-        modelBuilder.Entity<Species>()
+        modelBuilder.Entity<SpeciesEntity>()
             .HasOne(r => r.Regim)
             .WithMany(s => s.Species)
             .HasForeignKey(r => r.RegimId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Species>()
-            .HasOne(r => r.Type)
+        modelBuilder.Entity<SpeciesEntity>()
+            .HasOne(r => r.TypeEntity)
             .WithMany(s => s.Species)
             .HasForeignKey(r => r.TypeId)
             .OnDelete(DeleteBehavior.Restrict);
@@ -132,43 +132,43 @@ public class BioDomesDbContext : IdentityDbContext<User>
     public static void SeedData(ModelBuilder modelBuilder)
     {
         // Ajout des régimes
-        modelBuilder.Entity<SpeciesRegime>().HasData(
-            new SpeciesRegime { IdRegime = "1", Name = "Photosynthèse" },
-            new SpeciesRegime { IdRegime = "2", Name = "Carnivore" },
-            new SpeciesRegime { IdRegime = "3", Name = "Omnivore" },
-            new SpeciesRegime { IdRegime = "4", Name = "Coprophage" },
-            new SpeciesRegime { IdRegime = "5", Name = "Herbivore" },
-            new SpeciesRegime { IdRegime = "6", Name = "Détritivores" },
-            new SpeciesRegime { IdRegime = "7", Name = "Hétérotrophie" },
-            new SpeciesRegime { IdRegime = "8", Name = "Coprophages" }
+        modelBuilder.Entity<SpeciesRegimeEntity>().HasData(
+            new SpeciesRegimeEntity { IdRegime = "1", Name = "Photosynthèse" },
+            new SpeciesRegimeEntity { IdRegime = "2", Name = "Carnivore" },
+            new SpeciesRegimeEntity { IdRegime = "3", Name = "Omnivore" },
+            new SpeciesRegimeEntity { IdRegime = "4", Name = "Coprophage" },
+            new SpeciesRegimeEntity { IdRegime = "5", Name = "Herbivore" },
+            new SpeciesRegimeEntity { IdRegime = "6", Name = "Détritivores" },
+            new SpeciesRegimeEntity { IdRegime = "7", Name = "Hétérotrophie" },
+            new SpeciesRegimeEntity { IdRegime = "8", Name = "Coprophages" }
         );
 
         // Ajout des types d'especes
-        modelBuilder.Entity<SpeciesType>().HasData(
-            new SpeciesType { IdType = "1", Name = "Mammiferes" },
-            new SpeciesType { IdType = "2", Name = "Oiseaux" },
-            new SpeciesType { IdType = "3", Name = "Poissons" },
-            new SpeciesType { IdType = "4", Name = "Reptiles" },
-            new SpeciesType { IdType = "5", Name = "Amphibiens" },
-            new SpeciesType { IdType = "6", Name = "Crustaces" },
-            new SpeciesType { IdType = "7", Name = "Arachnides" },
-            new SpeciesType { IdType = "8", Name = "Insectes" },
-            new SpeciesType { IdType = "9", Name = "Myriapodes" },
-            new SpeciesType { IdType = "10", Name = "Mollusques" },
-            new SpeciesType { IdType = "11", Name = "Echinodermes" },
-            new SpeciesType { IdType = "12", Name = "Anelides" },
-            new SpeciesType { IdType = "13", Name = "Cnidaires" },
-            new SpeciesType { IdType = "14", Name = "Plathelminthes" },
-            new SpeciesType { IdType = "15", Name = "Poriferes" },
-            new SpeciesType { IdType = "16", Name = "Plantes" },
-            new SpeciesType { IdType = "17", Name = "Mousses" },
-            new SpeciesType { IdType = "18", Name = "Algues" },
-            new SpeciesType { IdType = "19", Name = "Lichen" },
-            new SpeciesType { IdType = "20", Name = "Champignons" }
+        modelBuilder.Entity<SpeciesTypeEntity>().HasData(
+            new SpeciesTypeEntity { IdType = "1", Name = "Mammiferes" },
+            new SpeciesTypeEntity { IdType = "2", Name = "Oiseaux" },
+            new SpeciesTypeEntity { IdType = "3", Name = "Poissons" },
+            new SpeciesTypeEntity { IdType = "4", Name = "Reptiles" },
+            new SpeciesTypeEntity { IdType = "5", Name = "Amphibiens" },
+            new SpeciesTypeEntity { IdType = "6", Name = "Crustaces" },
+            new SpeciesTypeEntity { IdType = "7", Name = "Arachnides" },
+            new SpeciesTypeEntity { IdType = "8", Name = "Insectes" },
+            new SpeciesTypeEntity { IdType = "9", Name = "Myriapodes" },
+            new SpeciesTypeEntity { IdType = "10", Name = "Mollusques" },
+            new SpeciesTypeEntity { IdType = "11", Name = "Echinodermes" },
+            new SpeciesTypeEntity { IdType = "12", Name = "Anelides" },
+            new SpeciesTypeEntity { IdType = "13", Name = "Cnidaires" },
+            new SpeciesTypeEntity { IdType = "14", Name = "Plathelminthes" },
+            new SpeciesTypeEntity { IdType = "15", Name = "Poriferes" },
+            new SpeciesTypeEntity { IdType = "16", Name = "Plantes" },
+            new SpeciesTypeEntity { IdType = "17", Name = "Mousses" },
+            new SpeciesTypeEntity { IdType = "18", Name = "Algues" },
+            new SpeciesTypeEntity { IdType = "19", Name = "Lichen" },
+            new SpeciesTypeEntity { IdType = "20", Name = "Champignons" }
         );
 
-        modelBuilder.Entity<Species>().HasData(
-            new Species
+        modelBuilder.Entity<SpeciesEntity>().HasData(
+            new SpeciesEntity
             {
                 IdSpecies = 1,
                 Name = "Lion",
@@ -180,7 +180,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 150000,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 2,
                 Name = "Boa",
@@ -192,7 +192,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 13000,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 3,
                 Name = "Hetre",
@@ -204,7 +204,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 830000,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 4,
                 Name = "Chene",
@@ -216,7 +216,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 2100000,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 5,
                 Name = "Mouche",
@@ -228,7 +228,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 1,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 6,
                 Name = "Araignée",
@@ -240,7 +240,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 95,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 7,
                 Name = "Hirondelle",
@@ -252,7 +252,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 45,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 8,
                 Name = "Lievre",
@@ -264,7 +264,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 4000,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 9,
                 Name = "Pâturin des prés",
@@ -276,7 +276,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Weight = 1,
                 UserId = null
             },
-            new Species
+            new SpeciesEntity
             {
                 IdSpecies = 10,
                 Name = "Souris",
@@ -290,8 +290,8 @@ public class BioDomesDbContext : IdentityDbContext<User>
             }
         );
 
-        modelBuilder.Entity<Biodomes>().HasData(
-            new Biodomes
+        modelBuilder.Entity<BiodomeEntity>().HasData(
+            new BiodomeEntity
             {
                 idBiodomes = "1",
                 Name = "Forêt Tempérée",
@@ -300,7 +300,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Avatar = "foret-temperee.png",
                 userId = null
             },
-            new Biodomes
+            new BiodomeEntity
             {
                 idBiodomes = "2",
                 Name = "Forêt Tropicale",
@@ -309,7 +309,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Avatar = "foret-tropicale.png",
                 userId = null
             },
-            new Biodomes
+            new BiodomeEntity
             {
                 idBiodomes = "3",
                 Name = "Savane",
@@ -318,7 +318,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Avatar = "savane.png",
                 userId = null
             },
-            new Biodomes
+            new BiodomeEntity
             {
                 idBiodomes = "4",
                 Name = "Prairie Tempérée",
@@ -327,7 +327,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Avatar = "prarie.png",
                 userId = null
             },
-            new Biodomes
+            new BiodomeEntity
             {
                 idBiodomes = "5",
                 Name = "Laboratoire Contrôlé",

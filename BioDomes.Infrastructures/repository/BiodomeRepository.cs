@@ -34,7 +34,7 @@ public class BiodomeRepository : IBiodomeRepository
 
     public void Create(Biodome biodome)
     {
-        var entity = new Biodomes
+        var entity = new BiodomeEntity
         {
             idBiodomes = biodome.Id,
             Name = biodome.Nom,

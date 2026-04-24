@@ -11,15 +11,15 @@ namespace BioDomes.Web.Pages.Account;
 [Authorize]
 public class EditModel : PageModel
 {
-    private readonly UserManager<Infrastructures.entities.User> _userManager;
-    private readonly IUserStore<Infrastructures.entities.User> _userStore;
+    private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;
+    private readonly IUserStore<Infrastructures.entities.UserEntity> _userStore;
     private readonly ILogger<EditModel> _logger;
     private readonly IResearchService _researchOrganismService;
-    private readonly IUserEmailStore<Infrastructures.entities.User> _emailStore;
+    private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
 
     public EditModel(
-        UserManager<Infrastructures.entities.User> userManager,
-        IUserStore<Infrastructures.entities.User> userStore,
+        UserManager<Infrastructures.entities.UserEntity> userManager,
+        IUserStore<Infrastructures.entities.UserEntity> userStore,
         ILogger<EditModel> logger,
         IResearchService researchOrganismService)
     {
@@ -196,7 +196,7 @@ public class EditModel : PageModel
         public string? ResearchOrganism { get; set; }
     }
 
-    private IUserEmailStore<Infrastructures.entities.User> GetEmailStore()
+    private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()
     {
         if (!_userManager.SupportsUserEmail)
         {
@@ -204,7 +204,7 @@ public class EditModel : PageModel
         }
            
 
-        return (IUserEmailStore<Infrastructures.entities.User>)_userStore;
+        return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
     }
 
     private void LoadOrganismes()

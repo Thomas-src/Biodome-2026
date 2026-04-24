@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Account;
 
-public class LogoutModel(SignInManager<User> signInManager) : PageModel
+public class LogoutModel(SignInManager<UserEntity> signInManager) : PageModel
 {
     public IActionResult OnGet() => RedirectToPage("/Index");
 

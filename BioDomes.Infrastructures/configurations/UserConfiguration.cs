@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BioDomes.Infrastructures.configurations;
 
-public class UserConfiguration  : IEntityTypeConfiguration<User>
+public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Property<string>(user => user.Email).IsRequired().HasMaxLength(128);
         builder.Property<string>(user => user.UserName).IsRequired().HasMaxLength(128);
@@ -18,11 +18,11 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
     public static readonly string AdminId =  Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"A";
     public static readonly string ResearchId =  Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"B";
 
-    private void SeedUsers(EntityTypeBuilder<User> builder)
+    private void SeedUsers(EntityTypeBuilder<UserEntity> builder)
     {
-        PasswordHasher<User> ph = new PasswordHasher<User>();
+        PasswordHasher<UserEntity> ph = new PasswordHasher<UserEntity>();
         
-        var admin = new User()
+        var admin = new UserEntity()
         {
             Id = AdminId,
             Email = "admin@company.com",
@@ -35,7 +35,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<User>
         };
         admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
         
-        var research = new User()
+        var research = new UserEntity()
         {
             Id = ResearchId,
             Email = "research@company.com",

@@ -13,20 +13,20 @@ namespace BioDomes.Web.Pages.Account;
 
 public class RegisterModel : PageModel
 {
-    private readonly UserManager<Infrastructures.entities.User> _userManager;
-    private readonly IUserStore<Infrastructures.entities.User> _userStore;
+    private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;
+    private readonly IUserStore<Infrastructures.entities.UserEntity> _userStore;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IResearchService _researchOrganismService;
-    private readonly SignInManager<Infrastructures.entities.User> _signInManager;
-    private readonly IUserEmailStore<Infrastructures.entities.User> _emailStore;
+    private readonly SignInManager<Infrastructures.entities.UserEntity> _signInManager;
+    private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
     private readonly IMyEmailSender _emailSender;
 
     public RegisterModel(
-        UserManager<Infrastructures.entities.User> userManager,
-        IUserStore<Infrastructures.entities.User> userStore,
+        UserManager<Infrastructures.entities.UserEntity> userManager,
+        IUserStore<Infrastructures.entities.UserEntity> userStore,
         ILogger<RegisterModel> logger,
         IResearchService researchOrganismService,
-        SignInManager<Infrastructures.entities.User> signInManager,
+        SignInManager<Infrastructures.entities.UserEntity> signInManager,
         IMyEmailSender emailSender)
     {
         _userManager = userManager;
@@ -204,13 +204,13 @@ public class RegisterModel : PageModel
         public string? ResearchOrganism { get; set; }
     }
 
-    private IUserEmailStore<Infrastructures.entities.User> GetEmailStore()
+    private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()
     {
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
-        return (IUserEmailStore<Infrastructures.entities.User>)_userStore;
+        return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
     }
 
     private void LoadOrganismes()
@@ -218,11 +218,11 @@ public class RegisterModel : PageModel
         Organismes = _researchOrganismService.GetAllOrganisms();
     }
 
-    private Infrastructures.entities.User CreateUser()
+    private Infrastructures.entities.UserEntity CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<Infrastructures.entities.User>();
+            return Activator.CreateInstance<Infrastructures.entities.UserEntity>();
         }
         catch
         {

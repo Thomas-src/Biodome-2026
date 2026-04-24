@@ -1,6 +1,6 @@
 ﻿namespace BioDomes.Infrastructures.entities;
 
-public class Equipment
+public class EquipmentEntity
 {
     public string IdEquipment { get; set; }
     public string Name { get; set; }
@@ -10,8 +10,8 @@ public class Equipment
 
     // Lien avec User
     public string? UserId { get; set; }
-    public User? User { get; set; }
+    public UserEntity? User { get; set; }
 
     // Lien avec Biodomes
-    public IList<Biodomes> Biodomes { get; set; } = new List<Biodomes>();
+    public IList<BiodomeEntity> Biodomes { get; set; } = new List<BiodomeEntity>();
 }

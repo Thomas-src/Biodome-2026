@@ -21,7 +21,7 @@ public class SpeciesRepository : ISpeciesRepository
             s.Size,
             s.Weight,
             Enum.Parse<DietType>(s.Regim.Name),
-            Enum.Parse<SpeciesClassification>(s.Type.Name),
+            Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
             s.Avatar,
             s.Visible,
             s.User.UserName)
@@ -40,7 +40,7 @@ public class SpeciesRepository : ISpeciesRepository
 
         // 2. Enregistrer l'espece
 
-        var entity = new entities.Species()
+        var entity = new entities.SpeciesEntity()
         {
             Avatar = created.Avatar,
             Name = created.Nom,

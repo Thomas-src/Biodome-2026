@@ -1,10 +1,10 @@
 namespace BioDomes.Infrastructures.entities;
 
-public class SpeciesType
+public class SpeciesTypeEntity
 {
     public string IdType { get; set; }
     public string Name { get; set; }
 
     // Lien avec User
-    public IList<Species> Species { get; set; } = new List<Species>();
+    public IList<SpeciesEntity> Species { get; set; } = new List<SpeciesEntity>();
 }

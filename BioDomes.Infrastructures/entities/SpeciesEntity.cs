@@ -1,16 +1,16 @@
 ﻿namespace BioDomes.Infrastructures.entities;
 
-public class Species
+public class SpeciesEntity
 {
     public int IdSpecies { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
    
     public string TypeId { get; set; } = string.Empty;
-    public SpeciesType Type { get; set; }
+    public SpeciesTypeEntity TypeEntity { get; set; }
 
     public string RegimId { get; set; } = string.Empty;
-    public SpeciesRegime Regim { get; set; }
+    public SpeciesRegimeEntity Regim { get; set; }
    
     public int Size { get; set; }
     public double Weight { get; set; } 
@@ -18,8 +18,8 @@ public class Species
 
     // Lien avec User
     public string? UserId { get; set; }
-    public User? User { get; set; }
+    public UserEntity? User { get; set; }
 
     // Lien avec Biodomes
-    public IList<Biodomes>  Biodomes { get; set; } = new List<Biodomes>();
+    public IList<BiodomeEntity>  Biodomes { get; set; } = new List<BiodomeEntity>();
 }
