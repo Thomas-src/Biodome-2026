@@ -16,7 +16,7 @@
     </div>
 }
 
-@if (User.IsInRole(Roles.Research.ToRoleName()) || User.IsInRole(Roles.Admin.ToRoleName()))
+@if (User.Identity.IsAuthenticated)
 {
     
     <h2>Vos espèces :</h2>
@@ -39,13 +39,13 @@
 
                             <partial name="_SpeciesCard" model="espece"/>
 
-                            <div class="card-body pt-0">
-                                <a class="btn btn-sm btn-outline-primary mb-2"
-                                   asp-page="/Species/Edit"
-                                   asp-route-slug="@espece.Nom">
-                                    Edit
-                                </a>
-                            </div>
+                            @* <div class="card-body pt-0"> *@
+                            @*     <a class="btn btn-sm btn-outline-primary mb-2" *@
+                            @*        asp-page="/Species/Edit" *@
+                            @*        asp-route-slug="@espece.Nom"> *@
+                            @*         Edit *@
+                            @*     </a> *@
+                            @* </div> *@
 
                         </div>
                     </div>

@@ -1,8 +1,7 @@
 @model BioDomes.Domains.Core.Species
-
 <div class="mb-3">
     <div class="row g-0 align-items-center">
-        
+
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">@Model.Nom</h5>
@@ -27,9 +26,10 @@
             </div>
         </div>
 
-        <div class="col-md-4 text-center">
-            <img src="@Model.Avatar" 
-                 class="img-fluid rounded p-2" />
+        <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+            <img src="@Model.Avatar"
+                 class="rounded"
+                 style="width: 150px; height: 150px; object-fit: cover; display: block;" />
         </div>
 
     </div>

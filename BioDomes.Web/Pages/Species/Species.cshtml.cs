@@ -46,7 +46,7 @@ public class SpeciesModel : PageModel
         }
         else
         {
-            OtherSpecies = speciesList;
+            OtherSpecies = speciesList.Where(s => s.IsVisible).ToList();
         }
 
     }
