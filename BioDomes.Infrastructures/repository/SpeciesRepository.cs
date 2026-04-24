@@ -42,7 +42,6 @@ public class SpeciesRepository : ISpeciesRepository
 
         var entity = new entities.Species()
         {
-            IdSpecies = incrementedId(),
             Avatar = created.Avatar,
             Name = created.Nom,
             Size = (int)created.Taille,
@@ -55,18 +54,5 @@ public class SpeciesRepository : ISpeciesRepository
 
         _context.Species.Add(entity);
         _context.SaveChanges();
-    }
-
-    // Todo plus tard changer par une int pour avoir auto-increment
-    private string incrementedId()
-    {
-        var maxId = _context.Species
-            .AsNoTracking()
-            .AsEnumerable() // 👈 important : bascule en mémoire
-            .Select(s => int.TryParse(s.IdSpecies, out var id) ? id : 0)
-            .DefaultIfEmpty(0)
-            .Max();
-
-        return (maxId + 1).ToString();
     }
 }
