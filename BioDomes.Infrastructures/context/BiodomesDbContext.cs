@@ -13,6 +13,19 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     {
     }
 
+    private static SpeciesEntity souris = new SpeciesEntity
+    {
+        IdSpecies = 10,
+        Name = "Souris",
+        RegimId = 3, // Omnivore
+        TypeId = 1, // Mammifere
+        Visible = true,
+        Avatar = "souris.webp",
+        Size = 9,
+        Weight = 25,
+        UserId = null
+    };
+
     public DbSet<BiodomeEntity> Biodomes { get; set; }
     public DbSet<SpeciesEntity> Species { get; set; }
     public DbSet<EquipmentEntity> Equipment { get; set; }
@@ -133,38 +146,38 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     {
         // Ajout des régimes
         modelBuilder.Entity<SpeciesRegimeEntity>().HasData(
-            new SpeciesRegimeEntity { IdRegime = "1", Name = "Photosynthèse" },
-            new SpeciesRegimeEntity { IdRegime = "2", Name = "Carnivore" },
-            new SpeciesRegimeEntity { IdRegime = "3", Name = "Omnivore" },
-            new SpeciesRegimeEntity { IdRegime = "4", Name = "Coprophage" },
-            new SpeciesRegimeEntity { IdRegime = "5", Name = "Herbivore" },
-            new SpeciesRegimeEntity { IdRegime = "6", Name = "Détritivores" },
-            new SpeciesRegimeEntity { IdRegime = "7", Name = "Hétérotrophie" },
-            new SpeciesRegimeEntity { IdRegime = "8", Name = "Coprophages" }
+            new SpeciesRegimeEntity { IdRegime = 1, Name = "Photosynthèse" },
+            new SpeciesRegimeEntity { IdRegime = 2, Name = "Carnivore" },
+            new SpeciesRegimeEntity { IdRegime = 3, Name = "Omnivore" },
+            new SpeciesRegimeEntity { IdRegime = 4, Name = "Coprophage" },
+            new SpeciesRegimeEntity { IdRegime = 5, Name = "Herbivore" },
+            new SpeciesRegimeEntity { IdRegime = 6, Name = "Détritivores" },
+            new SpeciesRegimeEntity { IdRegime = 7, Name = "Hétérotrophie" },
+            new SpeciesRegimeEntity { IdRegime = 8, Name = "Coprophages" }
         );
 
         // Ajout des types d'especes
         modelBuilder.Entity<SpeciesTypeEntity>().HasData(
-            new SpeciesTypeEntity { IdType = "1", Name = "Mammiferes" },
-            new SpeciesTypeEntity { IdType = "2", Name = "Oiseaux" },
-            new SpeciesTypeEntity { IdType = "3", Name = "Poissons" },
-            new SpeciesTypeEntity { IdType = "4", Name = "Reptiles" },
-            new SpeciesTypeEntity { IdType = "5", Name = "Amphibiens" },
-            new SpeciesTypeEntity { IdType = "6", Name = "Crustaces" },
-            new SpeciesTypeEntity { IdType = "7", Name = "Arachnides" },
-            new SpeciesTypeEntity { IdType = "8", Name = "Insectes" },
-            new SpeciesTypeEntity { IdType = "9", Name = "Myriapodes" },
-            new SpeciesTypeEntity { IdType = "10", Name = "Mollusques" },
-            new SpeciesTypeEntity { IdType = "11", Name = "Echinodermes" },
-            new SpeciesTypeEntity { IdType = "12", Name = "Anelides" },
-            new SpeciesTypeEntity { IdType = "13", Name = "Cnidaires" },
-            new SpeciesTypeEntity { IdType = "14", Name = "Plathelminthes" },
-            new SpeciesTypeEntity { IdType = "15", Name = "Poriferes" },
-            new SpeciesTypeEntity { IdType = "16", Name = "Plantes" },
-            new SpeciesTypeEntity { IdType = "17", Name = "Mousses" },
-            new SpeciesTypeEntity { IdType = "18", Name = "Algues" },
-            new SpeciesTypeEntity { IdType = "19", Name = "Lichen" },
-            new SpeciesTypeEntity { IdType = "20", Name = "Champignons" }
+            new SpeciesTypeEntity { IdType = 1, Name = "Mammiferes" },
+            new SpeciesTypeEntity { IdType = 2, Name = "Oiseaux" },
+            new SpeciesTypeEntity { IdType = 3, Name = "Poissons" },
+            new SpeciesTypeEntity { IdType = 4, Name = "Reptiles" },
+            new SpeciesTypeEntity { IdType = 5, Name = "Amphibiens" },
+            new SpeciesTypeEntity { IdType = 6, Name = "Crustaces" },
+            new SpeciesTypeEntity { IdType = 7, Name = "Arachnides" },
+            new SpeciesTypeEntity { IdType = 8, Name = "Insectes" },
+            new SpeciesTypeEntity { IdType = 9, Name = "Myriapodes" },
+            new SpeciesTypeEntity { IdType = 10, Name = "Mollusques" },
+            new SpeciesTypeEntity { IdType = 11, Name = "Echinodermes" },
+            new SpeciesTypeEntity { IdType = 12, Name = "Anelides" },
+            new SpeciesTypeEntity { IdType = 13, Name = "Cnidaires" },
+            new SpeciesTypeEntity { IdType = 14, Name = "Plathelminthes" },
+            new SpeciesTypeEntity { IdType = 15, Name = "Poriferes" },
+            new SpeciesTypeEntity { IdType = 16, Name = "Plantes" },
+            new SpeciesTypeEntity { IdType = 17, Name = "Mousses" },
+            new SpeciesTypeEntity { IdType = 18, Name = "Algues" },
+            new SpeciesTypeEntity { IdType = 19, Name = "Lichen" },
+            new SpeciesTypeEntity { IdType = 20, Name = "Champignons" }
         );
 
         modelBuilder.Entity<SpeciesEntity>().HasData(
@@ -172,8 +185,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 1,
                 Name = "Lion",
-                RegimId = "2", // Carnivore
-                TypeId = "1", // Mammifere
+                RegimId = 2, // Carnivore
+                TypeId = 1, // Mammifere
                 Visible = true,
                 Avatar = "/images/species/lion.jpg",
                 Size = 180,
@@ -184,8 +197,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 2,
                 Name = "Boa",
-                RegimId = "2", // Carnivore
-                TypeId = "4", // Reptile
+                RegimId = 2, // Carnivore
+                TypeId = 4, // Reptile
                 Visible = true,
                 Avatar = "boa.webp",
                 Size = 225,
@@ -196,8 +209,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 3,
                 Name = "Hetre",
-                RegimId = "1", // Photosynthèse
-                TypeId = "16", // Plante
+                RegimId = 1, // Photosynthèse
+                TypeId = 16, // Plante
                 Visible = true,
                 Avatar = "hetre.webp",
                 Size = 600,
@@ -208,8 +221,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 4,
                 Name = "Chene",
-                RegimId = "1", // Photosynthèse
-                TypeId = "16", // Plante
+                RegimId = 1, // Photosynthèse
+                TypeId = 16, // Plante
                 Visible = true,
                 Avatar = "chene.webp",
                 Size = 2500,
@@ -220,8 +233,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 5,
                 Name = "Mouche",
-                RegimId = "4", // Coprophage
-                TypeId = "8", // Insecte
+                RegimId = 4, // Coprophage
+                TypeId = 8, // Insecte
                 Visible = true,
                 Avatar = "mouche.webp",
                 Size = 1,
@@ -232,8 +245,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 6,
                 Name = "Araignée",
-                RegimId = "2", // Carnivore
-                TypeId = "7", // Arachnide
+                RegimId = 2, // Carnivore
+                TypeId = 7, // Arachnide
                 Visible = true,
                 Avatar = "araignee.webp",
                 Size = 4,
@@ -244,8 +257,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 7,
                 Name = "Hirondelle",
-                RegimId = "2", // Carnivore
-                TypeId = "2", // Oiseau
+                RegimId = 2, // Carnivore
+                TypeId = 2, // Oiseau
                 Visible = true,
                 Avatar = "hirondelle.webp",
                 Size = 18,
@@ -256,8 +269,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 8,
                 Name = "Lievre",
-                RegimId = "5", // Herbivore
-                TypeId = "1", // Mammifere
+                RegimId = 5, // Herbivore
+                TypeId = 1, // Mammifere
                 Visible = true,
                 Avatar = "lievre.webp",
                 Size = 50,
@@ -268,32 +281,23 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             {
                 IdSpecies = 9,
                 Name = "Pâturin des prés",
-                RegimId = "1", // Photosynthèse
-                TypeId = "16", // Plante
+                RegimId = 1, // Photosynthèse
+                TypeId = 16, // Plante
                 Visible = true,
                 Avatar = "paturin.webp",
                 Size = 23,
                 Weight = 1,
                 UserId = null
             },
-            new SpeciesEntity
-            {
-                IdSpecies = 10,
-                Name = "Souris",
-                RegimId = "3", // Omnivore
-                TypeId = "1", // Mammifere
-                Visible = true,
-                Avatar = "souris.webp",
-                Size = 9,
-                Weight = 25,
-                UserId = null
-            }
+            souris
+            
         );
 
+        var list =  new List<SpeciesEntity> { souris };
         modelBuilder.Entity<BiodomeEntity>().HasData(
             new BiodomeEntity
             {
-                idBiodomes = "1",
+                idBiodomes = 1,
                 Name = "Forêt Tempérée",
                 Temperature = 18,
                 Humidity = 70,
@@ -302,7 +306,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new BiodomeEntity
             {
-                idBiodomes = "2",
+                idBiodomes = 2,
                 Name = "Forêt Tropicale",
                 Temperature = 28,
                 Humidity = 90,
@@ -311,7 +315,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new BiodomeEntity
             {
-                idBiodomes = "3",
+                idBiodomes = 3,
                 Name = "Savane",
                 Temperature = 32,
                 Humidity = 40,
@@ -320,7 +324,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new BiodomeEntity
             {
-                idBiodomes = "4",
+                idBiodomes = 4,
                 Name = "Prairie Tempérée",
                 Temperature = 20,
                 Humidity = 55,
@@ -329,13 +333,17 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new BiodomeEntity
             {
-                idBiodomes = "5",
+                idBiodomes = 5,
                 Name = "Laboratoire Contrôlé",
                 Temperature = 22,
                 Humidity = 60,
                 Avatar = "labo.png",
                 userId = null
             }
+        );
+        modelBuilder.Entity("BiodomeSpecies").HasData(
+            new { BiodomeId = 2, SpeciesId = 10 }, // souris
+        new { BiodomeId = 2, SpeciesId = 9 }
         );
     }
 

@@ -6,10 +6,10 @@ public class SpeciesEntity
     public string Name { get; set; } = string.Empty;
     public string Avatar { get; set; } = string.Empty;
    
-    public string TypeId { get; set; } = string.Empty;
+    public int TypeId { get; set; }
     public SpeciesTypeEntity TypeEntity { get; set; }
 
-    public string RegimId { get; set; } = string.Empty;
+    public int RegimId { get; set; }
     public SpeciesRegimeEntity Regim { get; set; }
    
     public int Size { get; set; }

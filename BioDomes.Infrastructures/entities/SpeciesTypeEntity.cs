@@ -2,7 +2,7 @@ namespace BioDomes.Infrastructures.entities;
 
 public class SpeciesTypeEntity
 {
-    public string IdType { get; set; }
+    public int IdType { get; set; }
     public string Name { get; set; }
 
     // Lien avec User

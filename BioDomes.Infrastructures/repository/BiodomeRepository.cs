@@ -27,11 +27,28 @@ public class BiodomeRepository : IBiodomeRepository
     }
     */
 
-    public IReadOnlyList<Biodome> GetAllBiodomes()
-    {
-        return _context.Biodomes.Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar)).ToList<Biodome>();
-    }
-
+   public IReadOnlyList<Biodome> GetAllBiodomes()
+   {
+       return _context.Biodomes
+           .Select(b => new Biodome(
+               b.idBiodomes,
+               b.Name,
+               b.Temperature,
+               b.Humidity,
+               b.Avatar,
+               b.Species.Select(s => new Species(
+                   s.Name,
+                   s.Size,
+                   s.Weight,
+                   Enum.Parse<DietType>(s.Regim.Name),
+                   Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
+                   s.Avatar,
+                   s.Visible,
+                   s.User != null ? s.User.UserName : "unknown"
+               )).ToList()
+           ))
+           .ToList();
+   }
     public void Create(Biodome biodome)
     {
         var entity = new BiodomeEntity

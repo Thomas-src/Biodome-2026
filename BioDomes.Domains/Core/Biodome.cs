@@ -1,12 +1,12 @@
 ﻿namespace BioDomes.Domains.Core;
 
 public record Biodome(
-    string Id,
+    int Id,
     string Nom,
     double Temperature,
     double Humidite,
-    string Image
-)
+    string Image,
+    IReadOnlyList<Species> Species)
 {
     public BiodomeEtat Etat => BiodomeEtatCompanion.DeterminerEtat(Temperature, Humidite);
 }
