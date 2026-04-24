@@ -72,9 +72,6 @@ public class RegisterModel : PageModel
 
         if (ModelState.IsValid)
         {
-
-
-
             var user = CreateUser();
 
             await _userStore.SetUserNameAsync(user, Input.Nom, CancellationToken.None); // Nom ≠ Email
@@ -104,9 +101,33 @@ public class RegisterModel : PageModel
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, AppRoles.Research);
+
                 _logger.LogInformation("Nouvel utilisateur créé : {Email}", Input.Email);
-                await _signInManager.SignInAsync(user, isPersistent: true);
-                return LocalRedirect(returnUrl);
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var confirmationLink = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new
+                    {
+                        userId = user.Id,
+                        token = token
+                    },
+                    protocol: Request.Scheme
+                );
+
+                await _emailSender.SendEmailAsync(
+                    Input.Email,
+                    "Confirme ton compte BioDomes",
+                    $@"
+            <h2>Bienvenue {Input.Nom}</h2>
+            <p>Clique sur le lien pour activer ton compte :</p>
+            <a href='{confirmationLink}'>Confirmer mon compte</a>
+        "
+                );
+
+                return RedirectToPage("/Account/Login");
             }
 
             foreach (var error in result.Errors)

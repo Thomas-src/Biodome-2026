@@ -2,5 +2,5 @@
 
 public interface IMyEmailSender
 {
-    void SendEmail(string email, string subject, string host);
+    Task SendEmailAsync(string email, string subject, string body);
 }

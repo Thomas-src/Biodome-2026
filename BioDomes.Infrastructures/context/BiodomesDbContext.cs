@@ -170,7 +170,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
         modelBuilder.Entity<Species>().HasData(
             new Species
             {
-                IdSpecies = "1",
+                IdSpecies = 1,
                 Name = "Lion",
                 RegimId = "2", // Carnivore
                 TypeId = "1", // Mammifere
@@ -182,7 +182,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "2",
+                IdSpecies = 2,
                 Name = "Boa",
                 RegimId = "2", // Carnivore
                 TypeId = "4", // Reptile
@@ -194,7 +194,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "3",
+                IdSpecies = 3,
                 Name = "Hetre",
                 RegimId = "1", // Photosynthèse
                 TypeId = "16", // Plante
@@ -206,7 +206,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "4",
+                IdSpecies = 4,
                 Name = "Chene",
                 RegimId = "1", // Photosynthèse
                 TypeId = "16", // Plante
@@ -218,7 +218,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "5",
+                IdSpecies = 5,
                 Name = "Mouche",
                 RegimId = "4", // Coprophage
                 TypeId = "8", // Insecte
@@ -230,7 +230,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "6",
+                IdSpecies = 6,
                 Name = "Araignée",
                 RegimId = "2", // Carnivore
                 TypeId = "7", // Arachnide
@@ -242,7 +242,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "7",
+                IdSpecies = 7,
                 Name = "Hirondelle",
                 RegimId = "2", // Carnivore
                 TypeId = "2", // Oiseau
@@ -254,7 +254,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "8",
+                IdSpecies = 8,
                 Name = "Lievre",
                 RegimId = "5", // Herbivore
                 TypeId = "1", // Mammifere
@@ -266,7 +266,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "9",
+                IdSpecies = 9,
                 Name = "Pâturin des prés",
                 RegimId = "1", // Photosynthèse
                 TypeId = "16", // Plante
@@ -278,7 +278,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
             },
             new Species
             {
-                IdSpecies = "10",
+                IdSpecies = 10,
                 Name = "Souris",
                 RegimId = "3", // Omnivore
                 TypeId = "1", // Mammifere
