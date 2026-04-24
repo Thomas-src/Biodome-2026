@@ -5,4 +5,5 @@ namespace BioDomes.Domains.Services;
 public interface IBiodomeService
 {
     IReadOnlyList<Biodome> GetBestThreeBiodome();
+    IReadOnlyList<Biodome> GetAllBiodomes();
 }

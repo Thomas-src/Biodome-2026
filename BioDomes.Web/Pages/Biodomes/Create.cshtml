@@ -6,8 +6,58 @@
 }
 
 
-<h1>Page de création de biodomes</h1>
+<h1 class="mb-4">Page de création de biodomes</h1>
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">@TempData["SuccessMessage"]</div>
 }
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+
+        <form method="post" enctype="multipart/form-data">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            }
+
+            <div class="mb-3">
+                <label asp-for="Biome.Name" class="form-label">Nom*</label>
+                <input asp-for="Biome.Name" class="form-control"/>
+                <span asp-validation-for="Biome.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Biome.temperature" class="form-label">Temperature*</label>
+                <input asp-for="Biome.temperature" class="form-control"/>
+                <span asp-validation-for="Biome.temperature" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Biome.humidite" class="form-label">Humidité*</label>
+                <input asp-for="Biome.humidite" class="form-control"/>
+                <span asp-validation-for="Biome.humidite" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Image*</label>
+                <input type="file" asp-for="Biome.Avatar" class="form-control"/>
+                <span asp-validation-for="Biome.Avatar" class="text-danger"></span>
+            </div>
+
+
+        </form>
+
+        <div class="d-flex justify-content-end gap-3">
+
+        <a href="./" class="btn btn-secondary ms-2">Annuler</a>
+        <button type="submit" class="btn btn-primary">Créer</button>
+
+        </div>
+        <p>* indique un champ obligatoire</p>
+
+        </div>
+
+    </div>
+</div>
