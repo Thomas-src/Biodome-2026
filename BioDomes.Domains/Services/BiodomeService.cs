@@ -36,7 +36,7 @@ public class BiodomeService : IBiodomeService
             fileStream.CopyTo(stream);
         }
 
-        created.Image = "/images/species/" + newFileName;
+        created.Image = newFileName;
     }
 
     public void Save(Biodome created)

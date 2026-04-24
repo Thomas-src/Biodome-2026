@@ -96,6 +96,6 @@ public class SpeciesService : ISpeciesService
             fileStream.CopyTo(stream);
         }
 
-        created.Avatar = "/images/species/" + newFileName;
+        created.Avatar = newFileName;
     }
 }
