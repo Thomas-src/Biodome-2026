@@ -297,7 +297,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Name = "Forêt Tempérée",
                 Temperature = 18,
                 Humidity = 70,
-                Avatar = "/wwwroot/images/biodomes/1.wepb",
+                Avatar = "foret-temperee.png",
                 userId = null
             },
             new Biodomes
@@ -306,7 +306,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Name = "Forêt Tropicale",
                 Temperature = 28,
                 Humidity = 90,
-                Avatar = "/wwwroot/images/biodomes/1.wepb",
+                Avatar = "foret-tropicale.png",
                 userId = null
             },
             new Biodomes
@@ -315,7 +315,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Name = "Savane",
                 Temperature = 32,
                 Humidity = 40,
-                Avatar = "/wwwroot/images/biodomes/1.wepb",
+                Avatar = "savane.png",
                 userId = null
             },
             new Biodomes
@@ -324,7 +324,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Name = "Prairie Tempérée",
                 Temperature = 20,
                 Humidity = 55,
-                Avatar = "/wwwroot/images/biodomes/1.wepb",
+                Avatar = "prarie.png",
                 userId = null
             },
             new Biodomes
@@ -333,7 +333,7 @@ public class BioDomesDbContext : IdentityDbContext<User>
                 Name = "Laboratoire Contrôlé",
                 Temperature = 22,
                 Humidity = 60,
-                Avatar = "/wwwroot/images/biodomes/1.wepb",
+                Avatar = "labo.png",
                 userId = null
             }
         );

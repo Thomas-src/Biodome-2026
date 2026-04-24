@@ -4,8 +4,6 @@ namespace BioDomes.Domains.Repository;
 
 public interface IBiodomeRepository
 {
-    
-    
     IReadOnlyList<Biodome> GetAllBiodomes();
     
     void Create(Biodome biodome);
