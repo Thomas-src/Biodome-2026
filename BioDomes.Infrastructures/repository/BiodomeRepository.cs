@@ -15,7 +15,8 @@ public class BiodomeRepository : IBiodomeRepository
         _context = context;
     }
     
-    public IReadOnlyList<Biodome> GetBestThreeBiodome()
+   /*
+    * public IReadOnlyList<Biodome> GetBestThreeBiodome()
     {
         return _context.Biodomes
             .Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar))
@@ -24,6 +25,7 @@ public class BiodomeRepository : IBiodomeRepository
             .ToList<Biodome>();
 
     }
+    */
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {

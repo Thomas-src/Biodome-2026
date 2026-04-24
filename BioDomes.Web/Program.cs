@@ -3,6 +3,7 @@ using BioDomes.Domains.Constants;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
+using BioDomes.Domains.Services.mail;
 using BioDomes.Infrastructures;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
@@ -42,6 +43,7 @@ var connectionString = builder.Environment.IsDevelopment()
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
+        options.SignIn.RequireConfirmedAccount = false; // todo configurer la confirmation des mails => mdp ? resend bloqué par l'école
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
     })
@@ -57,6 +59,14 @@ builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepos
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 builder.Services.AddTransient<ISpeciesService, SpeciesService>();
+builder.Services.AddTransient<IResearchService, ResearchOrganismService>();
+
+
+// Mail service
+builder.Services.AddSingleton(sp => builder.Configuration.GetSection("NetMail").Get<MailConfig>());
+builder.Services.AddTransient<IMyEmailSender, MyEmailSender>();
+
+
 
 // Code reprit de la lecon8
 builder.Services.AddRateLimiter(options =>
