@@ -16,5 +16,31 @@ public class BiodomeService : IBiodomeService
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     => _repository.GetAllBiodomes();
-    
+
+    // TODO deleguer dans un repo commun
+    public void SavePicture(Biodome created, string fileName, Stream fileStream)
+    {
+        var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
+
+        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "biodomes");
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, newFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            fileStream.CopyTo(stream);
+        }
+
+        created.Image = "/images/species/" + newFileName;
+    }
+
+    public void Save(Biodome created)
+    {
+        _repository.Create(created);
+    }
 }

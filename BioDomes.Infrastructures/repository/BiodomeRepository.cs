@@ -29,14 +29,13 @@ public class BiodomeRepository : IBiodomeRepository
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {
-        return _context.Biodomes.Select(b => new Biodome(b.idBiodomes, b.Name, b.Temperature, b.Humidity, b.Avatar)).ToList<Biodome>();
+        return _context.Biodomes.Select(b => new Biodome(Convert.ToInt32(b.idBiodomes), b.Name, b.Temperature, b.Humidity, b.Avatar)).ToList<Biodome>();
     }
 
     public void Create(Biodome biodome)
     {
         var entity = new BiodomeEntity
         {
-            idBiodomes = biodome.Id,
             Name = biodome.Nom,
             Temperature = biodome.Temperature,
             Humidity = biodome.Humidite,
