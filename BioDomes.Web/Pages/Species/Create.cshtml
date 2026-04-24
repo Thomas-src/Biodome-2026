@@ -8,7 +8,7 @@
 <h1 class="mb-4">Créer une espèce</h1>
 
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-6">
             
             <form method="post" enctype="multipart/form-data">
@@ -17,7 +17,7 @@
                 {
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                 }
-                
+
                 <div class="mb-3">
                     <label asp-for="Species.Name" class="form-label">Nom*</label>
                     <input asp-for="Species.Name" class="form-control" />
@@ -68,9 +68,13 @@
                     <input type="file" asp-for="Species.Avatar" class="form-control" />
                     <span asp-validation-for="Species.Avatar" class="text-danger"></span>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">Créer</button>
-                <a href="./" class="btn btn-secondary ms-2">Annuler</a>
+
+                <div class="d-flex justify-content-end gap-3">
+
+                    <a href="./" class="btn btn-secondary ms-2">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+
+                </div>
 
             </form>
 

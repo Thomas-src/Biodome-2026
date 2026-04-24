@@ -1,15 +1,24 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Extensions;
+using BioDomes.Domains.Services;
 using BioDomes.Infrastructures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Biodomes;
 
 public class Biodomes : PageModel
 {
-    public IList<Biodome> _allbiodomes;
+    private readonly IBiodomeService _service;
 
-    public IList<Biodome> AllBiodomes
+    public Biodomes(IBiodomeService service)
+    {
+        _service = service;
+    }
+
+    public IReadOnlyList<Biodome> _allbiodomes;
+
+    public IReadOnlyList<Biodome> AllBiodomes
     {
         get { return _allbiodomes; }
         set { _allbiodomes = value; }
@@ -17,10 +26,8 @@ public class Biodomes : PageModel
 
     public void OnGet()
     {
-        /*
-        IRepository repository = new SqlRepository();
 
-        AllBiodomes = repository.GetAllDomes();
-        */
+        AllBiodomes = _service.GetAllBiodomes();
+
     }
 }
