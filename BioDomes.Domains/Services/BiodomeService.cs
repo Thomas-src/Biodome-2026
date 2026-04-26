@@ -1,5 +1,6 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Utils;
 
 namespace BioDomes.Domains.Services;
 
@@ -33,7 +34,6 @@ public class BiodomeService : IBiodomeService
 
     public double CalculateHumiditeMax(double temp)
     {
-        return (216.7 * 6.112 * Math.Exp((17.67 * temp) / (temp + 243.5)))
-               / (temp + 273.15);
+        return HumidityCalculator.MaxHumidityOf(temp);
     }
 }
