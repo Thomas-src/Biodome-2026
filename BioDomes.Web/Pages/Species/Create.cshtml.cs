@@ -70,7 +70,7 @@ public class Create : PageModel
             Species.Poids.Value,
             diet,
             type,
-            "",
+            Species.Avatar.FileName,
             false,
             User.Identity.Name
         );
@@ -82,9 +82,7 @@ public class Create : PageModel
             return Page();
         }
 
-        _speciesService.SavePicture(created, Species.Avatar.FileName, Species.Avatar.OpenReadStream());
-
-        if (!_speciesService.Save(created))
+        if (!_speciesService.Save(created, Species.Avatar.OpenReadStream() ))
         {
             ModelState.AddModelError("", $"Erreur lors de la création de l'espèce");
             LoadSelect();

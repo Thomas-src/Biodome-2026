@@ -46,15 +46,13 @@ public class Create : PageModel
             Biome.Name,
             Biome.temperature.Value,
             Biome.humidite.Value,
-            "",
+            Biome.Avatar.FileName,
             new List<Domains.Core.Species>()
             );
         
         created.CreatorName = User.Identity.Name;
-
-        _service.SavePicture(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
-
-        _service.Save(created);
+        
+        _service.Save(created, Biome.Avatar.OpenReadStream());
 
         TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
         return RedirectToPage("Biodomes");

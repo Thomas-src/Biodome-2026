@@ -6,10 +6,12 @@ namespace BioDomes.Domains.Services;
 public class SpeciesService : ISpeciesService
 {
     private readonly ISpeciesRepository _repository;
+    private readonly IPictureRepository _pictureRepository;
 
-    public SpeciesService(ISpeciesRepository repository)
+    public SpeciesService(ISpeciesRepository repository, IPictureRepository pictureRepository)
     {
         _repository = repository;
+        _pictureRepository = pictureRepository;
     }
 
     public IReadOnlyList<Species> FilterOwnerSpecies(string ownerSpecies, IReadOnlyList<Species> species)
@@ -65,10 +67,12 @@ public class SpeciesService : ISpeciesService
         return false;
     }
 
-    public bool Save(Species created)
+    public bool Save(Species created, Stream openReadStream)
     {
         try
         {
+            created.Avatar = _pictureRepository.Save(created.Avatar, openReadStream, "species");
+            
             _repository.Save(created);
         } catch (Exception e)
         {
@@ -76,26 +80,5 @@ public class SpeciesService : ISpeciesService
             return false;
         }
         return true;
-    }
-
-    public void SavePicture(Species created, string fileName, Stream fileStream)
-    {
-        var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
-
-        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "species");
-
-        if (!Directory.Exists(folderPath))
-        {
-            Directory.CreateDirectory(folderPath);
-        }
-
-        var filePath = Path.Combine(folderPath, newFileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            fileStream.CopyTo(stream);
-        }
-
-        created.Avatar = newFileName;
     }
 }

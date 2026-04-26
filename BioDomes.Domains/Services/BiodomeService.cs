@@ -6,9 +6,11 @@ namespace BioDomes.Domains.Services;
 public class BiodomeService : IBiodomeService
 {
     private IBiodomeRepository _repository;
-    public BiodomeService(IBiodomeRepository repository)
+    private IPictureRepository _pictureRepository;
+    public BiodomeService(IBiodomeRepository repository,  IPictureRepository pictureRepository)
     {
         _repository = repository;
+        _pictureRepository = pictureRepository;
     }
     public IReadOnlyList<Biodome> GetBestThreeBiodome()
         => _repository.GetAllBiodomes()
@@ -20,30 +22,12 @@ public class BiodomeService : IBiodomeService
     public IReadOnlyList<Biodome> GetAllBiodomes()
     => _repository.GetAllBiodomes();
 
-    // TODO deleguer dans un repo commun
-    public void SavePicture(Biodome created, string fileName, Stream fileStream)
+    public void Save(Biodome created, Stream openReadStream)
     {
-        var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
-
-        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "biodomes");
-
-        if (!Directory.Exists(folderPath))
-        {
-            Directory.CreateDirectory(folderPath);
-        }
-
-        var filePath = Path.Combine(folderPath, newFileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            fileStream.CopyTo(stream);
-        }
-
-        created.Image = newFileName;
-    }
-
-    public void Save(Biodome created)
-    {
+        // 1. Enregistrer l'image
+        created.Image = _pictureRepository.Save(created.Image, openReadStream, "biodomes");
+        
+        //2. Enregistrer le biome
         _repository.Create(created);
     }
 

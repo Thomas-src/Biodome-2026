@@ -61,6 +61,7 @@ builder.Services.AddTransient<ISpeciesRepository, SpeciesRepository>();
 builder.Services.AddTransient<ISpeciesClassificationRepository, SpeciesClassificationRepository>();
 builder.Services.AddTransient<IDietTypeRepository, DietTypeRepository>();
 builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepository>();
+builder.Services.AddTransient<IPictureRepository, PictureRepository>();
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 builder.Services.AddTransient<ISpeciesService, SpeciesService>();

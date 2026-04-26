@@ -9,7 +9,6 @@ public interface ISpeciesService
     public IReadOnlyList<Species> FilterSpecies(string ownerSpecies, IReadOnlyList<Species> species);
     
     public bool SpeciesExists(Species species);
-    bool Save(Species created);
+    bool Save(Species created, Stream openReadStream);
 
-    void SavePicture(Species created, string fileName, Stream fileStream);
 }

@@ -6,8 +6,7 @@ public interface IBiodomeService
 {
     IReadOnlyList<Biodome> GetBestThreeBiodome();
     IReadOnlyList<Biodome> GetAllBiodomes();
-    void SavePicture(Biodome created, string avatarFileName, Stream openReadStream);
-    void Save(Biodome created);
+    void Save(Biodome created, Stream openReadStream);
 
     double CalculateHumiditeMax(double temp);
 }
