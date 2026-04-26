@@ -51,13 +51,20 @@ public class BiodomeRepository : IBiodomeRepository
     }
     public void Create(Biodome biodome)
     {
+        var u = _context.Users.FirstOrDefault(u => u.UserName == biodome.CreatorName);
+        if (u == null)
+        {
+            throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
+        }
+        string userId = u.Id;     
+        
         var entity = new BiodomeEntity
         {
-            idBiodomes = biodome.Id,
             Name = biodome.Nom,
             Temperature = biodome.Temperature,
             Humidity = biodome.Humidite,
-            Avatar = biodome.Image
+            Avatar = biodome.Image,
+            userId = userId
         };
         _context.Biodomes.Add(entity);
         _context.SaveChanges();

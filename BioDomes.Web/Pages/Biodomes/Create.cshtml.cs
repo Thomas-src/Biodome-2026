@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Web.Pages.Biodomes;
 
+[Authorize]
 public class Create : PageModel
 {
     private readonly IBiodomeService _service;
@@ -30,19 +33,30 @@ public class Create : PageModel
             return Page();
         }
 
+        double humiditeMax = _service.CalculateHumiditeMax(Biome.temperature.Value);
+
+        if (Biome.humidite.Value > humiditeMax)
+        {
+            ModelState.AddModelError("Biome.humidite", $"Un biome avec une température de {Biome.temperature.Value}° peut avoir une humidité max de {humiditeMax} g/m³");
+            return Page();
+        }
+
         Biodome created = new Biodome(
             -1,
             Biome.Name,
-            Biome.temperature,
-            Biome.humidite,
+            Biome.temperature.Value,
+            Biome.humidite.Value,
             "",
             new List<Domains.Core.Species>()
             );
+        
+        created.CreatorName = User.Identity.Name;
 
         _service.SavePicture(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
 
         _service.Save(created);
 
+        TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
         return RedirectToPage("Biodomes");
     }
 
@@ -55,11 +69,11 @@ public class Create : PageModel
 
         [Required(ErrorMessage = "La temperature est obligatoire")]
         [Range(-100, 100, ErrorMessage = "La taille doit être entre -100 et 100")]
-        public double temperature { get; set; }
+        public double? temperature { get; set; }
 
         [Required(ErrorMessage = "L'humidité est obligatoire")]
         [Range(-100, 100, ErrorMessage = "L'humitidé doit être entre -100 et 100")]
-        public double humidite { get; set; }
+        public double? humidite { get; set; }
 
         [Required(ErrorMessage = "Un avatar est obligatoire")]
         public IFormFile Avatar { get; set; }

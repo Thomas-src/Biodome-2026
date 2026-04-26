@@ -8,6 +8,7 @@ public class Biodome
     private double _humidite;
     private string _image;
     private IReadOnlyList<Species> _species;
+    private string _creatorName; 
     public Biodome(int id, string nom, double temperature, double humidite, string image,IReadOnlyList<Species> species)
     {
         _id = id;
@@ -26,6 +27,7 @@ public class Biodome
     public double Temperature { get { return _temperature; } }
     public double Humidite { get { return _humidite; } }
     public string Image{ get { return _image; } set { _image = value; } }
+    public string CreatorName { get { return _creatorName; } set { _creatorName = value; } }
 
     public BiodomeEtat Etat => BiodomeEtatCompanion.DeterminerEtat(Temperature, Humidite);
 }
