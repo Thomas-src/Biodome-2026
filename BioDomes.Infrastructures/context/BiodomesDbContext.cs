@@ -31,7 +31,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<EquipmentEntity> Equipment { get; set; }
     public DbSet<ResearchOrganismEntity> ResearchOrganisms { get; set; }
     public DbSet<SpeciesTypeEntity> SpeciesTypes { get; set; }
-    public DbSet<SpeciesRegimeEntity> SpeciesRegim { get; set; }
+    public DbSet<SpeciesRegimeEntity> SpeciesRegimes { get; set; }
     
     public DbSet<ConsumptionEntity> consumptions { get; set; }
     
@@ -351,7 +351,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Name = "Prairie Tempérée",
                 Temperature = 20,
                 Humidity = 55,
-                Avatar = "prarie.png",
+                Avatar = "prairie.png",
                 userId = null
             },
             new BiodomeEntity
