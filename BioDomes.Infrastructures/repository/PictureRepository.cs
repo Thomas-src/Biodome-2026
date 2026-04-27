@@ -6,21 +6,26 @@ public class PictureRepository : IPictureRepository
 {
     private const string SPECIES_PATH = "species";
     private const string BIOMES_PATH = "biodomes";
+    private const string EQUIPEMENTS_PATH = "equipements";
     
     public string Save(string fileName, Stream fileStream, string imageType)
     {
         string path;
-
+        
         if (imageType.ToLower() == "biodomes")
         {
             path = BIOMES_PATH;
         }
-        else
+        else if (imageType.ToLower() == "species")
         {
             path = SPECIES_PATH;
         }
-        
-        
+        else
+        {
+            path = EQUIPEMENTS_PATH;
+        }
+
+
         var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
 
         var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", path);

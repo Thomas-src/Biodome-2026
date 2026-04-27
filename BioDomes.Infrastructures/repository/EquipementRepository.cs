@@ -2,6 +2,7 @@
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures.context;
+using BioDomes.Infrastructures.entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
@@ -17,13 +18,65 @@ public class EquipementRepository : IEquipementRepository
     
     public IReadOnlyList<Equipement> GetAllEquipements()
     {
-        return _dbContext.Equipment.Select(e => new Equipement(
-            e.Name,
-            Enum.Parse<Consumptions>(e.Consumption.Name),
-            Enum.Parse<Production>(e.Production.Name),
-            e.Avatar,
-            e.Visible,
-            e.User.UserName ?? "unknown"
-            )).ToList();
+        return _dbContext.Equipment
+            .Include(e => e.Consumption)
+            .Include(e => e.Production)
+            .Include(e => e.User)
+            .Select(e => new Equipement(
+                e.Name,
+                e.Consumption != null 
+                    ? Enum.Parse<Consumptions>(e.Consumption.Name)
+                    : Consumptions.None,
+                Enum.Parse<Production>(e.Production.Name),
+                e.Avatar,
+                e.Visible,
+                e.User.UserName ?? "unknown"
+            ))
+            .ToList();
+    }
+
+    public void Save(Equipement created)
+    {
+        var u = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == created.OwnerName.ToLower());
+        
+        if (u == null)
+        {
+            throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
+        }
+
+        string userId = u.Id;
+        EquipmentEntity entity;
+
+        if (created.Consumption == Consumptions.None)
+        {
+            entity = new EquipmentEntity
+            {
+                Name = created.Name,
+                Avatar = created.Avatar,
+                UserId = userId,
+                Visible = created.Visibility,
+                ProductionId = _dbContext.productions.FirstOrDefault(e => e.Name == created.Production.ToString())
+                    .ProductionId
+            };
+        }
+        else
+        {
+            entity = new EquipmentEntity
+            {
+                Name = created.Name,
+                Avatar = created.Avatar,
+                UserId = userId,
+                Visible = created.Visibility,
+                ProductionId = _dbContext.productions.FirstOrDefault(e => e.Name == created.Production.ToString())
+                    .ProductionId,
+                ConsumptionId = _dbContext.consumptions.FirstOrDefault(c => c.Name == created.Consumption.ToString())
+                    .ConsumptionId
+            };
+        }
+
+        _dbContext.Add(entity);
+        _dbContext.SaveChanges();
+
+
     }
 }

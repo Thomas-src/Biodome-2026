@@ -2,6 +2,7 @@
 
 public enum Consumptions
 {
+    None,
     Hydrogène,
     Electricité,
     Essence

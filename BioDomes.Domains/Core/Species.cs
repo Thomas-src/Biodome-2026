@@ -27,7 +27,7 @@ public class Species
 
     public override bool Equals(Object other)
     {
-        if (other == null || !(other is Species) || other == this)
+        if (other == null || !(other is Species))
         {
             return false;
         }

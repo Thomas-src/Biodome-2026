@@ -26,5 +26,21 @@ public class Equipement
     public bool Visibility { get { return visibility; } }
     
     public string OwnerName { get { return _ownerName; } }
-    
+
+    public override bool Equals(object other)
+    {
+        if (other == null || !(other is Equipement))
+        {
+            return false;
+        }
+        
+        Equipement otherEquipement = (Equipement)other;
+
+        if (otherEquipement.Name == this.Name && otherEquipement.Consumption == this.Consumption && otherEquipement.Production == this.Production)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

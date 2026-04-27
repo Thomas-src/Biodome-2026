@@ -43,7 +43,47 @@ public class Create : PageModel
             LoadSelect();
             return Page();
         }
+
+        Consumptions cons;
+        Production prod = Enum.Parse<Production>(Equipement.Production);
         
+        if (Enum.TryParse<Consumptions>(Equipement.Consumption, out var consumption))
+        {
+            cons = consumption;
+        }
+        else
+        {
+            cons = Domains.Core.Equipements.Consumptions.None;
+        }
+        
+        Equipement created = new Equipement(
+            Equipement.Name,
+            cons, 
+            prod,
+            Equipement.Avatar.FileName,
+            false,
+            User.Identity.Name
+            );
+
+        if (_service.AlreadyExist(created))
+        {
+            ModelState.AddModelError("", $"L'équipement {Equipement.Name} existe déjà !");
+            LoadSelect();
+            return Page();
+        }
+
+        try
+        {
+            _service.Save(created, Equipement.Avatar.OpenReadStream());
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", $"Erreur lors de la création de l'équipement!");
+            LoadSelect();
+            return Page();
+        }
+        
+        TempData["SuccessMessage"] = $"L'équipement {Equipement.Name} a été ajoutée avec succès !";
         return  RedirectToPage("Equipements");
     }
 
