@@ -2,5 +2,6 @@
 
 public class MailConfig
 {
-    public string Token { get; set; }
+    public string ResendApiKey { get; set; }
+    public string FromAddress { get; set; }
 }

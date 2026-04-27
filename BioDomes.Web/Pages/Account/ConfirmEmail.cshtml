@@ -1,19 +1,60 @@
-﻿@page
-@model BioDomes.Web.Pages.Account.ConfirmEmail
+﻿@page "{userId}/{token}"
+@model BioDomes.Web.Pages.Account.ConfirmEmailModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Confirmation d'e-mail";
 }
 
-<!DOCTYPE html>
+<section class="rounded-4 m-auto p-4" style="background-color: aliceblue; width: 40%">
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
-</div>
-</body>
-</html>
+    <h1 class="title text-center mb-4">Confirmation d'identité</h1>
+
+    <div class="d-flex flex-column align-items-center gap-3">
+
+        @if (Model.IsSuccess)
+        {
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-success bg-opacity-10 border border-success"
+                 style="width:72px; height:72px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                     stroke="#198754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6 9 17l-5-5"/>
+                </svg>
+            </div>
+
+            <div class="alert alert-success w-100 text-center mb-0" role="alert">
+                @Model.StatusMessage
+            </div>
+
+            <a asp-page="/Account/Login" class="btn btn-primary mt-1">
+                Accéder à mon compte
+            </a>
+        }
+        else
+        {
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-danger bg-opacity-10 border border-danger"
+                 style="width:72px; height:72px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                     stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+
+            <div class="alert alert-danger w-100 text-center mb-0" role="alert">
+                @Model.StatusMessage
+            </div>
+
+            <div class="d-flex flex-column gap-2 w-100 mt-1">
+                <a asp-page="/Account/ResendConfirmationEmail" class="btn btn-primary">
+                    Renvoyer le lien de confirmation
+                </a>
+                <a asp-page="/Account/Login" class="btn btn-outline-secondary">
+                    Retour à la connexion
+                </a>
+            </div>
+        }
+
+    </div>
+
+</section>

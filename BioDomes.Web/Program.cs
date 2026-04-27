@@ -73,8 +73,8 @@ builder.Services.AddTransient<IEquipementService, EquipementService>();
 
 
 // Mail service
-builder.Services.AddSingleton(sp => builder.Configuration.GetSection("ApiMailToken").Get<MailConfig>());
-builder.Services.AddHttpClient<IMyEmailSender, PhpMailSender>();
+builder.Services.AddSingleton(sp => builder.Configuration.GetSection("MailConfig").Get<MailConfig>());
+builder.Services.AddHttpClient<IMyEmailSender, ResendMailSender>();
 
 
 
@@ -103,9 +103,6 @@ builder.Services.AddWebOptimizer(pipeline =>
 
 builder.Services.Configure<RouteOptions>(options =>
 {
-    options.LowercaseUrls = true;
-    options.LowercaseQueryStrings = true;
-
     options.ConstraintMap["slug"] = typeof(SlugTransformer);
 });
 

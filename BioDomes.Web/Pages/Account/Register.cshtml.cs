@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Text;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Services;
@@ -8,6 +9,7 @@ using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace BioDomes.Web.Pages.Account;
 
@@ -76,6 +78,12 @@ public class RegisterModel : PageModel
         {
             return Page();
         }
+        var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+        if (existingUser != null)
+        {
+            ModelState.AddModelError("Input.Email", "Cette adresse e-mail est déjà utilisée.");
+            return Page();
+        }
 
         var user = CreateUser();
 
@@ -120,23 +128,22 @@ public class RegisterModel : PageModel
         }
 
         var result = await _userManager.CreateAsync(user, Input.Password);
-        await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
         if (result.Succeeded)
         {
+            await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
             await _userManager.AddToRoleAsync(user, AppRoles.Research);
 
             _logger.LogInformation("Nouvel utilisateur créé : {Email}", Input.Email);
-
+            
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            _logger.LogInformation("Token de l'utilisateur {}", token);
+            _logger.LogInformation("Token encodé de l'utilisateur {}", encodedToken);
+        
             var confirmationLink = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new
-                {
-                    userId = user.Id,
-                    token = token
-                },
+                values: new { userId = user.Id, token = encodedToken },
                 protocol: Request.Scheme
             );
 
@@ -149,7 +156,8 @@ public class RegisterModel : PageModel
 <a href='{confirmationLink}'>Confirmer mon compte</a>
 ");
 
-            return RedirectToPage("/Account/Login");
+            return RedirectToPage("/Account/RegisterSuccess", new { email = Input.Email });
+
         }
 
         foreach (var error in result.Errors)

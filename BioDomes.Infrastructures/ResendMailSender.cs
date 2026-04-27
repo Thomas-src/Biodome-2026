@@ -5,37 +5,38 @@ using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Infrastructures;
 
-public class PhpMailSender : IMyEmailSender
+public class ResendMailSender : IMyEmailSender
 {
     private readonly HttpClient _http;
-    private readonly ILogger<PhpMailSender> _logger;
+    private readonly ILogger<ResendMailSender> _logger;
+    private readonly string _fromAddress;
 
-    public PhpMailSender(
+    public ResendMailSender(
         HttpClient http,
         MailConfig config,
-        ILogger<PhpMailSender> logger)
+        ILogger<ResendMailSender> logger)
     {
         _http = http;
         _logger = logger;
+        _fromAddress = config.FromAddress; // ex: "BioDomes <noreply@tondomaine.com>"
 
-        _http.DefaultRequestHeaders.Add("X-API-TOKEN", config.Token);
+        _http.BaseAddress = new Uri("https://api.resend.com/");
+        _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {config.ResendApiKey}");
     }
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         var payload = new
         {
-            to = email,
+            from = _fromAddress,
+            to = new[] { email },
             subject,
-            body = htmlMessage
+            html = htmlMessage
         };
 
         _logger.LogInformation("📧 Envoi email vers {Email} | Subject: {Subject}", email, subject);
 
-        var response = await _http.PostAsJsonAsync(
-            "https://panoramix.cg.helmo.be/~q240206/EVAL_V4/api.php",
-            payload
-        );
+        var response = await _http.PostAsJsonAsync("emails", payload);
 
         var responseBody = await response.Content.ReadAsStringAsync();
 
