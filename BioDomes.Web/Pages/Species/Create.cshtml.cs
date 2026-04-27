@@ -62,7 +62,7 @@ public class Create : PageModel
             return Page();
         }
 
-        // "/images/species/lion.jpg"
+        // "images/species/lion.jpg"
 
         var created = new Domains.Core.Species(
             Species.Name,
