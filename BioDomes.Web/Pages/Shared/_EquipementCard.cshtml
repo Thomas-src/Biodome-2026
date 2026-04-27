@@ -1,0 +1,29 @@
+﻿@model BioDomes.Domains.Core.Equipements.Equipement
+
+<div class="d-flex row justify-content-start gap-4">
+
+    <div class="w-50">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text mb-1">
+                <strong>Consommation :</strong> @Model.Consumption
+            </p>
+            <p class="card-text mb-1">
+                <strong>Production :</strong> @Model.Production
+            </p>
+            @if (User.Identity.Name != null && User.Identity.Name.Equals(Model.OwnerName))
+            {
+                <p class="card-text">
+                    <strong>Visible :</strong> @Model.Visibility
+                </p>   
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+        <img src="/images/equipements/@Model.Avatar"
+             class="rounded"
+             style="width: 150px; height: 150px; object-fit: cover; display: block;" />
+    </div>
+
+</div>

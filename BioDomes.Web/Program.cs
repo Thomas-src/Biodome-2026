@@ -62,10 +62,14 @@ builder.Services.AddTransient<ISpeciesClassificationRepository, SpeciesClassific
 builder.Services.AddTransient<IDietTypeRepository, DietTypeRepository>();
 builder.Services.AddTransient<IResearchOrganismRepository, ResearchOrganismRepository>();
 builder.Services.AddTransient<IPictureRepository, PictureRepository>();
+builder.Services.AddTransient<IEquipementRepository, EquipementRepository>();
+builder.Services.AddTransient<IProductionRepository, ProductionRepository>();
+builder.Services.AddTransient<IConsumptionRepository, ConsumptionRepository>();
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 builder.Services.AddTransient<ISpeciesService, SpeciesService>();
 builder.Services.AddTransient<IResearchService, ResearchOrganismService>();
+builder.Services.AddTransient<IEquipementService, EquipementService>();
 
 
 // Mail service

@@ -1,13 +1,80 @@
-@page
+@page "/equipements"
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
 @model BioDomes.Web.Pages.Equipements.Equipements
 
 @{
     ViewData["Title"] = "Equipements";
 }
 
-
-<h1>Page des équipements</h1>
+<h1 class="text-center">Page des équipements</h1>
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h2>Vos équipements</h2>
+    
+    <div class="container">
+        <a class="btn btn-sm btn-outline-primary mb-2"
+           asp-page="/Equipements/Create">
+            Créer
+        </a>
+    </div>
+
+    <section>
+        @if (Model.OwnEquipements == null || Model.OwnEquipements.Count == 0)
+        {
+            <p>Vous n'avez crée aucun équipements</p>
+        }
+        else
+        {
+            @foreach (var eq in Model.OwnEquipements)
+            {
+                <div class="col-4">
+                    <div class="card shadow-sm h-100">
+
+                        <partial name="Shared/_EquipementCard" model="eq"/>
+                    </div>
+                </div>
+            }
+        }
+    </section>
+
+    <h2>Autres équipements disponibles</h2>
+    <section>
+        @foreach (var eq in Model.RestEquipements)
+        {
+            <div class="col-4">
+                <div class="card shadow-sm h-100">
+
+                    <partial name="Shared/_EquipementCard" model="eq"/>
+                </div>
+            </div>
+        }
+    </section>
+}
+else
+{
+    <h2>Tout les équipements disponibles</h2>
+    <section>
+        @foreach (var eq in Model.RestEquipements)
+        {
+            <div class="col-4">
+                <div class="card shadow-sm h-100">
+
+                    <partial name="Shared/_EquipementCard" model="eq"/>
+                </div>
+            </div>
+        }
+    </section>
 }
