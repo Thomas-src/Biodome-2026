@@ -15,7 +15,7 @@ public class DietTypeRepository : IDietTypeRepository
 
     public IReadOnlyList<DietType> GetAllDietTypes()
     {
-        return _context.SpeciesRegim
+        return _context.SpeciesRegimes
             .Select(sr => Enum.Parse<DietType>(sr.Name))
             .Distinct()
             .ToList();

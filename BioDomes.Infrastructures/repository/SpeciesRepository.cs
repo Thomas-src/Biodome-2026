@@ -47,7 +47,7 @@ public class SpeciesRepository : ISpeciesRepository
             Size = (int)created.Taille,
             Weight = created.Poids,
             UserId = userId,
-            RegimId = _context.SpeciesRegim.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime,
+            RegimId = _context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime,
             TypeId = _context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString()).IdType,
             Visible = created.IsVisible
         };

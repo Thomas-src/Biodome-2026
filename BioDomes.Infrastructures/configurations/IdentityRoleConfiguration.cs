@@ -7,8 +7,8 @@ namespace BioDomes.Infrastructures.configurations;
 
 public class IdentityRoleConfiguration : IEntityTypeConfiguration<IdentityRole>
 {
-    public static readonly string AdminId = Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"Admin";
-    public static readonly string ResearchID =  Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"CeoId";
+    public static readonly string AdminId = "0";
+    public static readonly string ResearchID =  "1";
     
     public void Configure(EntityTypeBuilder<IdentityRole> builder)
     {
