@@ -20,7 +20,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
         RegimId = 3, // Omnivore
         TypeId = 1, // Mammifere
         Visible = true,
-        Avatar = "souris.webp",
+        Avatar = "souris.jpg",
         Size = 9,
         Weight = 25,
         UserId = null
@@ -32,6 +32,10 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<ResearchOrganismEntity> ResearchOrganisms { get; set; }
     public DbSet<SpeciesTypeEntity> SpeciesTypes { get; set; }
     public DbSet<SpeciesRegimeEntity> SpeciesRegim { get; set; }
+    
+    public DbSet<ConsumptionEntity> consumptions { get; set; }
+    
+    public DbSet<ProductionEntity> productions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,6 +64,12 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
 
         modelBuilder.Entity<SpeciesTypeEntity>()
             .HasKey(r => r.IdType);
+        
+        modelBuilder.Entity<ProductionEntity>()
+            .HasKey(p => p.ProductionId);
+
+        modelBuilder.Entity<ConsumptionEntity>()
+            .HasKey(c => c.ConsumptionId);
 
         // User -> Biodomes
         modelBuilder.Entity<BiodomeEntity>()
@@ -74,6 +84,19 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             .WithMany(u => u.Equipments)
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        modelBuilder.Entity<EquipmentEntity>()
+            .HasOne(e => e.Production)
+            .WithMany(p => p.Equipments)
+            .HasForeignKey(e => e.ProductionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<EquipmentEntity>()
+            .HasOne(e => e.Consumption)
+            .WithMany(c => c.Equipments)
+            .HasForeignKey(e => e.ConsumptionId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // User -> Species
         modelBuilder.Entity<SpeciesEntity>()
@@ -188,7 +211,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 2, // Carnivore
                 TypeId = 1, // Mammifere
                 Visible = true,
-                Avatar = "/images/species/lion.jpg",
+                Avatar = "lion.jpg",
                 Size = 180,
                 Weight = 150000,
                 UserId = null
@@ -200,7 +223,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 2, // Carnivore
                 TypeId = 4, // Reptile
                 Visible = true,
-                Avatar = "boa.webp",
+                Avatar = "boa.jpg",
                 Size = 225,
                 Weight = 13000,
                 UserId = null
@@ -236,7 +259,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 4, // Coprophage
                 TypeId = 8, // Insecte
                 Visible = true,
-                Avatar = "mouche.webp",
+                Avatar = "mouche.jpg",
                 Size = 1,
                 Weight = 1,
                 UserId = null
@@ -248,7 +271,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 2, // Carnivore
                 TypeId = 7, // Arachnide
                 Visible = true,
-                Avatar = "araignee.webp",
+                Avatar = "araigne.jpg",
                 Size = 4,
                 Weight = 95,
                 UserId = null
@@ -260,7 +283,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 2, // Carnivore
                 TypeId = 2, // Oiseau
                 Visible = true,
-                Avatar = "hirondelle.webp",
+                Avatar = "hirondelle.jpg",
                 Size = 18,
                 Weight = 45,
                 UserId = null
@@ -272,7 +295,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 5, // Herbivore
                 TypeId = 1, // Mammifere
                 Visible = true,
-                Avatar = "lievre.webp",
+                Avatar = "lievrejpeg.jpeg",
                 Size = 50,
                 Weight = 4000,
                 UserId = null
@@ -284,7 +307,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 RegimId = 1, // Photosynthèse
                 TypeId = 16, // Plante
                 Visible = true,
-                Avatar = "paturin.webp",
+                Avatar = "paturin.jpg",
                 Size = 23,
                 Weight = 1,
                 UserId = null
@@ -345,6 +368,56 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             new { BiodomeId = 2, SpeciesId = 10 }, // souris
         new { BiodomeId = 2, SpeciesId = 9 }
         );
+        
+        // Prodution pour équipements 
+        modelBuilder.Entity<ProductionEntity>().HasData(
+        new ProductionEntity
+        {
+            ProductionId = 1,
+            Name = "Lumière"
+        },
+        new ProductionEntity
+        {
+            ProductionId = 2,
+            Name = "Eau"
+        },
+        new ProductionEntity
+        {
+            ProductionId = 3,
+            Name = "Azote"
+        }
+        );
+        
+        // Consommation pour équipements
+        modelBuilder.Entity<ConsumptionEntity>().HasData(
+        new ConsumptionEntity
+        {
+            ConsumptionId = 1,
+            Name = "Hydrogène"
+        },
+        new ConsumptionEntity
+        {
+            ConsumptionId = 2,
+            Name = "Electricité"
+        },
+        new ConsumptionEntity
+        {
+            ConsumptionId = 3,
+            Name = "Essence"
+        }
+        );
+        // Equipements 
+        modelBuilder.Entity<EquipmentEntity>().HasData(
+            new EquipmentEntity
+            {
+                IdEquipment = 1,
+                Avatar = "lampe.webp",
+                Name = "Lampe",
+                ConsumptionId = 2,
+                ProductionId = 1,
+                Visible = false
+            }
+            );
     }
 
     private static void SeedUsersData(ModelBuilder modelBuilder)

@@ -2,13 +2,19 @@
 
 public class EquipmentEntity
 {
-    public string IdEquipment { get; set; }
+    public int IdEquipment { get; set; }
     public string Name { get; set; }
-    private string Production { get; set; } = string.Empty;
-    public string Consumption { get; set; } = string.Empty;
-    public string Avatar  { get; set; } = string.Empty;
+    
+    // Production et consommation
+    public ProductionEntity Production { get; set; }
+    public int ProductionId { get; set; }
+    
+    public ConsumptionEntity? Consumption { get; set; }
+    public int? ConsumptionId { get; set; }
+    public string Avatar { get; set; } = string.Empty;
+    public bool Visible { get; set; }
 
-    // Lien avec User
+// Lien avec User
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
 
