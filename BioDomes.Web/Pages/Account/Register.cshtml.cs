@@ -73,6 +73,10 @@ public class RegisterModel : PageModel
                 ModelState.AddModelError("Input.Avatar", "L'avatar ne peut pas dépasser 2 Mo.");
             }
         }
+        if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
+        {
+            ModelState.AddModelError("Input.SelectedAvatar", "Veuillez sélectionner ou uploader un avatar.");
+        }
 
         if (!ModelState.IsValid)
         {
@@ -208,8 +212,9 @@ public class RegisterModel : PageModel
         [Display(Name = "Avatar")]
         public IFormFile? Avatar { get; set; }
 
+        [Required(ErrorMessage = "Veuillez choisir un organisme de recherche.")]
         [Display(Name = "Organisme de recherche")]
-        public string? ResearchOrganism { get; set; }
+        public string ResearchOrganism { get; set; }
     }
 
     private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()
