@@ -9,4 +9,5 @@ public interface IBiodomeService
     void Save(Biodome created, Stream openReadStream);
 
     double CalculateHumiditeMax(double temp);
+    Biodome GetBiodomeById(int biodomeId);
 }

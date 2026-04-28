@@ -9,4 +9,5 @@ public interface IBiodomeRepository
     void Create(Biodome biodome);
     void Update(Biodome biodome);
     void Delete(string id);
+    Biodome GetBiodomeById(int biodomeId);
 }

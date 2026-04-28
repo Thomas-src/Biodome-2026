@@ -36,4 +36,9 @@ public class BiodomeService : IBiodomeService
     {
         return HumidityCalculator.MaxHumidityOf(temp);
     }
+
+    public Biodome GetBiodomeById(int biodomeId)
+    {
+        return _repository.GetBiodomeById(biodomeId);
+    }
 }

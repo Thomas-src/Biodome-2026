@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,10 +48,10 @@ public class Create : PageModel
             Biome.temperature.Value,
             Biome.humidite.Value,
             Biome.Avatar.FileName,
-            new List<Domains.Core.Species>()
+            new List<Domains.Core.Species>(),
+            new List<Equipement>(),
+            User.Identity.Name
             );
-        
-        created.CreatorName = User.Identity.Name;
         
         _service.Save(created, Biome.Avatar.OpenReadStream());
 

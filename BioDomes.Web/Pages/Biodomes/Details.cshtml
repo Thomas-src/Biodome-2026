@@ -1,0 +1,182 @@
+﻿@page "/biodomes/details/{id:int}"
+@using BioDomes.Domains.Core
+@using Microsoft.IdentityModel.Tokens
+@model BioDomes.Web.Pages.Biodomes.Details
+
+@* Une IA (Claude) à été utilisé pour amélioré l'estéthique de cette page, voici la conversation https://claude.ai/share/88cf48b5-22f6-49ea-84f7-5875f0663ee2 *@
+@* Le style du boutons + Ajouter ainsi que le panneau qui se déplie ont aussi été stylisé a l'aide de l'IA (claude aussi) *@
+@{
+    ViewData["Title"] = "Détails";
+}
+
+<h1 class="visually-hidden">Vue détaillée</h1>
+
+<div class="border mx-auto border overflow-hidden" style="max-width: 820px; border-radius: 0.75rem;">
+
+    <div class="row g-0">
+        <div class="col p-4">
+            <p>Biodome</p>
+            <h2 class="mb-4">@Model.Biodome.Nom</h2>
+
+            <div>
+                <div class="d-flex border-bottom py-1 gap-2">
+                    <span class="text-uppercase fw-bold" style="min-width: 120px;">Température</span>
+                    <span>@Model.Biodome.Temperature °C</span>
+                </div>
+                <div class="d-flex border-bottom py-1 gap-2">
+                    <span class="text-uppercase fw-bold" style="min-width: 120px;">Humidité</span>
+                    <span>@Model.Biodome.Humidite g/m³</span>
+                </div>
+                <div class="d-flex border-bottom py-1 gap-2">
+                    <span class="text-uppercase fw-bold" style="min-width: 120px;">État</span>
+                    <span>@Model.Biodome.Etat</span>
+                </div>
+                <div class="d-flex py-1 gap-2">
+                    <span class="text-uppercase fw-bold" style="min-width: 120px;">Créateur</span>
+                    <span>
+                        @if (Model.Biodome.CreatorName == null || Model.Biodome.CreatorName.IsNullOrEmpty())
+                        {
+                            <text>Inconnu</text>
+                        }
+                        else
+                        {
+                            @Model.Biodome.CreatorName
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-auto">
+            <img src="~/images/biodomes/@Model.Biodome.Image"
+                 style="width: 220px; height: 100%; object-fit: cover; display: block; min-height: 220px;" />
+        </div>
+    </div>
+
+    <div class="row g-0 border-top">
+        <div class="col p-4 border-end">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="bd-section-label mb-0">Les espèces</h5>
+                @if (Model.Owner)
+                {
+                    <button class="btn btn-sm btn-outline-primary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#addSpeciesPanel">
+                        + Ajouter
+                    </button>
+                }
+            </div>
+
+            @if (Model.Biodome.Species == null || Model.Biodome.Species.Count < 1)
+            {
+                <p class="text-muted small mb-0">Il n'y a aucune espèce dans ce biodome !</p>
+            }
+            else
+            {
+                <table class="table table-sm bd-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Régime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var specy in Model.Biodome.Species)
+                        {
+                            <tr>
+                                <td>@specy.Nom</td>
+                                <td>@specy.SpeciesClassification</td>
+                                <td>@specy.DietType</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @if (Model.Owner)
+            {
+                <div class="collapse mt-3" id="addSpeciesPanel">
+                    <div class="border rounded p-3 bg-light">
+                        <form method="post" asp-page-handler="AddSpecies">
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <div class="d-flex gap-2 align-items-center">
+                                <select name="speciesName" class="form-select form-select-sm">
+                                    @foreach (var specy in Model.AvailableSpecies)
+                                    {
+                                        <option value="@specy.Nom">@specy.Nom</option>
+                                    }
+                                </select>
+                                <button type="post" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="bd-section-label mb-0">Les équipements</h5>
+                @if (Model.Owner)
+                {
+                    <button class="btn btn-sm btn-outline-primary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#addEquipementPanel">
+                        + Ajouter
+                    </button>
+                }
+            </div>
+
+            @if (Model.Biodome.Equipements == null || Model.Biodome.Equipements.Count < 1)
+            {
+                <p class="text-muted small mb-0">Il n'y a aucun équipement dans ce biodome !</p>
+            }
+            else
+            {
+                <table class="table table-sm bd-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Consommation</th>
+                            <th>Production</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var equipement in Model.Biodome.Equipements)
+                        {
+                            <tr>
+                                <td>@equipement.Name</td>
+                                <td>@equipement.Consumption</td>
+                                <td>@equipement.Production</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @if (Model.Owner)
+            {
+                <div class="collapse mt-3" id="addEquipementPanel">
+                    <div class="border rounded p-3 bg-light">
+                        <form method="post" asp-page-handler="AddEquipement">
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <div class="d-flex gap-2 align-items-center">
+                                <select name="equipementName" class="form-select form-select-sm">
+                                    @foreach (var equipement in Model.AvailableEquipements)
+                                    {
+                                        <option value="@equipement.Name">@equipement.Name</option>
+                                    }
+                                </select>
+                                <button type="post" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
