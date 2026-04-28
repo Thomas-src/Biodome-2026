@@ -23,6 +23,8 @@ public class BiodomeService : IBiodomeService
     public IReadOnlyList<Biodome> GetAllBiodomes()
     => _repository.GetAllBiodomes();
 
+    
+
     public void Save(Biodome created, Stream openReadStream)
     {
         // 1. Enregistrer l'image
@@ -32,6 +34,40 @@ public class BiodomeService : IBiodomeService
         _repository.Create(created);
     }
 
+    public IReadOnlyList<Biodome> SearchBiodomes(double? temperatureMin, double? temperatureMax, double? humiditeMin, double? humiditeMax, string? equipement, string? espece)
+    {
+        var query = _repository.GetAllBiodomes().AsQueryable();
+
+        if (temperatureMin.HasValue)
+            query = query.Where(b => b.Temperature >= temperatureMin.Value);
+
+        if (temperatureMax.HasValue)
+            query = query.Where(b => b.Temperature <= temperatureMax.Value);
+
+        if (humiditeMin.HasValue)
+        {
+            query = query.Where(b => b.Humidite >= humiditeMin.Value);
+        }
+
+        if (humiditeMax.HasValue)
+        {
+            query = query.Where(b => b.Humidite <= humiditeMax.Value);
+        }
+          
+
+        if (!string.IsNullOrWhiteSpace(equipement))
+        {
+          //  query = query.Where(b => b.Equipements.Any(e => e.Nom.Contains(equipement, StringComparison.OrdinalIgnoreCase)));
+        }
+           
+        if (!string.IsNullOrWhiteSpace(espece))
+        {
+            query = query.Where(b => b.Species.Any(s => s.Nom.Contains(espece, StringComparison.OrdinalIgnoreCase)));
+        }
+           
+        return query.ToList();
+    }
+    
     public double CalculateHumiditeMax(double temp)
     {
         return HumidityCalculator.MaxHumidityOf(temp);
