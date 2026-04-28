@@ -125,4 +125,29 @@ public class BiodomeRepository : IBiodomeRepository
             .AsNoTracking()
             .FirstOrDefault();
     }
+
+    public void AddSpecyInBiome(int biomeId, string speciesName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
+
+        if (!biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        {
+            biodome.Species.Add(specy);
+            _context.SaveChanges();
+        }
+        
+    }
+
+    public void AddEquipementInBiome(int biomeId, string equipementName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var equipement = _context.Equipment.FirstOrDefault(e => e.Name == equipementName);
+
+        if (!biodome.Equipment.Any(s => s.IdEquipment == equipement.IdEquipment))
+        {
+            biodome.Equipment.Add(equipement);
+            _context.SaveChanges();
+        }
+    }
 }

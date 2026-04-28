@@ -53,12 +53,15 @@ public class Details : PageModel
     public IActionResult OnPostAddSpecies(int biomeId, string speciesName)
     {
         // Console.WriteLine("=========================\n" + biomeId);
+        _service.AddSpecyTo(biomeId, speciesName);
         
         return RedirectToPage(new { id = biomeId });
     }
     
     public IActionResult OnPostAddEquipement(int biomeId, string equipementName)
     {
+        _service.AddEquipementTo(biomeId, equipementName);
+        
         return RedirectToPage(new { id = biomeId });
     }
 }

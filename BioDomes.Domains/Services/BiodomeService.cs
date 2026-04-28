@@ -77,4 +77,15 @@ public class BiodomeService : IBiodomeService
     {
         return _repository.GetBiodomeById(biodomeId);
     }
+
+    public void AddSpecyTo(int biomeId, string speciesName)
+    {
+        _repository.AddSpecyInBiome(biomeId, speciesName);
+    
+    }
+
+    public void AddEquipementTo(int biomeId, string equipementName)
+    {
+        _repository.AddEquipementInBiome(biomeId, equipementName);
+    }
 }
