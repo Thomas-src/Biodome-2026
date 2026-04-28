@@ -3,6 +3,7 @@ using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services;
 using BioDomes.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Biodomes;
@@ -23,11 +24,38 @@ public class Biodomes : PageModel
         get { return _allbiodomes; }
         set { _allbiodomes = value; }
     }
+    
+    [BindProperty(SupportsGet = true)]
+    public double? SearchTemperatureMin { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public double? SearchTemperatureMax { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public double? SearchHumiditeMin { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public double? SearchHumiditeMax { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string? SearchEquipement { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string? SearchEspece { get; set; }
+
+    
 
     public void OnGet()
     {
-
         AllBiodomes = _service.GetAllBiodomes();
 
+        AllBiodomes = _service.SearchBiodomes(
+            SearchTemperatureMin,
+            SearchTemperatureMax,
+            SearchHumiditeMin,
+            SearchHumiditeMax,
+            SearchEquipement,
+            SearchEspece
+        );
     }
 }
