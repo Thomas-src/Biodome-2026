@@ -54,13 +54,13 @@ public class Edit : PageModel
 
         string fileName;
 
-        if (Biome.Avatar == null)
+        if (Biome.Avatar != null)
         {
-            fileName = Biodome.Image;
+            fileName = Biome.Avatar.FileName;
         }
         else
         {
-            fileName = Biome.Avatar.FileName;
+            fileName = Biodome.Image;
         }
 
         Biodome created = new Biodome(
@@ -69,13 +69,21 @@ public class Edit : PageModel
             Biome.temperature.Value,
             Biome.humidite.Value,
             fileName,
-            new List<Domains.Core.Species>(),
-            new List<Equipement>(),
+            Biodome.Species,        
+            Biodome.Equipements,    
             User.Identity.Name
         );
-        
-        _service.Update(created);
-        
+
+        if (Biome.Avatar != null)
+        {
+            _service.Update(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
+        }
+        else
+        {
+            _service.Update(created);
+        }
+
+
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
         return RedirectToPage("/Biodomes/Details", new { id = Biodome.Id });        
     }
