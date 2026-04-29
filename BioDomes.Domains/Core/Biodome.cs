@@ -37,4 +37,26 @@ public class Biodome
     public  IReadOnlyList<Equipement> Equipements { get { return _equipements; } }
 
     public BiodomeEtat Etat => BiodomeEtatCompanion.DeterminerEtat(Temperature, Humidite);
+
+    public bool DeepEquals(Object other)
+    {
+        if (!(other is Biodome))
+        {
+            return false;
+        }
+
+        Biodome otherBiodome = (Biodome)other;
+
+        if (otherBiodome.Id == this.Id 
+            && otherBiodome.Image == this.Image 
+            && otherBiodome.CreatorName == this.CreatorName 
+            && otherBiodome.Nom == this.Nom
+            && otherBiodome.Temperature == this.Temperature
+            && otherBiodome.Humidite == this.Humidite)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

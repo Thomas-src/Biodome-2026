@@ -30,13 +30,13 @@
 
             <div class="mb-3">
                 <label asp-for="Biome.temperature" class="form-label">Temperature*</label>
-                <input asp-for="Biome.temperature" class="form-control"/>
+                <input asp-for="Biome.temperature" class="form-control" type="number" step="0.01"/>
                 <span asp-validation-for="Biome.temperature" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Biome.humidite" class="form-label">Humidité*</label>
-                <input asp-for="Biome.humidite" class="form-control"/>
+                <input asp-for="Biome.humidite" class="form-control" type="number" step="0.01"/>
                 <span asp-validation-for="Biome.humidite" class="text-danger"></span>
             </div>
 

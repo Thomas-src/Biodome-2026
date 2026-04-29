@@ -88,4 +88,14 @@ public class BiodomeService : IBiodomeService
     {
         _repository.AddEquipementInBiome(biomeId, equipementName);
     }
+
+    public void Update(Biodome created)
+    {
+        var old = _repository.GetBiodomeById(created.Id);
+
+        if (!created.DeepEquals(old))
+        {
+            _repository.Update(created);
+        }
+    }
 }

@@ -17,4 +17,5 @@ public interface IBiodomeService
     Biodome GetBiodomeById(int biodomeId);
     void AddSpecyTo(int biomeId, string speciesName);
     void AddEquipementTo(int biomeId, string equipementName);
+    void Update(Biodome created);
 }

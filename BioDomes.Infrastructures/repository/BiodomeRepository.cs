@@ -84,7 +84,20 @@ public class BiodomeRepository : IBiodomeRepository
 
     public void Update(Biodome biodome)
     {
-        throw new NotImplementedException();
+        var old = _context.Biodomes
+            .FirstOrDefault(b => b.idBiodomes == biodome.Id);
+
+        if (old == null)
+        {
+            throw new Exception("Biodome introuvable");
+        }
+
+        old.Name = biodome.Nom;
+        old.Temperature = biodome.Temperature;
+        old.Humidity = biodome.Humidite;
+        old.Avatar = biodome.Image;
+
+        _context.SaveChanges();
     }
 
     public void Delete(string id)
