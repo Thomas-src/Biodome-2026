@@ -7,6 +7,7 @@ public interface IBiodomeService
     IReadOnlyList<Biodome> GetBestThreeBiodome();
     IReadOnlyList<Biodome> GetAllBiodomes();
     IReadOnlyList<Biodome> HasSpecies(string speciesName);
+    IReadOnlyList<Biodome> HasEquipement(string equipementName);
     
     IReadOnlyList<Biodome> SearchBiodomes(
         double? temperatureMin, double? temperatureMax,

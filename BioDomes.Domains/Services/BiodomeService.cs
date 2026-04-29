@@ -34,6 +34,15 @@ public class BiodomeService : IBiodomeService
             .ToList();
     }
 
+    public IReadOnlyList<Biodome> HasEquipement(string equipementName)
+    {
+        var biodomes = _repository.GetAllBiodomes();
+
+        return biodomes
+            .Where(b => b.Equipements.Any(s => s.Name.Equals(equipementName)))
+            .ToList();
+    }
+
     public void Save(Biodome created, Stream openReadStream)
     {
         // 1. Enregistrer l'image
@@ -77,7 +86,7 @@ public class BiodomeService : IBiodomeService
 
         return query.ToList();
     }
-
+    
     public double CalculateHumiditeMax(double temp)
     {
         return HumidityCalculator.MaxHumidityOf(temp);

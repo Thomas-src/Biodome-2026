@@ -11,12 +11,6 @@
             <p class="card-text mb-1">
                 <strong>Production :</strong> @Model.Production
             </p>
-            @if (User.Identity.Name != null && User.Identity.Name.Equals(Model.OwnerName))
-            {
-                <p class="card-text">
-                    <strong>Visible :</strong> @Model.Visibility
-                </p>   
-            }
         </div>
     </div>
 

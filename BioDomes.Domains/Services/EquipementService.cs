@@ -46,7 +46,55 @@ public class EquipementService : IEquipementService
         
         return false;
     }
-    
+
+    public void MakePublic(string equipementName)
+    {
+        var equipement = Get(equipementName);
+
+        if (equipement is not null)
+        {
+            equipement.Visibility = true;
+
+            _repository.Update(equipementName, equipement);
+        }
+    }
+
+    public Equipement? Get(string name)
+    {
+        return _repository.GetAllEquipements().FirstOrDefault(e => e.Name == name);
+    }
+
+    public void Delete(string name)
+    {
+        var equipement = Get(name);
+
+        if (equipement is null)
+        {
+            return;
+        }
+        
+        if (!string.IsNullOrEmpty(equipement.Avatar))
+        {
+            _pictureRepository.Delete(equipement.Avatar, "equipements");
+        }
+
+        _repository.Delete(name);
+    }
+
+    public IReadOnlyList<Equipement> GetAvailableEquipements()
+    {
+        return _repository.GetAllEquipements()
+            .Where(e => e.Visibility)
+            .ToList();
+    }
+
+    public IReadOnlyList<Equipement> GetUnavailableEquipements()
+    {
+        return _repository.GetAllEquipements()
+            .Where(e => !e.Visibility)
+            .ToList();
+    }
+
     public void Save(Equipement created, Stream openReadStream)
     {
         // 1. Sauvegarder l'image

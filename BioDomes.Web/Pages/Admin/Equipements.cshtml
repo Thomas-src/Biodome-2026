@@ -1,0 +1,102 @@
+@page
+@model BioDomes.Web.Pages.Admin.EquipementsModel
+
+@{
+    ViewData["Title"] = "Modification des équipements";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="mb-0">Les équipements</h1>
+
+    <a class="btn btn-sm btn-outline-primary mb-3" asp-page="/Equipements/Create">
+        Créer
+    </a>
+</div>
+
+<div class="container mb-4">
+    <h2>Équipements à vérifier: @Model.EquipementsToVerify.Count</h2>
+
+    @if (Model.EquipementsToVerify.Count > 0)
+    {
+        <div class="row g-3 mb-4">
+            @foreach (var equipement in Model.EquipementsToVerify)
+            {
+                var usage = Model.EquipementsBiodomeCount.ContainsKey(equipement.Name) ? Model.EquipementsBiodomeCount[equipement.Name] : 0;
+                var message = $"Êtes-vous sûr de vouloir modifier l’équipement {equipement.Name} ? Utilisé dans {usage} biodome(s).";
+
+                <div class="col-4">
+                    <div class="card shadow-sm h-100 border-warning">
+                        <partial name="_EquipementCard" model="equipement"/>
+                        <div class="card-footer d-flex gap-2">
+                            <a class="btn btn-sm btn-outline-primary w-50"
+                               asp-page="/Species/Edit"
+                               onclick="return confirm('@message');"
+                               asp-route-slug="@equipement.Name">
+                                Modifier
+                            </a>
+                            <form method="post" asp-page-handler="MakePublic">
+                                <input type="hidden" name="name" value="@equipement.Name"/>
+
+                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                    Rendre publique
+                                </button>
+                            </form>
+                            @if (Model.EquipementsBiodomeCount[equipement.Name] == 0)
+                            {
+                                <a class="btn btn-sm btn-outline-danger w-50"
+                                   asp-page="/Admin/DeleteEquipement"
+                                   asp-route-slug="@equipement.Name">
+                                    Supprimer
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mb-4">Aucune espèce en attente de vérification.</p>
+    }
+
+    <h2>Équipements vérifiés @Model.EquipementsVerified.Count</h2>
+
+    @if (Model.EquipementsVerified.Count > 0)
+    {
+        <div class="row g-3 mb-4">
+            @foreach (var equipement in Model.EquipementsVerified)
+            {
+                var usage = Model.EquipementsBiodomeCount.ContainsKey(equipement.Name) ? Model.EquipementsBiodomeCount[equipement.Name] : 0;
+                var message = $"Êtes-vous sûr de vouloir modifier l’équipement {equipement.Name} ? Utilisé dans {usage} biodome(s).";
+
+
+                <div class="col-4">
+                    <div class="card shadow-sm h-100">
+                        <partial name="_EquipementCard" model="equipement"/>
+                        <div class="card-footer d-flex gap-2">
+                            <a class="btn btn-sm btn-outline-primary w-50"
+                               asp-page="/Equipements/Edit"
+                               onclick="return confirm('@message');"
+                               asp-route-slug="@equipement.Name">
+                                Modifier
+                            </a>
+                            @if (Model.EquipementsBiodomeCount[equipement.Name] == 0)
+                            {
+                                <a class="btn btn-sm btn-outline-danger w-50"
+                                   asp-page="/Admin/DeleteEquipement"
+                                   asp-route-slug="@equipement.Name">
+                                    Supprimer
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mb-4">Aucune espèce vérifiée.</p>
+    }
+</div>

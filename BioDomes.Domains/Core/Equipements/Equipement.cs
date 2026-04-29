@@ -2,30 +2,24 @@
 
 public class Equipement
 {
-    private string name; 
-    private Consumptions consumption;
-    private Production production;
-    private string avatar;
-    private bool visibility;
-    private string _ownerName; 
-
     public Equipement(string name, Consumptions consumption, Production production, string avatar, bool visibility, string ownerName)
     {
-        this.name = name;
-        this.consumption = consumption;
-        this.production = production;
-        this.avatar = avatar;
-        this.visibility = visibility;
-        this._ownerName = ownerName;
+        this.Name = name;
+        this.Consumption = consumption;
+        this.Production = production;
+        this.Avatar = avatar;
+        this.Visibility = visibility;
+        this.OwnerName = ownerName;
     }
     
-    public string Name { get { return name; } }
-    public Consumptions Consumption { get { return consumption; } }
-    public Production Production { get { return production; } }
-    public string Avatar { get { return avatar; } set { avatar = value; } }
-    public bool Visibility { get { return visibility; } }
-    
-    public string OwnerName { get { return _ownerName; } }
+    public string Name { get; }
+    public Consumptions Consumption { get; }
+    public Production Production { get; }
+    public string Avatar { get; set; }
+
+    public bool Visibility { get; set; }
+
+    public string OwnerName { get; }
 
     public override bool Equals(object other)
     {

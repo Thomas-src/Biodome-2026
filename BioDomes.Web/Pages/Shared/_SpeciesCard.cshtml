@@ -16,12 +16,7 @@
                 <p class="card-text">
                     <strong>Poids :</strong> @Model.Poids g
                 </p>
-                @if (User.Identity.Name != null && User.Identity.Name.Equals(Model.OwnerName))
-                {
-                    <p class="card-text">
-                        <strong>Visible :</strong> @Model.IsVisible
-                    </p>
-                }
+                
             </div>
         </div>
 

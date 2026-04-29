@@ -12,23 +12,17 @@ public class PictureRepository : IPictureRepository
     {
         string path;
         
-        if (imageType.ToLower() == "biodomes")
+        var folder = imageType.ToLower() switch
         {
-            path = BIOMES_PATH;
-        }
-        else if (imageType.ToLower() == "species")
-        {
-            path = SPECIES_PATH;
-        }
-        else
-        {
-            path = EQUIPEMENTS_PATH;
-        }
+            "biodomes" => BIOMES_PATH,
+            "species" => SPECIES_PATH,
+            _ => EQUIPEMENTS_PATH
+        };
 
 
         var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
 
-        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", path);
+        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", folder);
 
         if (!Directory.Exists(folderPath))
         {
@@ -37,12 +31,33 @@ public class PictureRepository : IPictureRepository
 
         var filePath = Path.Combine(folderPath, newFileName);
 
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            fileStream.CopyTo(stream);
-        }
+        using var stream = new FileStream(filePath, FileMode.Create);
+        fileStream.CopyTo(stream);
 
         return newFileName;
     }
-    
+
+    public void Delete(string fileName, string imageType)
+    {
+        var folder = imageType.ToLower() switch
+        {
+            "biodomes" => BIOMES_PATH,
+            "species" => SPECIES_PATH,
+            _ => EQUIPEMENTS_PATH
+        };
+
+        var path = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot",
+            "images",
+            folder,
+            fileName
+        );
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+           
+    }
 }

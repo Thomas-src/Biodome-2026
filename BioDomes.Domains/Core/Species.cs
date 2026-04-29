@@ -79,6 +79,7 @@ public class Species
     public bool IsVisible
     {
         get { return _IsVisible; }
+        set  { _IsVisible = value; }
     }
 
     public string OwnerName{

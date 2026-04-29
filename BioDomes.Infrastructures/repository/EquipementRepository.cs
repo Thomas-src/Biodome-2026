@@ -79,4 +79,66 @@ public class EquipementRepository : IEquipementRepository
 
 
     }
+
+    public void Delete(string name)
+    {
+        var entity = _dbContext.Equipment.FirstOrDefault(e => e.Name == name);
+
+        if (entity is null)
+        {
+            return;
+        }
+        
+        _dbContext.Equipment.Remove(entity);
+        _dbContext.SaveChanges();
+    }
+
+    public void Update(string name, Equipement update)
+    {
+        var entity = _dbContext.Equipment
+            .Include(e => e.Consumption)
+            .Include(e => e.Production)
+            .Include(e => e.User)
+            .FirstOrDefault(e => e.Name == name);
+
+        if (entity is null)
+        {
+            return;
+        } 
+
+        entity.Name = update.Name;
+        entity.Avatar = update.Avatar;
+        entity.Visible = update.Visibility;
+
+        // User
+        var user = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == update.OwnerName.ToLower());
+
+        if (user != null)
+        {
+            entity.UserId = user.Id;
+        }
+
+        var production = _dbContext.productions.FirstOrDefault(p => p.Name == update.Production.ToString());
+
+        if (production != null)
+        {
+            entity.ProductionId = production.ProductionId;
+        }
+
+        if (update.Consumption != Consumptions.None)
+        {
+            var consumption = _dbContext.consumptions.FirstOrDefault(c => c.Name == update.Consumption.ToString());
+
+            if (consumption != null)
+            {
+                entity.ConsumptionId = consumption.ConsumptionId;
+            }
+        }
+        else
+        {
+            entity.ConsumptionId = null;
+        }
+
+        _dbContext.SaveChanges();
+    }
 }
