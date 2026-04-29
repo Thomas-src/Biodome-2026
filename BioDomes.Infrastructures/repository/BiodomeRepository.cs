@@ -1,20 +1,21 @@
 ﻿using BioDomes.Domains.Core;
+using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
 
 public class BiodomeRepository : IBiodomeRepository
 {
-    
     private readonly BioDomesDbContext _context;
-    
+
     public BiodomeRepository(BioDomesDbContext context)
     {
         _context = context;
     }
-    
+
     /*
      * public IReadOnlyList<Biodome> GetBestThreeBiodome()
      {
@@ -45,10 +46,20 @@ public class BiodomeRepository : IBiodomeRepository
                     s.Avatar,
                     s.Visible,
                     s.User != null ? s.User.UserName : "unknown"
-                )).ToList()
+                )).ToList(),
+                b.Equipment.Select(e => new Equipement(
+                    e.Name,
+                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
+                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
+                    e.Avatar,
+                    e.Visible,
+                    e.User != null ? e.User.UserName : "unknown"
+                )).ToList(),
+                b.user.UserName
             ))
             .ToList();
     }
+
     public void Create(Biodome biodome)
     {
         var u = _context.Users.FirstOrDefault(u => u.UserName == biodome.CreatorName);
@@ -56,8 +67,9 @@ public class BiodomeRepository : IBiodomeRepository
         {
             throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
         }
-        string userId = u.Id;     
-        
+
+        string userId = u.Id;
+
         var entity = new BiodomeEntity
         {
             Name = biodome.Nom,
@@ -72,11 +84,108 @@ public class BiodomeRepository : IBiodomeRepository
 
     public void Update(Biodome biodome)
     {
-        throw new NotImplementedException();
+        var old = _context.Biodomes
+            .FirstOrDefault(b => b.idBiodomes == biodome.Id);
+
+        if (old == null)
+        {
+            throw new Exception("Biodome introuvable");
+        }
+
+        old.Name = biodome.Nom;
+        old.Temperature = biodome.Temperature;
+        old.Humidity = biodome.Humidite;
+        old.Avatar = biodome.Image;
+
+        _context.SaveChanges();
     }
 
     public void Delete(string id)
     {
         throw new NotImplementedException();
+    }
+
+    public Biodome GetBiodomeById(int biodomeId)
+    {
+        return _context.Biodomes
+            .Where(b => b.idBiodomes == biodomeId)
+            .Select(b => new Biodome(
+                b.idBiodomes,
+                b.Name,
+                b.Temperature,
+                b.Humidity,
+                b.Avatar,
+                b.Species.Select(s => new Species(
+                    s.Name,
+                    s.Size,
+                    s.Weight,
+                    Enum.Parse<DietType>(s.Regim.Name),
+                    Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
+                    s.Avatar,
+                    s.Visible,
+                    s.User != null ? s.User.UserName : "unknown"
+                )).ToList(),
+                b.Equipment.Select(e => new Equipement(
+                    e.Name,
+                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
+                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,    
+                    e.Avatar,
+                    e.Visible,
+                    e.User != null ? e.User.UserName : "unknown"
+                )).ToList(),
+                b.user.UserName
+            ))        
+            .AsNoTracking()
+            .FirstOrDefault();
+    }
+
+    public void AddSpecyInBiome(int biomeId, string speciesName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
+
+        if (!biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        {
+            biodome.Species.Add(specy);
+            _context.SaveChanges();
+        }
+        
+    }
+
+    public void AddEquipementInBiome(int biomeId, string equipementName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Equipment).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var equipement = _context.Equipment.FirstOrDefault(e => e.Name == equipementName);
+
+        if (!biodome.Equipment.Any(s => s.IdEquipment == equipement.IdEquipment))
+        {
+            biodome.Equipment.Add(equipement);
+            _context.SaveChanges();
+        }
+    }
+
+    public void RemoveSpecyInBiome(int biomeId, string speciesName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
+
+        if (biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        {
+            biodome.Species.Remove(specy);
+            _context.SaveChanges();
+        }
+        
+    }
+
+    public void RemoveEquipementInBiome(int biomeId, string equipementName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Equipment).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var equipement = _context.Equipment.FirstOrDefault(e => e.Name == equipementName);
+
+        if (biodome.Equipment.Any(s => s.IdEquipment == equipement.IdEquipment))
+        {
+            biodome.Equipment.Remove(equipement);
+            _context.SaveChanges();
+        }    
     }
 }

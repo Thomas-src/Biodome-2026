@@ -15,4 +15,11 @@ public interface IBiodomeService
     void Save(Biodome created, Stream openReadStream);
 
     double CalculateHumiditeMax(double temp);
+    Biodome GetBiodomeById(int biodomeId);
+    void AddSpecyTo(int biomeId, string speciesName);
+    void AddEquipementTo(int biomeId, string equipementName);
+    void Update(Biodome created);
+    void Update(Biodome created, string fileName, Stream openReadStream);
+    void RemoveSpecyFrom(int biomeId, string speciesName);
+    void RemoveEquipementFrom(int biomeId, string equipementName);
 }
