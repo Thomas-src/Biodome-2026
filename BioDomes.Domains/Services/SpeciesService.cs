@@ -53,6 +53,20 @@ public class SpeciesService : ISpeciesService
 
         return result.AsReadOnly();
     }
+    
+
+    public IReadOnlyList<Species> GetUnavailableSpecies()
+    {
+        return _repository.GetAllSpecies()
+            .Where(s => !s.IsVisible)
+            .ToList();
+    }
+    public IReadOnlyList<Species> GetAvailableSpecies()
+    {
+        return _repository.GetAllSpecies()
+            .Where(s => s.IsVisible)
+            .ToList();
+    }
 
     public bool SpeciesExists(Species species)
     {

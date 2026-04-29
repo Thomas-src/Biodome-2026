@@ -8,6 +8,8 @@ public interface ISpeciesService
 
     public IReadOnlyList<Species> FilterSpecies(string ownerSpecies, IReadOnlyList<Species> species);
     
+    public IReadOnlyList<Species> GetAvailableSpecies();
+    public IReadOnlyList<Species> GetUnavailableSpecies();
     public bool SpeciesExists(Species species);
     bool Save(Species created, Stream openReadStream);
 

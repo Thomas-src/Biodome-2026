@@ -23,7 +23,14 @@ public class BiodomeService : IBiodomeService
     public IReadOnlyList<Biodome> GetAllBiodomes()
     => _repository.GetAllBiodomes();
 
-    
+    public IReadOnlyList<Biodome> HasSpecies(string speciesName)
+    {
+        var biodomes = _repository.GetAllBiodomes();
+
+        return biodomes
+            .Where(b => b.Species.Any(s => s.Nom.Equals(speciesName)))
+            .ToList();
+    }
 
     public void Save(Biodome created, Stream openReadStream)
     {

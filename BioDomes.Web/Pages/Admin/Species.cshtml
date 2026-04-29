@@ -1,0 +1,93 @@
+@page "/Admin/species"
+@model BioDomes.Web.Pages.Admin.SpeciesAdminModel
+
+@{
+    ViewData["Title"] = "Modification espèces";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="mb-0">Les espèces</h1>
+
+    <a class="btn btn-sm btn-outline-primary mb-3" asp-page="/Species/Create">
+        Créer
+    </a>
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container mb-4">
+        <h2>Espèces à vérifier: @Model.SpeciesToVerify.Count</h2>
+
+        @if (Model.SpeciesToVerify.Count > 0)
+        {
+            <div class="row g-3 mb-4">
+                @foreach (var espece in Model.SpeciesToVerify)
+                {
+                    <div class="col-4">
+                        <div class="card shadow-sm h-100 border-warning">
+                            <partial name="_SpeciesCard" model="espece" />
+                            <div class="card-footer d-flex gap-2">
+                                <a class="btn btn-sm btn-outline-primary w-50"
+                                   asp-page="/Species/Edit"
+                                   asp-route-slug="@espece.Nom">
+                                    Modifier
+                                </a>
+                                @if (Model.UnUsedSpeciesNames.Contains(espece.Nom))
+                                {
+                                    <a class="btn btn-sm btn-outline-danger w-50"
+                                       asp-page="/Species/Delete"
+                                       asp-route-slug="@espece.Nom">
+                                        Supprimer
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-4">Aucune espèce en attente de vérification.</p>
+        }
+
+        <h2>Espèces vérifiées @Model.SpeciesVerified.Count</h2>
+
+        @if (Model.SpeciesVerified.Count > 0)
+        {
+            <div class="row g-3 mb-4">
+                @foreach (var espece in Model.SpeciesVerified)
+                {
+                    <div class="col-4">
+                        <div class="card shadow-sm h-100 border-success">
+                            <partial name="_SpeciesCard" model="espece" />
+                            <div class="card-footer d-flex gap-2">
+                                <a class="btn btn-sm btn-outline-primary w-50"
+                                   asp-page="/Species/Edit"
+                                   asp-route-slug="@espece.Nom">
+                                    Modifier
+                                </a>
+                                @if (Model.UnUsedSpeciesNames.Contains(espece.Nom))
+                                {
+                                    <a class="btn btn-sm btn-outline-danger w-50"
+                                       asp-page="/Species/Delete"
+                                       asp-route-slug="@espece.Nom">
+                                        Supprimer
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-4">Aucune espèce vérifiée.</p>
+        }
+    </div>
+
+    <h2>Autres espèces disponibles :</h2>
+}
+
+

@@ -46,8 +46,10 @@
                                role="button"
                                data-bs-toggle="dropdown"
                                aria-expanded="false">
-
-                                <img src="~/images/avatars/@(User.FindFirst("Avatar")?.Value ?? "1.png")"
+                                @{
+                                    var avatar = User.FindFirst("Avatar")?.Value ?? "1.png";
+                                }
+                                <img src="~/images/avatars/@avatar"
                                      class="rounded-circle"
                                      style="width:32px; height:32px; object-fit:cover;"  alt="avatar"/>
 
@@ -76,6 +78,11 @@
                                     <li>
                                         <a class="dropdown-item" asp-page="/Admin/Dashboard">
                                             Tableau de bord admin
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Admin/Species">
+                                            Modifier les espèces
                                         </a>
                                     </li>
                                     <li>

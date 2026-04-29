@@ -62,15 +62,15 @@
                     var img = $"{i}.png";
                     var path = $"~/images/avatars/{img}";
                     var isActive = Model.Input.SelectedAvatar == img;
-
+                    var resolvedPath = Url.Content(path);
                     <label class="d-flex flex-column align-items-center gap-1" style="cursor:pointer">
                         <input type="radio"
                                name="Input.SelectedAvatar"
-                               value="@path"
+                               value="@img"
                                class="d-none avatar-radio"
                                @(isActive ? "checked" : null) />
 
-                        <img src="@path"
+                        <img src="@resolvedPath"
                              alt="Avatar @i"
                              class="rounded-circle avatar-option border border-2 @(isActive ? "border-primary" : "")"
                              style="width:64px; height:64px; object-fit:cover;" />
