@@ -19,4 +19,6 @@ public interface IBiodomeService
     void AddEquipementTo(int biomeId, string equipementName);
     void Update(Biodome created);
     void Update(Biodome created, string fileName, Stream openReadStream);
+    void RemoveSpecyFrom(int biomeId, string speciesName);
+    void RemoveEquipementFrom(int biomeId, string equipementName);
 }

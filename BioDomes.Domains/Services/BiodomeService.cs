@@ -90,6 +90,17 @@ public class BiodomeService : IBiodomeService
         _repository.AddEquipementInBiome(biomeId, equipementName);
     }
 
+    public void RemoveSpecyFrom(int biomeId, string speciesName)
+    {
+        _repository.RemoveSpecyInBiome(biomeId, speciesName);
+    }
+
+    public void RemoveEquipementFrom(int biomeId, string equipementName)
+    {
+        _repository.RemoveEquipementInBiome(biomeId, equipementName);
+
+    }
+    
     public void Update(Biodome created)
     {
         var old = _repository.GetBiodomeById(created.Id);

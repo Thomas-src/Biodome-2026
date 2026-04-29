@@ -95,14 +95,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var specy in Model.Biodome.Species)
-                        {
-                            <tr>
-                                <td>@specy.Nom</td>
-                                <td>@specy.SpeciesClassification</td>
-                                <td>@specy.DietType</td>
-                            </tr>
-                        }
+                    @foreach (var specy in Model.Biodome.Species)
+                    {
+                        <tr>
+                            <td>@specy.Nom</td>
+                            <td>@specy.SpeciesClassification</td>
+                            <td>@specy.DietType</td>
+                            @if (Model.Owner)
+                            {
+                                <td class="text-end">
+                                    <form method="post" asp-page-handler="RemoveSpecies" class="d-inline">
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                                        <input type="hidden" name="speciesName" value="@specy.Nom" />
+                                        <button type="submit"
+                                                class="btn btn-link btn-sm text-danger p-0 lh-1"
+                                                style="font-size: 1.1rem;"
+                                                >×</button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
                     </tbody>
                 </table>
             }
@@ -157,14 +170,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var equipement in Model.Biodome.Equipements)
-                        {
-                            <tr>
-                                <td>@equipement.Name</td>
-                                <td>@equipement.Consumption</td>
-                                <td>@equipement.Production</td>
-                            </tr>
-                        }
+                    @foreach (var equipement in Model.Biodome.Equipements)
+                    {
+                        <tr>
+                            <td>@equipement.Name</td>
+                            <td>@equipement.Consumption</td>
+                            <td>@equipement.Production</td>
+                            @if (Model.Owner)
+                            {
+                                <td class="text-end">
+                                    <form method="post" asp-page-handler="RemoveEquipement" class="d-inline">
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                                        <input type="hidden" name="equipementName" value="@equipement.Name" />
+                                        <button type="submit"
+                                                class="btn btn-link btn-sm text-danger p-0"
+                                                style="font-size: 1.1rem;"
+                                                >×</button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
                     </tbody>
                 </table>
             }

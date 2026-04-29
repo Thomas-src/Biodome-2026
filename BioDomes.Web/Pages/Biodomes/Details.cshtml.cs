@@ -64,4 +64,18 @@ public class Details : PageModel
         
         return RedirectToPage(new { id = biomeId });
     }
+    
+    public IActionResult OnPostRemoveSpecies(int biomeId, string speciesName)
+    {
+        _service.RemoveSpecyFrom(biomeId, speciesName);
+        // TempData["SuccessMessage"] = $"L'espèce {speciesName} a été retirée du biodome.";
+        return RedirectToPage(new { id = biomeId });
+    }
+
+    public IActionResult OnPostRemoveEquipement(int biomeId, string equipementName)
+    {
+        _service.RemoveEquipementFrom(biomeId, equipementName);
+        // TempData["SuccessMessage"] = $"L'équipement {equipementName} a été retiré du biodome.";
+        return RedirectToPage(new { id = biomeId });
+    }
 }

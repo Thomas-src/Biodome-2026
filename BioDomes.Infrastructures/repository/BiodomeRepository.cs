@@ -49,8 +49,8 @@ public class BiodomeRepository : IBiodomeRepository
                 )).ToList(),
                 b.Equipment.Select(e => new Equipement(
                     e.Name,
-                    Enum.Parse<Consumptions>(e.Consumption.Name),
-                    Enum.Parse<Production>(e.Production.Name),
+                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
+                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
                     e.Avatar,
                     e.Visible,
                     e.User != null ? e.User.UserName : "unknown"
@@ -127,8 +127,8 @@ public class BiodomeRepository : IBiodomeRepository
                 )).ToList(),
                 b.Equipment.Select(e => new Equipement(
                     e.Name,
-                    Enum.Parse<Consumptions>(e.Consumption.Name),
-                    Enum.Parse<Production>(e.Production.Name),
+                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
+                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,    
                     e.Avatar,
                     e.Visible,
                     e.User != null ? e.User.UserName : "unknown"
@@ -154,7 +154,7 @@ public class BiodomeRepository : IBiodomeRepository
 
     public void AddEquipementInBiome(int biomeId, string equipementName)
     {
-        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var biodome = _context.Biodomes.Include(b => b.Equipment).FirstOrDefault(b => b.idBiodomes == biomeId);
         var equipement = _context.Equipment.FirstOrDefault(e => e.Name == equipementName);
 
         if (!biodome.Equipment.Any(s => s.IdEquipment == equipement.IdEquipment))
@@ -162,5 +162,30 @@ public class BiodomeRepository : IBiodomeRepository
             biodome.Equipment.Add(equipement);
             _context.SaveChanges();
         }
+    }
+
+    public void RemoveSpecyInBiome(int biomeId, string speciesName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
+
+        if (biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        {
+            biodome.Species.Remove(specy);
+            _context.SaveChanges();
+        }
+        
+    }
+
+    public void RemoveEquipementInBiome(int biomeId, string equipementName)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Equipment).FirstOrDefault(b => b.idBiodomes == biomeId);
+        var equipement = _context.Equipment.FirstOrDefault(e => e.Name == equipementName);
+
+        if (biodome.Equipment.Any(s => s.IdEquipment == equipement.IdEquipment))
+        {
+            biodome.Equipment.Remove(equipement);
+            _context.SaveChanges();
+        }    
     }
 }
