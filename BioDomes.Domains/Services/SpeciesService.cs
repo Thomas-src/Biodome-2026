@@ -25,17 +25,14 @@ public class SpeciesService : ISpeciesService
 
     public bool MakePublic(string name, string ownerName)
     {
-        var allSpecies = _repository.GetAllSpecies();
-        var species = allSpecies.FirstOrDefault(s =>
-            s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
-            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+        var species = GetByKebabCase(name, ownerName);
         
         if (species is null)
         {
             return false;
         }
-
-        var alreadyVisible = allSpecies.Any(s =>
+        
+        var alreadyVisible = _repository.GetAllSpecies().Any(s =>
             s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
             s.IsVisible &&
             !s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));

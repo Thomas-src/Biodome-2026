@@ -36,9 +36,15 @@ public class EquipementsModel : PageModel
     
     public IActionResult OnPostMakePublic(string name, string ownerName)
     {
-        _logger.LogInformation("Made equipement public : {Nom} {Owner}", name, ownerName);
-        _service.MakePublic(name, ownerName);
-
+        if ( _service.MakePublic(name, ownerName))
+        {
+            TempData["SuccessMessage"] = $"L'équipement {name} de {ownerName} a été rendu publique avec succès";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = $"Impossible de rendre {name} publique car cet équipement a soit été supprimé ou le même équipement d'autre utilisateur a déjà été validé.";
+        }
+        
         return RedirectToPage();
     }
 }

@@ -29,16 +29,29 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
         e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
         (e.Visibility || e.OwnerName == equipement.OwnerName));
 
-    public void MakePublic(string equipementName, string ownerName)
+    public bool MakePublic(string equipementName, string ownerName)
     {
         var equipement = GetByKebabCase(equipementName, ownerName);
 
-        if (equipement is not null)
+        if (equipement is null)
         {
-            equipement.Visibility = true;
-
-            repository.Update(equipementName, ownerName, equipement);
+            return false;
         }
+        
+        var alreadyVisible = repository.GetAllEquipements().Any(s =>
+            s.Name.Equals(equipementName, StringComparison.CurrentCultureIgnoreCase) &&
+            s.Visibility &&
+            !s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+
+        if (alreadyVisible)
+        {
+            return false;
+        }
+
+        equipement.Visibility = true;
+
+        repository.Update(equipementName, ownerName, equipement);
+        return true;
     }
 
     public Equipement? GetByKebabCase(string name, string ownerName) => repository.GetAllEquipements()

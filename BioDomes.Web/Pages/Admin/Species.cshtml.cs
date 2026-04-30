@@ -44,7 +44,7 @@ public class SpeciesAdminModel : PageModel
         }
         else
         {
-            TempData["ErrorMessage"] = $"Impossible de rendre {name} de {ownerName} publique car elle a été supprimée ou est déjà publique.";
+            TempData["ErrorMessage"] = $"Impossible de rendre {name} publique car elle a été supprimée ou l'espèce d'un autre utilisateur a déjà été validée.";
         }
         
         return RedirectToPage();
