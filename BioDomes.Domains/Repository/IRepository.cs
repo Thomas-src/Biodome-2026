@@ -1,5 +1,5 @@
-using BioDomes.Domains;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Core.Equipements;
 
 namespace BioDomes.Domains.Extensions;
 
