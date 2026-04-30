@@ -7,19 +7,20 @@ public class PictureRepository : IPictureRepository
     private const string SPECIES_PATH = "species";
     private const string BIOMES_PATH = "biodomes";
     private const string EQUIPEMENTS_PATH = "equipements";
+    private const string AVATARS_PATH = "avatars";
+
+    private static string GetFolder(string filename) =>
+        filename.ToLower() switch
+    {
+        "biodomes" => BIOMES_PATH,
+        "species" => SPECIES_PATH,
+        "avatars" => AVATARS_PATH,
+        _ => EQUIPEMENTS_PATH
+    };
     
     public string Save(string fileName, Stream fileStream, string imageType)
     {
-        string path;
-        
-        var folder = imageType.ToLower() switch
-        {
-            "biodomes" => BIOMES_PATH,
-            "species" => SPECIES_PATH,
-            _ => EQUIPEMENTS_PATH
-        };
-
-
+        var folder = GetFolder(imageType);
         var newFileName = Guid.NewGuid() + Path.GetExtension(fileName);
 
         var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", folder);
@@ -39,12 +40,7 @@ public class PictureRepository : IPictureRepository
 
     public void Delete(string fileName, string imageType)
     {
-        var folder = imageType.ToLower() switch
-        {
-            "biodomes" => BIOMES_PATH,
-            "species" => SPECIES_PATH,
-            _ => EQUIPEMENTS_PATH
-        };
+        var folder = GetFolder(imageType);
 
         var path = Path.Combine(
             Directory.GetCurrentDirectory(),

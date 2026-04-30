@@ -20,7 +20,9 @@ public class DeleteEquipementModel : PageModel
     public IActionResult OnGet(string slug)
     {
         if (string.IsNullOrEmpty(slug))
+        {
             return NotFound();
+        }
 
         var equipement = _service.Get(slug);
 
@@ -36,9 +38,10 @@ public class DeleteEquipementModel : PageModel
     public IActionResult OnPostDelete(string slug)
     {
         if (string.IsNullOrEmpty(slug))
+        {
             return NotFound();
-
-        var usageCount =  _service.Get(slug);
+        }
+        
         var biodomesHasSpecies = _biodomesService.HasEquipement(slug);
         if (biodomesHasSpecies.Count == 0)
         {

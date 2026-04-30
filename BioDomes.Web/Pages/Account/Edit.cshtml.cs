@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,26 +17,28 @@ public class EditModel : PageModel
     private readonly ILogger<EditModel> _logger;
     private readonly IResearchService _researchOrganismService;
     private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
+    private readonly IPictureRepository _pictureRepository;
 
     public EditModel(
         UserManager<Infrastructures.entities.UserEntity> userManager,
         IUserStore<Infrastructures.entities.UserEntity> userStore,
         ILogger<EditModel> logger,
-        IResearchService researchOrganismService)
+        IResearchService researchOrganismService,
+        IPictureRepository pictureRepository)
     {
         _userManager = userManager;
         _userStore = userStore;
         _logger = logger;
         _emailStore = GetEmailStore();
         _researchOrganismService = researchOrganismService;
+        _pictureRepository = pictureRepository;
     }
 
     public IReadOnlyList<ResearchOrganism> Organismes { get; set; } = [];
     public string? CurrentAvatar { get; set; }
     public string? Email { get; set; }
 
-    [BindProperty]
-    public InputModel Input { get; set; } = new();
+    [BindProperty] public InputModel Input { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -107,35 +110,19 @@ public class EditModel : PageModel
 
         if (Input.Avatar is not null)
         {
-            var uploadsDir = Path.Combine("wwwroot", "uploads", "avatars");
-            Directory.CreateDirectory(uploadsDir);
-
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(Input.Avatar.FileName)}";
-            var filePath = Path.Combine(uploadsDir, fileName);
-
-            await using (var fs = System.IO.File.Create(filePath))
-            {
-                await Input.Avatar.CopyToAsync(fs);
-            }
-
-            if (!string.IsNullOrEmpty(user.Avatar) && user.Avatar.StartsWith("/uploads/"))
-            {
-                var oldPath = Path.Combine("wwwroot", user.Avatar.TrimStart('/'));
-
-                if (System.IO.File.Exists(oldPath))
-                {
-                    System.IO.File.Delete(oldPath);
-                }
-            }
-
-            user.Avatar = $"/uploads/avatars/{fileName}";
+            var filename = _pictureRepository.Save(Input.Avatar.FileName, Input.Avatar.OpenReadStream(), "avatars");
+            user.Avatar = filename;
+            _logger.LogInformation("Avatar mis à jour via upload: {f}", filename);
         }
         else if (!string.IsNullOrEmpty(Input.SelectedAvatar))
         {
             user.Avatar = Input.SelectedAvatar;
+            _logger.LogInformation("Avatar mis à jour via sélection: {s}", Input.SelectedAvatar);
         }
 
+        _logger.LogInformation("BEFORE UPDATE Avatar = {a}", user.Avatar);
         var result = await _userManager.UpdateAsync(user);
+        _logger.LogInformation("AFTER UPDATE SUCCESS = {s}", result.Succeeded);
 
         if (result.Succeeded && !string.IsNullOrWhiteSpace(Input.Password))
         {
@@ -157,6 +144,7 @@ public class EditModel : PageModel
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+
             return Page();
         }
 
@@ -187,8 +175,7 @@ public class EditModel : PageModel
         [Display(Name = "Date de naissance")]
         public DateOnly DateNaissance { get; set; }
 
-        [Display(Name = "Avatar")]
-        public IFormFile? Avatar { get; set; }
+        [Display(Name = "Avatar")] public IFormFile? Avatar { get; set; }
 
         public string? SelectedAvatar { get; set; }
 
@@ -202,7 +189,7 @@ public class EditModel : PageModel
         {
             throw new NotSupportedException("User store must support email.");
         }
-           
+
 
         return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
     }

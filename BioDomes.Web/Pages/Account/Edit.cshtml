@@ -102,3 +102,11 @@
 
     </form>
 </section>
+
+<script>
+    document.getElementById('avatarUpload').addEventListener('change', function() {
+        if (this.files.length > 0) {
+            document.querySelectorAll('.avatar-radio').forEach(r => r.checked = false);
+        }
+    });
+</script>
