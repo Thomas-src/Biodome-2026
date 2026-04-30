@@ -14,7 +14,7 @@ public class Species
     private bool _IsVisible;
 
     private string _ownerName;
-    private int quantity;
+    private int _quantity;
 
     public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName)
     {
@@ -38,7 +38,7 @@ public class Species
         this._avatar = avatar;
         this._IsVisible = visible;
         this._ownerName = ownerName;
-        this.quantity = quantity;
+        this._quantity = quantity;
     }
 
     public override bool Equals(Object other)
@@ -105,5 +105,11 @@ public class Species
 
     public string OwnerName{
         get { return _ownerName; }
+    }
+
+    public int Quantity
+    {
+        get => _quantity;
+        set => _quantity = value;
     }
 }

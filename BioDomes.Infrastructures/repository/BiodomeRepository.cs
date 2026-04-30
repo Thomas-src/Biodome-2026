@@ -137,7 +137,6 @@ public class BiodomeRepository : IBiodomeRepository
                 )).ToList(),
                 b.user.UserName
             ))
-            .AsNoTracking()
             .FirstOrDefault();
     }
 

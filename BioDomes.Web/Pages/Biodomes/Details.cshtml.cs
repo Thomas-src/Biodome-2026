@@ -50,11 +50,10 @@ public class Details : PageModel
         return Page();
     }
 
-    public IActionResult OnPostAddSpecies(int biomeId, string speciesName)
+    public IActionResult OnPostAddSpecies(int biomeId, string speciesName, int quantity = 1)
     {
-        // Console.WriteLine("=========================\n" + biomeId);
-        _service.AddSpecyTo(biomeId, speciesName, 1);
-        
+        _service.AddSpecyTo(biomeId, speciesName, quantity);
+    
         return RedirectToPage(new { id = biomeId });
     }
     

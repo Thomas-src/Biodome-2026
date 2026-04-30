@@ -36,7 +36,7 @@ public class Biodome
     
     public  IReadOnlyList<Equipement> Equipements { get { return _equipements; } }
 
-    public BiodomeEtat Etat => BiodomeEtatCompanion.DeterminerEtat(Temperature, Humidite);
+    public BiodomeEtat Etat => BiodomeEtatCompanion.DeterminerEtat(this);
 
     public bool DeepEquals(Object other)
     {

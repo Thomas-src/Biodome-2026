@@ -66,7 +66,7 @@
     </div>
 
     <div class="row g-0 border-top">
-        <div class="col p-4 border-end">
+        <div class="col-7 p-4 border-end">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h5 class="mb-0">Les espèces</h5>
                 @if (Model.Owner)
@@ -92,6 +92,7 @@
                             <th>Nom</th>
                             <th>Type</th>
                             <th>Régime</th>
+                            <th>Quantité</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,6 +102,7 @@
                             <td>@specy.Nom</td>
                             <td>@specy.SpeciesClassification</td>
                             <td>@specy.DietType</td>
+                            <td>@specy.Quantity</td>
                             @if (Model.Owner)
                             {
                                 <td class="text-end">
@@ -133,7 +135,9 @@
                                         <option value="@specy.Nom">@specy.Nom</option>
                                     }
                                 </select>
-                                <button type="post" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
+                                <input type="number" name="quantity" value="1" min="1"
+                                       class="form-control form-control-sm" style="width: 70px;" />
+                                <button type="submit" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
                             </div>
                         </form>
                     </div>
@@ -141,7 +145,7 @@
             }
         </div>
 
-        <div class="col p-4">
+        <div class="col-5 p-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h5 class="mb-0">Les équipements</h5>
                 @if (Model.Owner)
