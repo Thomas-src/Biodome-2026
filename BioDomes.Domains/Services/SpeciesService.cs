@@ -1,6 +1,7 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Domains.Services;
 
@@ -8,11 +9,13 @@ public class SpeciesService : ISpeciesService
 {
     private readonly ISpeciesRepository _repository;
     private readonly IPictureRepository _pictureRepository;
+    private readonly ILogger<SpeciesService> _logger;
 
-    public SpeciesService(ISpeciesRepository repository, IPictureRepository pictureRepository)
+    public SpeciesService(ISpeciesRepository repository, IPictureRepository pictureRepository, ILogger<SpeciesService> logger)
     {
         _repository = repository;
         _pictureRepository = pictureRepository;
+        _logger = logger;
     }
 
     public Species? GetSpeciesBySlug(string slug)
@@ -60,9 +63,14 @@ public class SpeciesService : ISpeciesService
 
         if (species is not null)
         {
+            _logger.LogInformation("found");
             species.IsVisible = true;
 
             _repository.Update(name, species);
+        }
+        else
+        {
+            _logger.LogInformation("not found");
         }
     }
 
@@ -159,13 +167,6 @@ public class SpeciesService : ISpeciesService
                 return false;
             }
             oldSpecies.IsVisible = newSpecies.IsVisible;
-    
-            // ⚠️ ici tu es limité par ton modèle (pas de setters pour Nom/Taille/Poids/DietType)
-            // donc normalement tu dois soit :
-            // - ajouter des méthodes métier dans Species
-            // - soit accepter que seul avatar + visibility changent
-    
-            // 2. Image update (si nouvelle image fournie)
             if (openReadStream != null)
             {
                 if (!string.IsNullOrEmpty(oldSpecies.Avatar))

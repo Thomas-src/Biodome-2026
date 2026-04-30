@@ -9,15 +9,17 @@ public class SpeciesAdminModel : PageModel
 {
     private readonly IBiodomeService _biodomesService;
     private readonly ISpeciesService _speciesService;
+    private readonly ILogger<SpeciesAdminModel> _logger;
 
     public Dictionary<string, int> SpeciesBiodomeCount { get; set; } = new();
     public IReadOnlyList<Domains.Core.Species> SpeciesVerified { get; set; } = [];
     public IReadOnlyList<Domains.Core.Species> SpeciesToVerify { get; set; } = [];
 
-    public SpeciesAdminModel(ISpeciesService speciesService, IBiodomeService biodomesService)
+    public SpeciesAdminModel(ISpeciesService speciesService, IBiodomeService biodomesService, ILogger<SpeciesAdminModel> logger)
     {
         _speciesService = speciesService;
         _biodomesService = biodomesService;
+        _logger = logger;
     }
 
     public void OnGet()
@@ -35,6 +37,7 @@ public class SpeciesAdminModel : PageModel
     
     public IActionResult OnPostMakePublic(string name)
     {
+        _logger.LogInformation("post pour {}", name);
         _speciesService.MakePublic(name);
 
         return RedirectToPage();
