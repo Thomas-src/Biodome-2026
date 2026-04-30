@@ -12,6 +12,7 @@ public class Species
     private bool _IsVisible;
 
     private string _ownerName;
+    private int quantity;
 
     public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName)
     {
@@ -23,6 +24,19 @@ public class Species
         this._avatar = avatar;
         this._IsVisible = visible;
         this._ownerName = ownerName;
+    }
+    
+    public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName, int quantity)
+    {
+        this._nom = nom;
+        this._taille = taille;
+        this._poids = poids;
+        this._dietType = dietType;
+        this._speciesClassification = speciesClassification;
+        this._avatar = avatar;
+        this._IsVisible = visible;
+        this._ownerName = ownerName;
+        this.quantity = quantity;
     }
 
     public override bool Equals(Object other)

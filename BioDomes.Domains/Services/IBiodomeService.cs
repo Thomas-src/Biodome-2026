@@ -17,7 +17,7 @@ public interface IBiodomeService
 
     double CalculateHumiditeMax(double temp);
     Biodome GetBiodomeById(int biodomeId);
-    void AddSpecyTo(int biomeId, string speciesName);
+    void AddSpecyTo(int biomeId, string speciesName, int quantity);
     void AddEquipementTo(int biomeId, string equipementName);
     void Update(Biodome created);
     void Update(Biodome created, string fileName, Stream openReadStream);

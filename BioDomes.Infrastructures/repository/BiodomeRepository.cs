@@ -37,15 +37,16 @@ public class BiodomeRepository : IBiodomeRepository
                 b.Temperature,
                 b.Humidity,
                 b.Avatar,
-                b.Species.Select(s => new Species(
-                    s.Name,
-                    s.Size,
-                    s.Weight,
-                    Enum.Parse<DietType>(s.Regim.Name),
-                    Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
-                    s.Avatar,
-                    s.Visible,
-                    s.User != null ? s.User.UserName : "unknown"
+                b.BiodomeSpecies.Select(bs => new Species(
+                    bs.Species.Name,
+                    bs.Species.Size,
+                    bs.Species.Weight,
+                    Enum.Parse<DietType>(bs.Species.Regim.Name),
+                    Enum.Parse<SpeciesClassification>(bs.Species.TypeEntity.Name),
+                    bs.Species.Avatar,
+                    bs.Species.Visible,
+                    bs.Species.User != null ? bs.Species.User.UserName : "unknown",
+                    bs.Quantity
                 )).ToList(),
                 b.Equipment.Select(e => new Equipement(
                     e.Name,
@@ -115,41 +116,53 @@ public class BiodomeRepository : IBiodomeRepository
                 b.Temperature,
                 b.Humidity,
                 b.Avatar,
-                b.Species.Select(s => new Species(
-                    s.Name,
-                    s.Size,
-                    s.Weight,
-                    Enum.Parse<DietType>(s.Regim.Name),
-                    Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
-                    s.Avatar,
-                    s.Visible,
-                    s.User != null ? s.User.UserName : "unknown"
+                b.BiodomeSpecies.Select(bs => new Species(
+                    bs.Species.Name,
+                    bs.Species.Size,
+                    bs.Species.Weight,
+                    Enum.Parse<DietType>(bs.Species.Regim.Name),
+                    Enum.Parse<SpeciesClassification>(bs.Species.TypeEntity.Name),
+                    bs.Species.Avatar,
+                    bs.Species.Visible,
+                    bs.Species.User != null ? bs.Species.User.UserName : "unknown",
+                    bs.Quantity
                 )).ToList(),
                 b.Equipment.Select(e => new Equipement(
                     e.Name,
                     e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
-                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,    
+                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
                     e.Avatar,
                     e.Visible,
                     e.User != null ? e.User.UserName : "unknown"
                 )).ToList(),
                 b.user.UserName
-            ))        
+            ))
             .AsNoTracking()
             .FirstOrDefault();
     }
 
-    public void AddSpecyInBiome(int biomeId, string speciesName)
+    public void AddSpecyInBiome(int biomeId, string speciesName, int quantity)
     {
-        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
         var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
 
-        if (!biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        if (specy == null)
+            throw new Exception("Espèce introuvable");
+
+        var existing = _context.BiodomeSpecies
+            .FirstOrDefault(bs => bs.BiodomeId == biomeId && bs.SpeciesId == specy.IdSpecies);
+
+        if (existing == null)
         {
-            biodome.Species.Add(specy);
-            _context.SaveChanges();
+                    var newEntry = new BiodomeSpeciesEntity
+                    {
+                        BiodomeId = biomeId,
+                        SpeciesId = specy.IdSpecies,
+                        Quantity = quantity
+                    };
+            
+                    _context.BiodomeSpecies.Add(newEntry);
+                    _context.SaveChanges();
         }
-        
     }
 
     public void AddEquipementInBiome(int biomeId, string equipementName)
@@ -166,15 +179,19 @@ public class BiodomeRepository : IBiodomeRepository
 
     public void RemoveSpecyInBiome(int biomeId, string speciesName)
     {
-        var biodome = _context.Biodomes.Include(b => b.Species).FirstOrDefault(b => b.idBiodomes == biomeId);
         var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
 
-        if (biodome.Species.Any(s => s.IdSpecies == specy.IdSpecies))
+        if (specy == null)
+            throw new Exception("Espèce introuvable");
+
+        var existing = _context.BiodomeSpecies
+            .FirstOrDefault(bs => bs.BiodomeId == biomeId && bs.SpeciesId == specy.IdSpecies);
+
+        if (existing != null)
         {
-            biodome.Species.Remove(specy);
+            _context.BiodomeSpecies.Remove(existing);
             _context.SaveChanges();
         }
-        
     }
 
     public void RemoveEquipementInBiome(int biomeId, string equipementName)
@@ -186,6 +203,6 @@ public class BiodomeRepository : IBiodomeRepository
         {
             biodome.Equipment.Remove(equipement);
             _context.SaveChanges();
-        }    
+        }
     }
 }
