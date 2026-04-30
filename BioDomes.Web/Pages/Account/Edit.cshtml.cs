@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
+using BioDomes.Infrastructures.entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +20,14 @@ public class EditModel : PageModel
     private readonly IResearchService _researchOrganismService;
     private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
     private readonly IPictureRepository _pictureRepository;
-
+    private readonly SignInManager<UserEntity> _signInManager;
     public EditModel(
-        UserManager<Infrastructures.entities.UserEntity> userManager,
-        IUserStore<Infrastructures.entities.UserEntity> userStore,
+        UserManager<UserEntity> userManager,
+        IUserStore<UserEntity> userStore,
         ILogger<EditModel> logger,
         IResearchService researchOrganismService,
-        IPictureRepository pictureRepository)
+        IPictureRepository pictureRepository,
+        SignInManager<UserEntity> signInManager)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -32,6 +35,7 @@ public class EditModel : PageModel
         _emailStore = GetEmailStore();
         _researchOrganismService = researchOrganismService;
         _pictureRepository = pictureRepository;
+        _signInManager = signInManager;
     }
 
     public IReadOnlyList<ResearchOrganism> Organismes { get; set; } = [];
@@ -120,6 +124,19 @@ public class EditModel : PageModel
             _logger.LogInformation("Avatar mis à jour via sélection: {s}", Input.SelectedAvatar);
         }
 
+        if (Input.Avatar is not null || !string.IsNullOrEmpty(Input.SelectedAvatar))
+        {
+            var existingClaims = await _userManager.GetClaimsAsync(user);
+            var avatarClaim = existingClaims.FirstOrDefault(c => c.Type == "Avatar");
+
+            if (avatarClaim != null)
+            {
+                await _userManager.RemoveClaimAsync(user, avatarClaim);
+            }
+            await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
+        }
+        
+        await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("BEFORE UPDATE Avatar = {a}", user.Avatar);
         var result = await _userManager.UpdateAsync(user);
         _logger.LogInformation("AFTER UPDATE SUCCESS = {s}", result.Succeeded);
@@ -183,7 +200,7 @@ public class EditModel : PageModel
         public string? ResearchOrganism { get; set; }
     }
 
-    private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()
+    private IUserEmailStore<UserEntity> GetEmailStore()
     {
         if (!_userManager.SupportsUserEmail)
         {
@@ -191,7 +208,7 @@ public class EditModel : PageModel
         }
 
 
-        return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
+        return (IUserEmailStore<UserEntity>)_userStore;
     }
 
     private void LoadOrganismes()
