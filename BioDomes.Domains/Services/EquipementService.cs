@@ -24,8 +24,9 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
         return result.AsReadOnly();
     }
 
-    public bool AlreadyExist(Equipement equipement) => repository.GetAllEquipements().Contains(equipement);
-    
+    public bool AlreadyExist(Equipement equipement) =>  repository.GetAllEquipements().Any(e =>
+            e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
+            (e.Visibility || e.OwnerName == equipement.OwnerName));
 
     public void MakePublic(string equipementName, string ownerName)
     {

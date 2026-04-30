@@ -114,30 +114,10 @@ public class SpeciesService : ISpeciesService
             .Where(s => s.IsVisible)
             .ToList();
     }
-
-    public bool SpeciesExists(Species species)
-    {
-        foreach (var specy in _repository.GetAllSpecies())
-        {
-            if (species.Equals(specy))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private Species? Get(string name, string ownerName)
-    {
-        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(ownerName))
-        {
-            return null;
-        }
-        return _repository.GetAllSpecies().FirstOrDefault(s =>
-            s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
-            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
-    }
+    
+    public bool SpeciesExists(Species species) => _repository.GetAllSpecies().Any(e =>
+        e.Nom.Equals(species.Nom, StringComparison.OrdinalIgnoreCase) &&
+        (e.IsVisible || e.OwnerName == species.OwnerName));
     
     public Species? GetByKebabCase(string kebabCase, string ownerName)
     {
@@ -214,7 +194,7 @@ public class SpeciesService : ISpeciesService
             return;
         }
 
-        var species = Get(name, ownerName);
+        var species = GetByKebabCase(name, ownerName);
 
         if (species is null)
         {
