@@ -9,14 +9,9 @@
     ViewData["Title"] = "Détails";
 }
 
-<h1>Vue détaillée</h1>
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success text-center">
-        @TempData["SuccessMessage"]
-    </div>
-}
 
+<partial name="Shared/_Toast" />
+<h1>Vue détaillée</h1>
 <div class="border mx-auto border overflow-hidden" style="max-width: 820px; border-radius: 0.75rem;">
 
     <div class="row g-0">

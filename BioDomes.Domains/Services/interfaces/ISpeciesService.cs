@@ -6,7 +6,7 @@ public interface ISpeciesService
 {
     
     public IReadOnlyList<Species> FilterOwnerSpecies(string ownerSpecies, IReadOnlyList<Species> species);
-    public void MakePublic(string name, string ownerName);
+    public bool MakePublic(string name, string ownerName);
     public IReadOnlyList<Species> FilterSpecies(string ownerSpecies, IReadOnlyList<Species> species);
     public bool SpeciesExists(Species species);
     

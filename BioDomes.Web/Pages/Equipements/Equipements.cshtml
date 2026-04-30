@@ -7,16 +7,8 @@
     ViewData["Title"] = "Equipements";
 }
 
+<partial name="Shared/_Toast" />
 <h1 class="text-center">Page des équipements</h1>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-    TempData["SuccessMessage"] = null;
-}
-
 @if (User.Identity.IsAuthenticated)
 {
     <h2>Vos équipements</h2>

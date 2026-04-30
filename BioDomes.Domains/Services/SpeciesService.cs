@@ -19,49 +19,36 @@ public class SpeciesService : ISpeciesService
         _logger = logger;
     }
 
-    public Species? GetSpeciesBySlug(string slug)
-    {
-        if (string.IsNullOrWhiteSpace(slug))
-        {
-            return null;
-        }
-
-        slug = slug.ToLowerInvariant();
-
-        foreach (var species in _repository.GetAllSpecies())
-        {
-            var speciesSlug = species.Nom.ToKebabCase();
-
-            if (speciesSlug.Equals(slug))
-            {
-                return species;
-            }
-        }
-
-        return null;
-    }
-
     public IReadOnlyList<Species> FilterOwnerSpecies(string ownerSpecies, IReadOnlyList<Species> species)
         => species.Where(sp => sp.OwnerName.ToUpper() == ownerSpecies.ToUpper()).ToList();
 
 
-    public void MakePublic(string name, string ownerName)
+    public bool MakePublic(string name, string ownerName)
     {
-        var species = _repository.GetAllSpecies().FirstOrDefault(s =>
+        var allSpecies = _repository.GetAllSpecies();
+        var species = allSpecies.FirstOrDefault(s =>
             s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
             s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
-
-        if (species is not null)
+        
+        if (species is null)
         {
-            _logger.LogInformation("found");
-            species.IsVisible = true;
+            return false;
+        }
 
-            _repository.Update(name, ownerName, species);
-        }
-        else
+        var alreadyVisible = allSpecies.Any(s =>
+            s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
+            s.IsVisible &&
+            !s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+
+        if (alreadyVisible)
         {
-            _logger.LogInformation("not found");
+            _logger.LogInformation("Another visible species with the same name already exists.");
+            return false;
         }
+        species.IsVisible = true;
+
+        _repository.Update(name, ownerName, species);
+        return true;
     }
 
     public IReadOnlyList<Species> FilterSpecies(string ownerSpecies, IReadOnlyList<Species> species)

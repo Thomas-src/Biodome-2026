@@ -4,14 +4,7 @@
 @{
     ViewData["Title"] = "Species";
 }
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-    TempData["SuccessMessage"] = null;
-}
-
+<partial name="Shared/_Toast" />
 <h1 class="text-center">Les espèces</h1>
 
 @if (User.Identity.IsAuthenticated)

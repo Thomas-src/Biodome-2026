@@ -6,12 +6,9 @@
 }
 
 
-<h1 class="mb-4">Page de création de biodomes</h1>
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
 
+<partial name="Shared/_Toast" />
+<h1 class="mb-4">Page de création de biodomes</h1>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">

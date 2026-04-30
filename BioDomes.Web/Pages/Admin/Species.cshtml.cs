@@ -38,8 +38,15 @@ public class SpeciesAdminModel : PageModel
 
     public IActionResult OnPostMakePublic(string name, string ownerName)
     {
-        _speciesService.MakePublic(name, ownerName);
-        TempData["SuccessMessage"] = $"Espèce {name} de {ownerName} rendue publique avec succès";
+        if (_speciesService.MakePublic(name, ownerName))
+        {
+            TempData["SuccessMessage"] = $"Espèce {name} de {ownerName} rendue publique avec succès";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = $"Impossible de rendre {name} de {ownerName} publique car elle a été supprimée ou est déjà publique.";
+        }
+        
         return RedirectToPage();
     }
 }
