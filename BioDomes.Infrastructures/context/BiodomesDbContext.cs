@@ -36,6 +36,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<ConsumptionEntity> consumptions { get; set; }
     
     public DbSet<ProductionEntity> productions { get; set; }
+    
+    public DbSet<BiodomeSpeciesEntity> BiodomeSpecies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -117,22 +119,18 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
        
 
         // Biodomes <-> Species
-        modelBuilder.Entity<BiodomeEntity>()
-            .HasMany(b => b.Species)
-            .WithMany(s => s.Biodomes)
-            .UsingEntity<Dictionary<string, object>>(
-                "BiodomeSpecies",
-                j => j
-                    .HasOne<SpeciesEntity>()
-                    .WithMany()
-                    .HasForeignKey("SpeciesId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                j => j
-                    .HasOne<BiodomeEntity>()
-                    .WithMany()
-                    .HasForeignKey("BiodomeId")
-                    .OnDelete(DeleteBehavior.Cascade)
-            );
+        modelBuilder.Entity<BiodomeSpeciesEntity>()
+            .HasKey(bs => new { bs.BiodomeId, bs.SpeciesId });
+
+        modelBuilder.Entity<BiodomeSpeciesEntity>()
+            .HasOne(bs => bs.Biodome)
+            .WithMany(b => b.BiodomeSpecies)
+            .HasForeignKey(bs => bs.BiodomeId);
+
+        modelBuilder.Entity<BiodomeSpeciesEntity>()
+            .HasOne(bs => bs.Species)
+            .WithMany(s => s.BiodomeSpecies)
+            .HasForeignKey(bs => bs.SpeciesId);
 
         // Biodomes <-> Equipment
         modelBuilder.Entity<BiodomeEntity>()
@@ -364,9 +362,9 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 userId = null
             }
         );
-        modelBuilder.Entity("BiodomeSpecies").HasData(
-            new { BiodomeId = 2, SpeciesId = 10 }, // souris
-        new { BiodomeId = 2, SpeciesId = 9 }
+        modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(
+            new BiodomeSpeciesEntity { BiodomeId = 2, SpeciesId = 10, Quantity = 3 }, // souris
+            new BiodomeSpeciesEntity { BiodomeId = 2, SpeciesId = 9, Quantity = 10 }
         );
         
         // Prodution pour équipements 

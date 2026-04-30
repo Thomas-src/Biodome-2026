@@ -20,6 +20,5 @@ public class SpeciesEntity
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
 
-    // Lien avec Biodomes
-    public IList<BiodomeEntity>  Biodomes { get; set; } = new List<BiodomeEntity>();
-}
+    // Lien avec BiodomeSpecies
+    public IList<BiodomeSpeciesEntity> BiodomeSpecies { get; set; } = new List<BiodomeSpeciesEntity>();}

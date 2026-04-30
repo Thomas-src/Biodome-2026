@@ -12,9 +12,9 @@ public class BiodomeEntity
     public string? userId { get; set; }
     public UserEntity? user { get; set; }
 
-    // Lien avec Species
-    public IList<SpeciesEntity> Species { get; set; } = new List<SpeciesEntity>();
-
+    // Lien avec BiodomeSpecies
+    
+    public IList<BiodomeSpeciesEntity> BiodomeSpecies { get; set; } = new List<BiodomeSpeciesEntity>();
     // Lien avec Equipement
     public IList<EquipmentEntity> Equipment { get; set; } = new List<EquipmentEntity>();
 }

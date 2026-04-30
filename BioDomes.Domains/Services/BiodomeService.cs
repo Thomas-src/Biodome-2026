@@ -97,9 +97,9 @@ public class BiodomeService : IBiodomeService
         return _repository.GetBiodomeById(biodomeId);
     }
 
-    public void AddSpecyTo(int biomeId, string speciesName)
+    public void AddSpecyTo(int biomeId, string speciesName, int quantity)
     {
-        _repository.AddSpecyInBiome(biomeId, speciesName);
+        _repository.AddSpecyInBiome(biomeId, speciesName, quantity);
     }
 
     public void AddEquipementTo(int biomeId, string equipementName)
