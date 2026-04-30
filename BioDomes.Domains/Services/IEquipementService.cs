@@ -14,4 +14,5 @@ public interface IEquipementService
     public void Delete(string name);
     public IReadOnlyList<Equipement> GetAvailableEquipements();
     public IReadOnlyList<Equipement> GetUnavailableEquipements();
+    bool Update(Equipement oldEquipement, Equipement newEquipement, Stream? openReadStream);
 }

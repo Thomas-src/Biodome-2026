@@ -3,21 +3,11 @@ using BioDomes.Domains.Repository;
 
 namespace BioDomes.Domains.Services;
 
-public class EquipementService : IEquipementService
+public class EquipementService(IEquipementRepository repository, IPictureRepository pictureRepository) : IEquipementService
 {
-    private readonly IEquipementRepository _repository;
-    private readonly IPictureRepository _pictureRepository;
+    private static string EQUIPEMENT = "equipements";
 
-    public EquipementService(IEquipementRepository repository,  IPictureRepository pictureRepository)
-    {
-        _repository = repository;
-        _pictureRepository = pictureRepository;
-    }
-    
-    public IReadOnlyList<Equipement> GetAllEquipements()
-    {
-        return _repository.GetAllEquipements();
-    }
+    public IReadOnlyList<Equipement> GetAllEquipements() => repository.GetAllEquipements();
 
     public IReadOnlyList<Equipement> FilterOwn(IReadOnlyList<Equipement> all, string identityName)
     {
@@ -30,22 +20,13 @@ public class EquipementService : IEquipementService
                 result.Add(equipement);
             }
         }
-        
+
         return result.AsReadOnly();
     }
 
     public bool AlreadyExist(Equipement equipement)
-    {
-        foreach (var eq in _repository.GetAllEquipements())
-        {
-            if (eq.Equals(equipement))
-            {
-                return true;
-            }
-        }
-        
-        return false;
-    }
+    => repository.GetAllEquipements().Contains(equipement);
+    
 
     public void MakePublic(string equipementName)
     {
@@ -55,14 +36,11 @@ public class EquipementService : IEquipementService
         {
             equipement.Visibility = true;
 
-            _repository.Update(equipementName, equipement);
+            repository.Update(equipementName, equipement);
         }
     }
 
-    public Equipement? Get(string name)
-    {
-        return _repository.GetAllEquipements().FirstOrDefault(e => e.Name == name);
-    }
+    public Equipement? Get(string name) => repository.GetAllEquipements().FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
 
     public void Delete(string name)
     {
@@ -72,35 +50,70 @@ public class EquipementService : IEquipementService
         {
             return;
         }
-        
+
         if (!string.IsNullOrEmpty(equipement.Avatar))
         {
-            _pictureRepository.Delete(equipement.Avatar, "equipements");
+            pictureRepository.Delete(equipement.Avatar, EQUIPEMENT);
         }
 
-        _repository.Delete(name);
+        repository.Delete(name);
     }
 
-    public IReadOnlyList<Equipement> GetAvailableEquipements()
-    {
-        return _repository.GetAllEquipements()
+    public IReadOnlyList<Equipement> GetAvailableEquipements() =>
+        repository.GetAllEquipements()
             .Where(e => e.Visibility)
             .ToList();
-    }
 
-    public IReadOnlyList<Equipement> GetUnavailableEquipements()
-    {
-        return _repository.GetAllEquipements()
+
+    public IReadOnlyList<Equipement> GetUnavailableEquipements() =>
+        repository.GetAllEquipements()
             .Where(e => !e.Visibility)
             .ToList();
-    }
+
 
     public void Save(Equipement created, Stream openReadStream)
     {
         // 1. Sauvegarder l'image
-        created.Avatar = _pictureRepository.Save(created.Avatar, openReadStream, "Equipements");
-        
+        created.Avatar = pictureRepository.Save(created.Avatar, openReadStream, EQUIPEMENT);
+
         // 2. Sauvegarder l'équipement
-        _repository.Save(created);
+        repository.Save(created);
+    }
+
+    public bool Update(Equipement oldEquipement, Equipement newEquipement, Stream? openReadStream)
+    {
+        try
+        {
+            if (oldEquipement == null || newEquipement == null)
+            {
+                return false;
+            }
+
+            oldEquipement.Visibility = newEquipement.Visibility;
+            if (openReadStream != null)
+            {
+                if (!string.IsNullOrEmpty(oldEquipement.Avatar))
+                {
+                    pictureRepository.Delete(oldEquipement.Avatar, EQUIPEMENT);
+                }
+
+                var filename = pictureRepository.Save(
+                    newEquipement.Avatar,
+                    openReadStream,
+                    EQUIPEMENT
+                );
+                newEquipement.Avatar = filename;
+            }
+
+            repository.Update(oldEquipement.Name, newEquipement);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("============== UPDATE EXCEPTION ==============");
+            Console.WriteLine(ex);
+            return false;
+        }
     }
 }

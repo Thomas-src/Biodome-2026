@@ -28,8 +28,6 @@
         <div class="row g-3 mb-4">
             @foreach (var espece in Model.SpeciesToVerify)
             {
-                var usage = Model.SpeciesBiodomeCount.ContainsKey(espece.Nom) ? Model.SpeciesBiodomeCount[espece.Nom] : 0;
-                
                 <div class="col-4">
                     <div class="card shadow-sm h-100 border-warning">
                         <partial name="_SpeciesCard" model="espece"/>
@@ -72,13 +70,12 @@
         <div class="row g-3 mb-4">
             @foreach (var espece in Model.SpeciesVerified)
             {
-                var usage = Model.SpeciesBiodomeCount.ContainsKey(espece.Nom) ? Model.SpeciesBiodomeCount[espece.Nom] : 0;
-                <div class="col-4">
+               <div class="col-4">
                     <div class="card shadow-sm h-100">
                         <partial name="_SpeciesCard" model="espece"/>
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
-                               asp-page="/Species/Edit"
+                               asp-page="/Admin/EditSpecies"
                                asp-route-slug="@espece.Nom">
                                 Modifier
                             </a>

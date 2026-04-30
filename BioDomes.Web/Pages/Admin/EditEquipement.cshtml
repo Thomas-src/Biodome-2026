@@ -1,0 +1,85 @@
+@page "{slug:slug}"
+@model BioDomes.Web.Pages.Admin.EditEquipementModel
+
+@{
+    ViewData["Title"] = "Modifier une espèce";
+}
+
+
+<h1 class="mb-4">Modifier l'équipement</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.Equipement.CurrentAvatarPath))
+            {
+                <div class="mb-4 text-center">
+                    <label class="form-label">Image actuelle</label>
+                    <div>
+                        <img src="~/images/equipements/@Model.Equipement.CurrentAvatarPath"
+                             alt="@Model.Equipement.Name"
+                             class="img-fluid rounded shadow"
+                             style="max-height: 250px;"/>
+                    </div>
+                </div>
+            }
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Equipement.Confirmed"/>
+
+                <div class="mb-3">
+                    <label asp-for="Equipement.Name" class="form-label">Nom*</label>
+                    <input asp-for="Equipement.Name" class="form-control" readonly/>
+                    <span asp-validation-for="Equipement.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Equipement.Consumption" class="form-label">Consommation*</label>
+                    <select class="form-control" asp-for="Equipement.Consumption">
+                        <option value="">-- Choisir une consommation --</option>
+                        @foreach (var consumption in Model.AllConsumptions)
+                        {
+                            <option value="@consumption">@consumption</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Equipement.Consumption" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Equipement.Production" class="form-label">Production*</label>
+                    <select class="form-control" asp-for="Equipement.Production">
+                        <option value="">-- Choisir une production --</option>
+                        @foreach (var production in Model.AllProductions)
+                        {
+                            <option value="@production">@production</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Equipement.Production" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nouvel avatar (optionnel)</label>
+                    <input type="file" asp-for="Equipement.Avatar" class="form-control"/>
+                    <span asp-validation-for="Equipement.Avatar" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <a asp-page="/Admin/Equipements" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" name="confirm" value="false" class="btn btn-primary">
+                        Enregistrer
+                    </button>
+                </div>
+
+                @if (ViewData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning mt-3">
+                        @ViewData["WarningMessage"]
+                        <button type="submit" name="confirm" value="true" class="btn btn-danger mt-2">
+                            Confirmer quand même
+                        </button>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
+    <p>* indique un champ obligatoire</p>
+</div>
