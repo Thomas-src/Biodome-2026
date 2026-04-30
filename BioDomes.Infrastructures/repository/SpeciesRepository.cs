@@ -1,18 +1,22 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Infrastructures.context;
+using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Infrastructures.Repository;
 
 public class SpeciesRepository : ISpeciesRepository
 {
     private readonly BioDomesDbContext _context;
+    private readonly ILogger<SpeciesRepository> _logger;
 
-    public SpeciesRepository(BioDomesDbContext context)
+    public SpeciesRepository(BioDomesDbContext context, ILogger<SpeciesRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public IReadOnlyList<Species> GetAllSpecies()
@@ -60,14 +64,16 @@ public class SpeciesRepository : ISpeciesRepository
 
     public Species? GetSpecies(string name)
     {
+        name =  name.ToLower();
         var entity = _context.Species
             .Include(s => s.Regim)
             .Include(s => s.TypeEntity)
             .Include(s => s.User)
-            .FirstOrDefault(s => s.Name == name);
+            .FirstOrDefault(s =>s.Name.ToLower() == name);
 
         if (entity is null)
         {
+            _logger.LogInformation("{} not found", name);
             return null;
         }
 
@@ -85,26 +91,24 @@ public class SpeciesRepository : ISpeciesRepository
 
     public void Update(string name, Species species)
     {
-        var entity = _context.Species.FirstOrDefault(s => s.Name == name);
-        if (entity is null)
+        var oldSpecies = _context.Species
+            .Include(s => s.Regim)
+            .Include(s => s.TypeEntity)
+            .Include(s => s.User)
+            .FirstOrDefault(s => s.Name == name);
+        if (oldSpecies is null)
         {
             throw new ArgumentException("Espèce introuvable");
         }
+        
+        oldSpecies.Size = (int)species.Taille;
+        oldSpecies.Weight = species.Poids;
+        oldSpecies.Regim = FindRegime(species.DietType);
+        oldSpecies.TypeEntity = FindType(species.SpeciesClassification);
+        oldSpecies.Visible = species.IsVisible;
+        oldSpecies.Avatar = species.Avatar;
 
-        entity.Name = species.Nom;
-        entity.Size = (int)species.Taille;
-        entity.Weight = species.Poids;
-        entity.Avatar = species.Avatar;
-        entity.Visible = species.IsVisible;
-        entity.RegimId = _context.SpeciesRegimes.First(r => r.Name == species.DietType.ToString()).IdRegime;
-        entity.TypeId = _context.SpeciesTypes.First(t => t.Name == species.SpeciesClassification.ToString()).IdType;
-        var user = _context.Users.FirstOrDefault(u => u.UserName == species.OwnerName);
-        if (user is null)
-        {
-            throw new ArgumentException("Utilisateur introuvable");
-        }
-
-        entity.UserId = user.Id;
+        _context.Species.Update(oldSpecies);
         _context.SaveChanges();
     }
 
@@ -120,5 +124,19 @@ public class SpeciesRepository : ISpeciesRepository
 
         _context.Species.Remove(entity);
         _context.SaveChanges();
+    }
+    
+    private SpeciesRegimeEntity FindRegime(DietType dietType)
+    {
+        return _context.SpeciesRegimes
+                   .FirstOrDefault(r => r.Name == dietType.ToString())
+               ?? throw new ArgumentException($"Régime '{dietType}' introuvable");
+    }
+
+    private SpeciesTypeEntity FindType(SpeciesClassification classification)
+    {
+        return _context.SpeciesTypes
+                   .FirstOrDefault(t => t.Name == classification.ToString())
+               ?? throw new ArgumentException($"Type '{classification}' introuvable");
     }
 }

@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Account;
-public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signInManager) : PageModel
+public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signInManager, UserManager<Infrastructures.entities.UserEntity> userManager) : PageModel
 {
     public string? ReturnUrl { get; set; }
 

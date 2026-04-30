@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.mail;
 using BioDomes.Web.Validators;
@@ -22,6 +23,7 @@ public class RegisterModel : PageModel
     private readonly SignInManager<Infrastructures.entities.UserEntity> _signInManager;
     private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
     private readonly IMyEmailSender _emailSender;
+    private readonly IPictureRepository _pictureRepository;
 
     public RegisterModel(
         UserManager<Infrastructures.entities.UserEntity> userManager,
@@ -29,7 +31,8 @@ public class RegisterModel : PageModel
         ILogger<RegisterModel> logger,
         IResearchService researchOrganismService,
         SignInManager<Infrastructures.entities.UserEntity> signInManager,
-        IMyEmailSender emailSender)
+        IMyEmailSender emailSender,
+        IPictureRepository pictureRepository)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -38,6 +41,7 @@ public class RegisterModel : PageModel
         _researchOrganismService = researchOrganismService;
         _signInManager = signInManager;
         _emailSender = emailSender;
+        _pictureRepository = pictureRepository;
     }
 
     public IReadOnlyList<ResearchOrganism> Organismes { get; set; } = [];
@@ -73,6 +77,7 @@ public class RegisterModel : PageModel
                 ModelState.AddModelError("Input.Avatar", "L'avatar ne peut pas dépasser 2 Mo.");
             }
         }
+
         if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
         {
             ModelState.AddModelError("Input.SelectedAvatar", "Veuillez sélectionner ou uploader un avatar.");
@@ -82,6 +87,7 @@ public class RegisterModel : PageModel
         {
             return Page();
         }
+
         var existingUser = await _userManager.FindByEmailAsync(Input.Email);
         if (existingUser != null)
         {
@@ -99,18 +105,8 @@ public class RegisterModel : PageModel
 
         if (Input.Avatar is not null)
         {
-            var uploadsDir = Path.Combine("wwwroot", "avatars");
-            Directory.CreateDirectory(uploadsDir);
-
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(Input.Avatar.FileName)}";
-            var filePath = Path.Combine(uploadsDir, fileName);
-
-            await using (var fs = System.IO.File.Create(filePath))
-            {
-                await Input.Avatar.CopyToAsync(fs);
-            }
-
-            user.Avatar = $"/avatars/{fileName}";
+            var filename = _pictureRepository.Save(Input.Avatar.FileName, Input.Avatar.OpenReadStream(), "avatars");
+            user.Avatar = filename;
         }
         else if (!string.IsNullOrWhiteSpace(Input.SelectedAvatar))
         {
@@ -138,12 +134,12 @@ public class RegisterModel : PageModel
             await _userManager.AddToRoleAsync(user, AppRoles.Research);
 
             _logger.LogInformation("Nouvel utilisateur créé : {Email}", Input.Email);
-            
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
             _logger.LogInformation("Token de l'utilisateur {}", token);
             _logger.LogInformation("Token encodé de l'utilisateur {}", encodedToken);
-        
+
             var confirmationLink = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
@@ -161,7 +157,6 @@ public class RegisterModel : PageModel
 ");
 
             return RedirectToPage("/Account/RegisterSuccess", new { email = Input.Email });
-
         }
 
         foreach (var error in result.Errors)
@@ -173,8 +168,7 @@ public class RegisterModel : PageModel
         return Page();
     }
 
-    [BindProperty]
-    public InputModel Input { get; set; }
+    [BindProperty] public InputModel Input { get; set; }
     public string ReturnUrl { get; set; }
 
     public class InputModel
@@ -184,14 +178,13 @@ public class RegisterModel : PageModel
         [Display(Name = "Nom du chercheur")]
         public string Nom { get; set; } = string.Empty;
 
-        [Display(Name = "Avatar prédéfini")]
-        public string? SelectedAvatar { get; set; }
+        [Display(Name = "Avatar prédéfini")] public string? SelectedAvatar { get; set; }
 
         [Required(ErrorMessage = "L'adresse e-mail est obligatoire.")]
         [IsEmailValid]
         [Display(Name = "Email")]
         public string Email { get; set; } = string.Empty;
-        
+
         [Required(ErrorMessage = "Le mot de passe est obligatoire.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Le mot de passe doit contenir au moins 6 caractères.")]
         [DataType(DataType.Password)]
@@ -209,8 +202,7 @@ public class RegisterModel : PageModel
         [Display(Name = "Date de naissance")]
         public DateOnly DateNaissance { get; set; }
 
-        [Display(Name = "Avatar")]
-        public IFormFile? Avatar { get; set; }
+        [Display(Name = "Avatar")] public IFormFile? Avatar { get; set; }
 
         [Required(ErrorMessage = "Veuillez choisir un organisme de recherche.")]
         [Display(Name = "Organisme de recherche")]
@@ -223,6 +215,7 @@ public class RegisterModel : PageModel
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
+
         return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
     }
 
@@ -239,7 +232,8 @@ public class RegisterModel : PageModel
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively override the register page.");
+            throw new InvalidOperationException(
+                $"Can't create an instance of '{nameof(IdentityUser)}'. Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively override the register page.");
         }
     }
 }
