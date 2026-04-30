@@ -25,13 +25,12 @@
 
         private static BiodomeEtat DeterminerEtatTemperature(double temperature)
         {
-            if (temperature < -20 || temperature > 40)
-                return BiodomeEtat.Critique;
-
-            if (temperature < 0 || temperature > 30)
-                return BiodomeEtat.Instable;
-
-            return BiodomeEtat.Optimal;
+            return temperature switch
+            {
+                < -20 or > 40 => BiodomeEtat.Critique,
+                < 0 or > 30 => BiodomeEtat.Instable,
+                _ => BiodomeEtat.Optimal
+            };
         }
 
         private static BiodomeEtat DegraderEtat(BiodomeEtat etat)
@@ -59,9 +58,7 @@
                 IList<SpeciesClassification> eatableClasses = NutrientChain.CanEat(predator.DietType);
 
                 IList<Species> availablePredators = allSpecies
-                    .Where(p =>
-                        eatableClasses.Contains(p.SpeciesClassification) &&
-                        p.Nom != predator.Nom)
+                    .Where(p => eatableClasses.Contains(p.SpeciesClassification) && p.Nom != predator.Nom)
                     .ToList();
 
                 // Si aucune proie n'est disponible / trouvé

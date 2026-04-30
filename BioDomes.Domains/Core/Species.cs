@@ -2,46 +2,22 @@ using BioDomes.Domains.Extensions;
 
 namespace BioDomes.Domains.Core;
 
-public class Species
+public class Species(
+    string nom,
+    double taille,
+    double poids,
+    DietType dietType,
+    SpeciesClassification speciesClassification,
+    string avatar,
+    bool visible,
+    string ownerName,
+    int quantity)
 {
-    private DietType _dietType;
-    private SpeciesClassification _speciesClassification;
-
-    private string _nom;
-    private double _taille;
-    private double _poids;
-    private string _avatar;
-    private bool _IsVisible;
-
-    private string _ownerName;
-    private int _quantity;
-
-    public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName)
+    public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName) : this(nom, taille, poids, dietType, speciesClassification, avatar, visible, ownerName, 0)
     {
-        this._nom = nom;
-        this._taille = taille;
-        this._poids = poids;
-        this._dietType = dietType;
-        this._speciesClassification = speciesClassification;
-        this._avatar = avatar;
-        this._IsVisible = visible;
-        this._ownerName = ownerName;
-    }
-    
-    public Species(string nom, double taille, double poids,  DietType dietType,  SpeciesClassification speciesClassification, string avatar, bool visible, string ownerName, int quantity)
-    {
-        this._nom = nom;
-        this._taille = taille;
-        this._poids = poids;
-        this._dietType = dietType;
-        this._speciesClassification = speciesClassification;
-        this._avatar = avatar;
-        this._IsVisible = visible;
-        this._ownerName = ownerName;
-        this._quantity = quantity;
     }
 
-    public override bool Equals(Object other)
+    public override bool Equals(object? other)
     {
         if (other == null || !(other is Species))
         {
@@ -50,66 +26,33 @@ public class Species
         
         Species otherSpecies = (Species)other;
 
-        if (otherSpecies.Nom == this.Nom 
-            &&  otherSpecies.Taille == this.Taille 
-            && otherSpecies.Poids == this.Poids 
-            && otherSpecies.DietType == this.DietType 
-            && otherSpecies.SpeciesClassification == this.SpeciesClassification)
-        {
-            return true;
-        }
-
-        return false;
+        return otherSpecies.Nom == this.Nom 
+               &&  Math.Abs(otherSpecies.Taille - this.Taille) < 0.001 
+               && Math.Abs(otherSpecies.Poids - this.Poids) < 0.001 
+               && otherSpecies.DietType == this.DietType 
+               && otherSpecies.SpeciesClassification == this.SpeciesClassification;
     }
 
-    public string Nom
-    {
-        get { return _nom; }
-    }
+    public string Nom => nom;
 
-    public string getSlug()
+    public string GetSlug()
     {
-        return _nom.ToKebabCase();
+        return nom.ToKebabCase();
     }
     
-    public double Taille
-    {
-        get { return _taille; }
-    }
+    public double Taille => taille;
 
-    public double Poids
-    {
-        get { return _poids; }
-    }
+    public double Poids => poids;
 
-    public DietType DietType
-    {
-        get { return _dietType; }
-    }
+    public DietType DietType => dietType;
 
-    public SpeciesClassification SpeciesClassification
-    {
-        get { return _speciesClassification; }
-    }
+    public SpeciesClassification SpeciesClassification => speciesClassification;
 
-    public string Avatar{
-        get { return _avatar; }
-        set { _avatar = value; }
-    }
+    public string Avatar { get; set; } = avatar;
 
-    public bool IsVisible
-    {
-        get { return _IsVisible; }
-        set  { _IsVisible = value; }
-    }
+    public bool IsVisible { get; set; } = visible;
 
-    public string OwnerName{
-        get { return _ownerName; }
-    }
+    public string OwnerName => ownerName;
 
-    public int Quantity
-    {
-        get => _quantity;
-        set => _quantity = value;
-    }
+    public int Quantity { get; set; } = quantity;
 }
