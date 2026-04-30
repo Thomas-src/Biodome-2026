@@ -21,6 +21,7 @@ public class EditModel : PageModel
     private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
     private readonly IPictureRepository _pictureRepository;
     private readonly SignInManager<UserEntity> _signInManager;
+
     public EditModel(
         UserManager<UserEntity> userManager,
         IUserStore<UserEntity> userStore,
@@ -133,9 +134,10 @@ public class EditModel : PageModel
             {
                 await _userManager.RemoveClaimAsync(user, avatarClaim);
             }
+
             await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
         }
-        
+
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("BEFORE UPDATE Avatar = {a}", user.Avatar);
         var result = await _userManager.UpdateAsync(user);

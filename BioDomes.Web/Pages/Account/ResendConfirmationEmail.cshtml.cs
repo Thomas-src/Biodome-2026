@@ -24,13 +24,14 @@ public class ResendConfirmationEmailModel : PageModel
         _logger = logger;
     }
 
-    [BindProperty]
-    public string Email { get; set; } = string.Empty;
+    [BindProperty] public string Email { get; set; } = string.Empty;
 
     public string? StatusMessage { get; set; }
     public bool? IsSuccess { get; set; }
 
-    public void OnGet() { }
+    public void OnGet()
+    {
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -43,7 +44,8 @@ public class ResendConfirmationEmailModel : PageModel
         if (user == null || await _userManager.IsEmailConfirmedAsync(user))
         {
             IsSuccess = true;
-            StatusMessage = "Si cette adresse est associée à un compte non confirmé, un nouveau lien vient d'être envoyé.";
+            StatusMessage =
+                "Si cette adresse est associée à un compte non confirmé, un nouveau lien vient d'être envoyé.";
             return Page();
         }
 

@@ -37,9 +37,8 @@ public class SpeciesAdminModel : PageModel
     
     public IActionResult OnPostMakePublic(string name)
     {
-        _logger.LogInformation("post pour {}", name);
         _speciesService.MakePublic(name);
-
+        TempData["SuccessMessage"] = $"Espèce @{name} rendue publique avec succès";
         return RedirectToPage();
     }
 }

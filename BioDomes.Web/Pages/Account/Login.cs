@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Account;
-public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signInManager, UserManager<Infrastructures.entities.UserEntity> userManager) : PageModel
+
+public class LoginModel(
+    SignInManager<Infrastructures.entities.UserEntity> signInManager,
+    UserManager<Infrastructures.entities.UserEntity> userManager) : PageModel
 {
     public string? ReturnUrl { get; set; }
 
-    [TempData]
-    public string? ErrorMessage { get; set; }
+    [TempData] public string? ErrorMessage { get; set; }
 
     [BindProperty]
     [Required]
@@ -24,8 +26,7 @@ public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signI
     [DataType(DataType.Password)]
     public string? Password { get; set; }
 
-    [BindProperty]
-    public bool RememberMe { get; set; }
+    [BindProperty] public bool RememberMe { get; set; }
 
     public async Task OnGetAsync(string? returnUrl = null)
     {
@@ -50,7 +51,8 @@ public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signI
             return Page();
         }
 
-        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername!) ?? await signInManager.UserManager.FindByNameAsync(EmailOrUsername!);
+        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername!) ??
+                   await signInManager.UserManager.FindByNameAsync(EmailOrUsername!);
 
         if (user == null)
         {
@@ -59,24 +61,23 @@ public class LoginModel(SignInManager<Infrastructures.entities.UserEntity> signI
         }
 
         var result = await signInManager.PasswordSignInAsync(
-                user.UserName,
-                Password,
-                RememberMe,
-                lockoutOnFailure: false
-            );
+            user.UserName,
+            Password,
+            RememberMe,
+            lockoutOnFailure: false
+        );
 
-            if (result.Succeeded)
-            {
-                return LocalRedirect(returnUrl);
-            }
+        if (result.Succeeded)
+        {
+            return LocalRedirect(returnUrl);
+        }
 
 
-            if (result.IsLockedOut)
-            {
-                return RedirectToPage("./Lockout");
-            }
-                
-        
+        if (result.IsLockedOut)
+        {
+            return RedirectToPage("./Lockout");
+        }
+
 
         ModelState.AddModelError(string.Empty, "Tentative de connexion invalide.");
         return Page();

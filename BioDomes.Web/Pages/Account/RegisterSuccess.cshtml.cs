@@ -6,6 +6,5 @@ public class RegisterSuccessModel : PageModel
 {
     public void OnGet()
     {
-        
     }
 }

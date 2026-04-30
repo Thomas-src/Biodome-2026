@@ -14,6 +14,7 @@
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
+    TempData["SuccessMessage"] = null;
 }
 
 @if (User.Identity.IsAuthenticated)

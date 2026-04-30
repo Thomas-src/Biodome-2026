@@ -1,0 +1,34 @@
+﻿@page "/biodomes/user"
+@model BioDomes.Web.Pages.Biodomes.UserBiodomesModel
+
+@{
+    ViewData["Title"] = "Vos Biodomes";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="mb-0">Vos biodomes</h1>
+
+    <a class="btn btn-primary" asp-page="/Biodomes/Create">
+        Créer
+    </a>
+</div>
+
+@if (!Model.AllBiodomes.Any())
+{
+    <div class="alert alert-info">Aucun biodome trouvé pour ces critères.</div>
+}
+else
+{
+    <div class="d-flex flex-wrap justify-content-evenly gap-3">
+        @foreach (var biodome in Model.AllBiodomes)
+        {
+            <partial name="Shared/_BiodomeCard" model="biodome" />
+        }
+    </div>
+}

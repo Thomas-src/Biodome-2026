@@ -11,6 +11,7 @@ public class ConfirmEmailModel : PageModel
 {
     private readonly UserManager<UserEntity> _userManager;
     private readonly ILogger<ConfirmEmailModel> _logger;
+
     public ConfirmEmailModel(UserManager<UserEntity> userManager, ILogger<ConfirmEmailModel> logger)
     {
         _userManager = userManager;
@@ -37,6 +38,7 @@ public class ConfirmEmailModel : PageModel
             StatusMessage = "Utilisateur introuvable.";
             return Page();
         }
+
         var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
         var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 

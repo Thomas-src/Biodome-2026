@@ -1,18 +1,22 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Domains.Services;
 
 public class BiodomeService : IBiodomeService
 {
-    private IBiodomeRepository _repository;
-    private IPictureRepository _pictureRepository;
+    private readonly IBiodomeRepository _repository;
+    private readonly IPictureRepository _pictureRepository;
+    private readonly ILogger<BiodomeService> _logger;
 
-    public BiodomeService(IBiodomeRepository repository, IPictureRepository pictureRepository)
+    public BiodomeService(IBiodomeRepository repository, IPictureRepository pictureRepository,
+        ILogger<BiodomeService> logger)
     {
         _repository = repository;
         _pictureRepository = pictureRepository;
+        _logger = logger;
     }
 
     public IReadOnlyList<Biodome> GetBestThreeBiodome()
@@ -22,24 +26,27 @@ public class BiodomeService : IBiodomeService
             .Take(3)
             .ToList();
 
-    public IReadOnlyList<Biodome> GetAllBiodomes()
-        => _repository.GetAllBiodomes();
+    public IReadOnlyList<Biodome> GetAllBiodomes() => _repository.GetAllBiodomes();
 
-    public IReadOnlyList<Biodome> HasSpecies(string speciesName)
+    public IReadOnlyList<Biodome> HasSpecies(string speciesName) => _repository.GetAllBiodomes()
+        .Where(b => b.Species.Any(s => s.Nom.Equals(speciesName)))
+        .ToList();
+
+
+    public IReadOnlyList<Biodome> HasEquipement(string equipementName) => _repository.GetAllBiodomes()
+        .Where(b => b.Equipements.Any(s => s.Name.Equals(equipementName)))
+        .ToList();
+
+
+    public IReadOnlyList<Biodome> GetUserBiodomes(string username)
     {
         var biodomes = _repository.GetAllBiodomes();
 
-        return biodomes
-            .Where(b => b.Species.Any(s => s.Nom.Equals(speciesName)))
-            .ToList();
-    }
+        username = username.ToLowerInvariant();
 
-    public IReadOnlyList<Biodome> HasEquipement(string equipementName)
-    {
-        var biodomes = _repository.GetAllBiodomes();
-
-        return biodomes
-            .Where(b => b.Equipements.Any(s => s.Name.Equals(equipementName)))
+        return biodomes.Where(biodome =>
+                !string.IsNullOrWhiteSpace(biodome.CreatorName) &&
+                biodome.CreatorName.Equals(username, StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
 
@@ -58,10 +65,15 @@ public class BiodomeService : IBiodomeService
         var query = _repository.GetAllBiodomes().AsQueryable();
 
         if (temperatureMin.HasValue)
+        {
             query = query.Where(b => b.Temperature >= temperatureMin.Value);
+        }
 
         if (temperatureMax.HasValue)
+        {
             query = query.Where(b => b.Temperature <= temperatureMax.Value);
+        }
+
 
         if (humiditeMin.HasValue)
         {
@@ -76,7 +88,9 @@ public class BiodomeService : IBiodomeService
 
         if (!string.IsNullOrWhiteSpace(equipement))
         {
-            //  query = query.Where(b => b.Equipements.Any(e => e.Nom.Contains(equipement, StringComparison.OrdinalIgnoreCase)));
+            query =
+                query.Where(b =>
+                    b.Equipements.Any(e => e.Name.Contains(equipement, StringComparison.OrdinalIgnoreCase)));
         }
 
         if (!string.IsNullOrWhiteSpace(espece))
@@ -86,38 +100,23 @@ public class BiodomeService : IBiodomeService
 
         return query.ToList();
     }
-    
-    public double CalculateHumiditeMax(double temp)
-    {
-        return HumidityCalculator.MaxHumidityOf(temp);
-    }
 
-    public Biodome GetBiodomeById(int biodomeId)
-    {
-        return _repository.GetBiodomeById(biodomeId);
-    }
+    public double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
 
-    public void AddSpecyTo(int biomeId, string speciesName, int quantity)
-    {
+    public Biodome GetBiodomeById(int biodomeId) => _repository.GetBiodomeById(biodomeId);
+
+    public void AddSpecyTo(int biomeId, string speciesName, int quantity) =>
         _repository.AddSpecyInBiome(biomeId, speciesName, quantity);
-    }
 
-    public void AddEquipementTo(int biomeId, string equipementName)
-    {
+    public void AddEquipementTo(int biomeId, string equipementName) =>
         _repository.AddEquipementInBiome(biomeId, equipementName);
-    }
 
-    public void RemoveSpecyFrom(int biomeId, string speciesName)
-    {
+    public void RemoveSpecyFrom(int biomeId, string speciesName) =>
         _repository.RemoveSpecyInBiome(biomeId, speciesName);
-    }
 
-    public void RemoveEquipementFrom(int biomeId, string equipementName)
-    {
+    public void RemoveEquipementFrom(int biomeId, string equipementName) =>
         _repository.RemoveEquipementInBiome(biomeId, equipementName);
 
-    }
-    
     public void Update(Biodome created)
     {
         var old = _repository.GetBiodomeById(created.Id);
@@ -135,7 +134,7 @@ public class BiodomeService : IBiodomeService
         if (!created.DeepEquals(old))
         {
             created.Image = _pictureRepository.Save(fileName, openReadStream, "biodomes");
-            
+
             _repository.Update(created);
         }
     }

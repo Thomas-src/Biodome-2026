@@ -42,12 +42,11 @@ public class SpeciesModel : PageModel
         if (User.Identity.IsAuthenticated)
         {
             OwnSpecies = _speciesService.FilterOwnerSpecies(User.Identity.Name, speciesList);
-            OtherSpecies = _speciesService.FilterSpecies(User.Identity.Name, speciesList);            
+            OtherSpecies = _speciesService.FilterSpecies(User.Identity.Name, speciesList);
         }
         else
         {
             OtherSpecies = speciesList.Where(s => s.IsVisible).ToList();
         }
-
     }
 }

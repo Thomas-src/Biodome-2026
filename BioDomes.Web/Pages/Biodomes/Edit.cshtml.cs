@@ -11,8 +11,7 @@ public class Edit : PageModel
 {
     private readonly IBiodomeService _service;
 
-    [BindProperty]
-    public InputModel Biome { get; set; }
+    [BindProperty] public InputModel Biome { get; set; }
     public Biodome Biodome { get; set; }
 
     public Edit(IBiodomeService service)
@@ -37,7 +36,7 @@ public class Edit : PageModel
     {
         Biodome = _service.GetBiodomeById(id);
 
-        
+
         if (!ModelState.IsValid)
         {
             return Page();
@@ -69,8 +68,8 @@ public class Edit : PageModel
             Biome.temperature.Value,
             Biome.humidite.Value,
             fileName,
-            Biodome.Species,        
-            Biodome.Equipements,    
+            Biodome.Species,
+            Biodome.Equipements,
             User.Identity.Name
         );
 
@@ -85,7 +84,7 @@ public class Edit : PageModel
 
 
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
-        return RedirectToPage("/Biodomes/Details", new { id = Biodome.Id });        
+        return RedirectToPage("/Biodomes/Details", new { id = Biodome.Id });
     }
 
     public class InputModel
