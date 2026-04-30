@@ -174,11 +174,12 @@ public class SpeciesService : ISpeciesService
                     _pictureRepository.Delete(oldSpecies.Avatar, "species");
                 }
     
-                oldSpecies.Avatar = _pictureRepository.Save(
+                var filename = _pictureRepository.Save(
                     oldSpecies.Avatar,
                     openReadStream,
                     "species"
                 );
+                newSpecies.Avatar = filename;
             }
     
             _repository.Update(oldSpecies.Nom, newSpecies);

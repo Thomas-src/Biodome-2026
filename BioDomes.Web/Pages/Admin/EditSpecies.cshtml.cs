@@ -118,7 +118,7 @@ public class EditSpeciesModel : PageModel
         }
 
         var updated = new Domains.Core.Species(
-            Species.Name,
+            existing.Nom,
             Species.Taille,
             Species.Poids,
             diet,
