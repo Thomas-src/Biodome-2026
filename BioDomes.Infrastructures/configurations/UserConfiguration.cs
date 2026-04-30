@@ -15,8 +15,8 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
 
         SeedUsers(builder);
     }
-    public static readonly string AdminId =  Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"A";
-    public static readonly string ResearchId =  Environment.MachineName+DateTime.Parse("2024-04-01T10:30:00.0")+"B";
+    public static readonly string AdminId =  "1";
+    public static readonly string ResearchId =  "2";
 
     private void SeedUsers(EntityTypeBuilder<UserEntity> builder)
     {

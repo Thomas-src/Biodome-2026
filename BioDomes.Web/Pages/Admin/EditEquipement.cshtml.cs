@@ -29,11 +29,11 @@ public class EditEquipementModel : PageModel
         _logger = logger;
     }
 
-    public IActionResult OnGet(string slug)
+    public IActionResult OnGet(string slug, string ownerName)
     {
         LoadSelects();
 
-        var existing = _equipementService.Get(slug);
+        var existing = _equipementService.GetByKebabCase(slug, ownerName);
         if (existing == null)
         {
             _logger.LogInformation("{} not found", slug);
@@ -42,10 +42,11 @@ public class EditEquipementModel : PageModel
 
         Equipement = new InputModel
         {
-            Name        = existing.Name,
+            Name = existing.Name,
             Consumption = existing.Consumption.ToString(),
-            Production  = existing.Production.ToString(),
-            CurrentAvatarPath = existing.Avatar
+            Production = existing.Production.ToString(),
+            CurrentAvatarPath = existing.Avatar,
+            OwnerName = existing.OwnerName,
         };
 
         return Page();
@@ -54,20 +55,38 @@ public class EditEquipementModel : PageModel
     private void LoadSelects()
     {
         AllConsumptions = Enum.GetNames<Consumptions>().ToList();
-        AllProductions  = Enum.GetNames<Production>().ToList();
+        AllProductions = Enum.GetNames<Production>().ToList();
     }
 
     public IActionResult OnPost(string confirm)
     {
-        _logger.LogInformation("POST slug = {slug}", Slug);
         LoadSelects();
 
+        _logger.LogInformation("{} confirmed", confirm);
         if (!ModelState.IsValid)
+        {
+            foreach (var state in ModelState)
+            {
+                foreach (var error in state.Value.Errors)
+                {
+                    _logger.LogWarning(
+                        "ModelState error on {Field}: {Error}",
+                        state.Key,
+                        error.ErrorMessage
+                    );
+                }
+            }
             return Page();
+        }
 
-        var existing = _equipementService.Get(Slug);
+
+        var existing = _equipementService.GetByKebabCase(Slug, Equipement.OwnerName);
         if (existing == null)
+        {
+            _logger.LogInformation("{} not found for user {}", Slug, Equipement.OwnerName);
             return NotFound();
+        }
+
 
         if (!Enum.TryParse<Consumptions>(Equipement.Consumption, out var consumption))
         {
@@ -82,14 +101,14 @@ public class EditEquipementModel : PageModel
         }
 
         var consumptionChanged = existing.Consumption != consumption;
-        var productionChanged  = existing.Production  != production;
+        var productionChanged = existing.Production != production;
         var isConfirm = confirm.Equals("true");
 
         if ((consumptionChanged || productionChanged) && !isConfirm)
         {
             var impacted = _biodomeService.HasEquipement(Slug).Count;
             ViewData["WarningMessage"] =
-                $"Attention : cette modification impactera {impacted} biodôme(s). Confirmez-vous ?";
+                $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?";
             return Page();
         }
 
@@ -124,5 +143,8 @@ public class EditEquipementModel : PageModel
         public IFormFile? Avatar { get; set; }
         public bool Confirmed { get; set; } = false;
         public string? CurrentAvatarPath { get; set; }
+        
+        [BindProperty(SupportsGet = true)]
+        public string OwnerName { get; set; }
     }
 }

@@ -11,7 +11,8 @@ public class SpeciesService : ISpeciesService
     private readonly IPictureRepository _pictureRepository;
     private readonly ILogger<SpeciesService> _logger;
 
-    public SpeciesService(ISpeciesRepository repository, IPictureRepository pictureRepository, ILogger<SpeciesService> logger)
+    public SpeciesService(ISpeciesRepository repository, IPictureRepository pictureRepository,
+        ILogger<SpeciesService> logger)
     {
         _repository = repository;
         _pictureRepository = pictureRepository;
@@ -24,6 +25,7 @@ public class SpeciesService : ISpeciesService
         {
             return null;
         }
+
         slug = slug.ToLowerInvariant();
 
         foreach (var species in _repository.GetAllSpecies())
@@ -57,16 +59,18 @@ public class SpeciesService : ISpeciesService
         return result.AsReadOnly();
     }
 
-    public void MakePublic(string name)
+    public void MakePublic(string name, string ownerName)
     {
-        var species = _repository.GetSpecies(name);
+        var species = _repository.GetAllSpecies().FirstOrDefault(s =>
+            s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
+            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
 
         if (species is not null)
         {
             _logger.LogInformation("found");
             species.IsVisible = true;
 
-            _repository.Update(name, species);
+            _repository.Update(name, ownerName, species);
         }
         else
         {
@@ -95,7 +99,7 @@ public class SpeciesService : ISpeciesService
 
         return result.AsReadOnly();
     }
-    
+
 
     public IReadOnlyList<Species> GetUnavailableSpecies()
     {
@@ -103,6 +107,7 @@ public class SpeciesService : ISpeciesService
             .Where(s => !s.IsVisible)
             .ToList();
     }
+
     public IReadOnlyList<Species> GetAvailableSpecies()
     {
         return _repository.GetAllSpecies()
@@ -123,21 +128,26 @@ public class SpeciesService : ISpeciesService
         return false;
     }
 
-    public Species? Get(string name)
+    private Species? Get(string name, string ownerName)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(ownerName))
         {
             return null;
         }
-        name = name.ToLowerInvariant();
-        foreach (var specy in _repository.GetAllSpecies())
+        return _repository.GetAllSpecies().FirstOrDefault(s =>
+            s.Nom.Equals(name, StringComparison.CurrentCultureIgnoreCase) &&
+            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+    }
+    
+    public Species? GetByKebabCase(string kebabCase, string ownerName)
+    {
+        if (string.IsNullOrWhiteSpace(kebabCase) || string.IsNullOrWhiteSpace(ownerName))
         {
-            if (specy.Nom.ToLowerInvariant().Equals(name))
-            {
-                return specy;
-            }
+            return null;
         }
-        return null;
+        return _repository.GetAllSpecies().FirstOrDefault(s =>
+            s.Nom.ToKebabCase().Equals(kebabCase, StringComparison.CurrentCultureIgnoreCase) &&
+            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
     }
 
     public bool Save(Species created, Stream? openReadStream)
@@ -148,13 +158,15 @@ public class SpeciesService : ISpeciesService
             {
                 created.Avatar = _pictureRepository.Save(created.Avatar, openReadStream, "species");
             }
-             
+
             _repository.Save(created);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            Console.WriteLine("==============\nEXCPETION : " +e + "==============");
+            Console.WriteLine("==============\nEXCPETION : " + e + "==============");
             return false;
         }
+
         return true;
     }
 
@@ -166,6 +178,7 @@ public class SpeciesService : ISpeciesService
             {
                 return false;
             }
+
             oldSpecies.IsVisible = newSpecies.IsVisible;
             if (openReadStream != null)
             {
@@ -173,7 +186,7 @@ public class SpeciesService : ISpeciesService
                 {
                     _pictureRepository.Delete(oldSpecies.Avatar, "species");
                 }
-    
+
                 var filename = _pictureRepository.Save(
                     oldSpecies.Avatar,
                     openReadStream,
@@ -181,9 +194,9 @@ public class SpeciesService : ISpeciesService
                 );
                 newSpecies.Avatar = filename;
             }
-    
-            _repository.Update(oldSpecies.Nom, newSpecies);
-    
+
+            _repository.Update(oldSpecies.Nom, oldSpecies.OwnerName, newSpecies);
+
             return true;
         }
         catch (Exception ex)
@@ -194,19 +207,20 @@ public class SpeciesService : ISpeciesService
         }
     }
 
-    public void Delete(string name)
+    public void Delete(string name, string ownerName)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(ownerName))
         {
             return;
         }
-        var species = _repository.GetSpecies(name);
+
+        var species = Get(name, ownerName);
 
         if (species is null)
         {
             return;
         }
-        
+
         if (!string.IsNullOrEmpty(species.Avatar))
         {
             _pictureRepository.Delete(species.Avatar, "species");

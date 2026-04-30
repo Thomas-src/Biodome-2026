@@ -15,7 +15,7 @@ public class EquipementRepository : IEquipementRepository
     {
         _dbContext = dbContext;
     }
-    
+
     public IReadOnlyList<Equipement> GetAllEquipements()
     {
         return _dbContext.Equipment
@@ -24,7 +24,7 @@ public class EquipementRepository : IEquipementRepository
             .Include(e => e.User)
             .Select(e => new Equipement(
                 e.Name,
-                e.Consumption != null 
+                e.Consumption != null
                     ? Enum.Parse<Consumptions>(e.Consumption.Name)
                     : Consumptions.None,
                 Enum.Parse<Production>(e.Production.Name),
@@ -38,7 +38,7 @@ public class EquipementRepository : IEquipementRepository
     public void Save(Equipement created)
     {
         var u = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == created.OwnerName.ToLower());
-        
+
         if (u == null)
         {
             throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
@@ -76,35 +76,35 @@ public class EquipementRepository : IEquipementRepository
 
         _dbContext.Add(entity);
         _dbContext.SaveChanges();
-
-
     }
 
-    public void Delete(string name)
+    public void Delete(string name, string ownerName)
     {
-        var entity = _dbContext.Equipment.FirstOrDefault(e => e.Name == name);
+        var entity = _dbContext.Equipment.FirstOrDefault(e =>
+            e.Name.ToLower() == name.ToLower() && e.User.UserName.ToLower() == ownerName.ToLower());
 
         if (entity is null)
         {
             return;
         }
-        
+
         _dbContext.Equipment.Remove(entity);
         _dbContext.SaveChanges();
     }
 
-    public void Update(string name, Equipement update)
+    public void Update(string name, string ownerName, Equipement update)
     {
         var entity = _dbContext.Equipment
             .Include(e => e.Consumption)
             .Include(e => e.Production)
             .Include(e => e.User)
-            .FirstOrDefault(e => e.Name == name);
+            .FirstOrDefault(e =>
+                e.Name.ToLower() == name.ToLower() && e.User.UserName.ToLower() == ownerName.ToLower());
 
         if (entity is null)
         {
             return;
-        } 
+        }
 
         entity.Name = update.Name;
         entity.Avatar = update.Avatar;

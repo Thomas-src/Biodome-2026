@@ -34,21 +34,23 @@
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
                                asp-page="/Admin/EditSpecies"
-                               asp-route-slug="@espece.Nom">
+                               asp-route-slug="@espece.Nom"
+                               asp-route-ownerName="@espece.OwnerName">
                                 Modifier
                             </a>
                             <form method="post" asp-page-handler="MakePublic">
                                 <input type="hidden" name="name" value="@espece.Nom"/>
-
+                                <input type="hidden" name="ownerName" value="@espece.OwnerName"/>
                                 <button type="submit" class="btn btn-sm btn-outline-success">
                                     Rendre publique
                                 </button>
                             </form>
-                            @if (Model.SpeciesBiodomeCount[espece.Nom] == 0)
+                            @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
                                 <a class="btn btn-sm btn-outline-danger w-50"
                                    asp-page="/Admin/DeleteSpecies"
-                                   asp-route-slug="@espece.Nom">
+                                   asp-route-slug="@espece.Nom"
+                                   asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
                                 </a>
                             }
@@ -76,14 +78,16 @@
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
                                asp-page="/Admin/EditSpecies"
-                               asp-route-slug="@espece.Nom">
+                               asp-route-slug="@espece.Nom"
+                               asp-route-ownerName="@espece.OwnerName">
                                 Modifier
                             </a>
-                            @if (Model.SpeciesBiodomeCount[espece.Nom] == 0)
+                            @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
                                 <a class="btn btn-sm btn-outline-danger w-50"
                                    asp-page="/Admin/DeleteSpecies"
-                                   asp-route-slug="@espece.getSlug()">
+                                   asp-route-slug="@espece.getSlug()"
+                                   asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
                                 </a>
                             }

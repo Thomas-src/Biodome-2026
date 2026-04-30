@@ -37,11 +37,11 @@ public class EditSpeciesModel : PageModel
     }
 
 
-    public IActionResult OnGet(string slug)
+    public IActionResult OnGet(string slug, string ownerName)
     {
         LoadSelect();
 
-        var existing = _speciesService.GetSpeciesBySlug(slug);
+        var existing = _speciesService.GetByKebabCase(slug,ownerName);
         if (existing == null)
         {
             _logger.LogInformation("{} not found", slug);
@@ -56,7 +56,8 @@ public class EditSpeciesModel : PageModel
             Regime = existing.DietType.ToString(),
             Taille = existing.Taille,
             Poids = existing.Poids,
-            CurrentAvatarPath = existing.Avatar
+            CurrentAvatarPath = existing.Avatar,
+            OwnerName = existing.OwnerName,
         };
 
         return Page();
@@ -85,7 +86,7 @@ public class EditSpeciesModel : PageModel
             return Page();
         }
 
-        var existing = _speciesService.GetSpeciesBySlug(Slug);
+        var existing = _speciesService.GetByKebabCase(Slug,Species.OwnerName);
         if (existing == null)
         {
             return NotFound();
@@ -110,9 +111,8 @@ public class EditSpeciesModel : PageModel
 
         if ((poidsChanged || regimeChanged) && !isConfirm)
         {
-            var impacted = _biodomeService.HasSpecies(Slug).Count;
-
-            ViewData["WarningMessage"] = $"Attention : cette modification impactera {impacted} biodôme(s). Confirmez-vous ?";
+            var impacted = _biodomeService.HasSpecies(Slug, Species.OwnerName).Count;
+            ViewData["WarningMessage"] = $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?"; 
 
             return Page();
         }
@@ -162,7 +162,7 @@ public class EditSpeciesModel : PageModel
 
         public IFormFile? Avatar { get; set; }
         public bool Confirmed { get; set; } = false;
-
+        public string OwnerName { get; set; }
         public string? CurrentAvatarPath { get; set; }
     }
     

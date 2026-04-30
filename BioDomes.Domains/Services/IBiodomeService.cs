@@ -6,15 +6,15 @@ public interface IBiodomeService
 {
     IReadOnlyList<Biodome> GetBestThreeBiodome();
     IReadOnlyList<Biodome> GetAllBiodomes();
-    IReadOnlyList<Biodome> HasSpecies(string speciesName);
+    IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName);
     IReadOnlyList<Biodome> HasEquipement(string equipementName);
     IReadOnlyList<Biodome> GetUserBiodomes(string username);
-    IReadOnlyList<Biodome> SearchBiodomes(
-        double? temperatureMin, double? temperatureMax,
-        double? humiditeMin, double? humiditeMax,
-        string? equipement, string? espece);
+
+    IReadOnlyList<Biodome> SearchBiodomes(double? temperatureMin, double? temperatureMax, double? humiditeMin,
+        double? humiditeMax, string? equipement, string? espece);
+
     void Save(Biodome created, Stream openReadStream);
-    
+
     double CalculateHumiditeMax(double temp);
     Biodome GetBiodomeById(int biodomeId);
     void AddSpecyTo(int biomeId, string speciesName, int quantity);

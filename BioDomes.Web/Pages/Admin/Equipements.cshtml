@@ -34,21 +34,23 @@
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
                                asp-page="/Admin/EditEquipement"
-                               asp-route-slug="@equipement.Name">
+                               asp-route-slug="@equipement.Name"
+                               asp-route-ownerName="@equipement.OwnerName">
                                 Modifier
                             </a>
                             <form method="post" asp-page-handler="MakePublic">
                                 <input type="hidden" name="name" value="@equipement.Name"/>
-
+                                <input type="hidden" name="ownerName" value="@equipement.OwnerName"/>
                                 <button type="submit" class="btn btn-sm btn-outline-success">
                                     Rendre publique
                                 </button>
                             </form>
-                            @if (Model.EquipementsBiodomeCount[equipement.Name] == 0)
+                            @if (Model.EquipementsBiodomeCount[(equipement.Name, equipement.OwnerName)] == 0)
                             {
                                 <a class="btn btn-sm btn-outline-danger w-50"
                                    asp-page="/Admin/DeleteEquipement"
-                                   asp-route-slug="@equipement.Name">
+                                   asp-route-slug="@equipement.Name"
+                                   asp-route-ownerName="@equipement.OwnerName">
                                     Supprimer
                                 </a>
                             }
@@ -76,14 +78,16 @@
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
                                asp-page="/Admin/EditEquipement"
-                               asp-route-slug="@equipement.Name">
+                               asp-route-slug="@equipement.Name"
+                               asp-route-ownerName="@equipement.OwnerName">
                                 Modifier
                             </a>
-                            @if (Model.EquipementsBiodomeCount[equipement.Name] == 0)
+                            @if (Model.EquipementsBiodomeCount[(equipement.Name, equipement.OwnerName)] == 0)
                             {
                                 <a class="btn btn-sm btn-outline-danger w-50"
                                    asp-page="/Admin/DeleteEquipement"
-                                   asp-route-slug="@equipement.Name">
+                                   asp-route-slug="@equipement.Name"
+                                   asp-route-ownerName="@equipement.OwnerName">
                                     Supprimer
                                 </a>
                             }

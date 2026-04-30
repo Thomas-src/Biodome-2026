@@ -41,13 +41,13 @@
                     </a>
                     <form method="post" asp-page-handler="Delete">
                         <input type="hidden" name="slug" value="@Model.Species.Nom" />
+                        <input type="hidden" name="ownerName" value="@Model.Species.OwnerName" />
                         <button type="submit" class="btn btn-danger">
                             Supprimer définitivement
                         </button>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

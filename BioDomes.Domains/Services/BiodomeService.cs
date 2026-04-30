@@ -28,13 +28,13 @@ public class BiodomeService : IBiodomeService
 
     public IReadOnlyList<Biodome> GetAllBiodomes() => _repository.GetAllBiodomes();
 
-    public IReadOnlyList<Biodome> HasSpecies(string speciesName) => _repository.GetAllBiodomes()
-        .Where(b => b.Species.Any(s => s.Nom.Equals(speciesName)))
+    public IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName) => _repository.GetAllBiodomes()
+        .Where(b => b.Species.Any(s => s.Nom.ToLower().Equals(speciesName.ToLower())&&  s.OwnerName.ToLower().Equals(ownerName.ToLower())))
         .ToList();
 
 
     public IReadOnlyList<Biodome> HasEquipement(string equipementName) => _repository.GetAllBiodomes()
-        .Where(b => b.Equipements.Any(s => s.Name.Equals(equipementName)))
+        .Where(b => b.Equipements.Any(e => e.Name.ToLower().Equals(equipementName.ToLower())))
         .ToList();
 
 

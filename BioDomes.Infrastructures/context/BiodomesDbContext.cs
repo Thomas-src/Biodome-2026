@@ -23,7 +23,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
         Avatar = "souris.jpg",
         Size = 9,
         Weight = 25,
-        UserId = null
+        UserId = "2"
     };
 
     public DbSet<BiodomeEntity> Biodomes { get; set; }
@@ -212,7 +212,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "lion.jpg",
                 Size = 180,
                 Weight = 150000,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -224,7 +224,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "boa.jpg",
                 Size = 225,
                 Weight = 13000,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -236,7 +236,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "hetre.webp",
                 Size = 600,
                 Weight = 830000,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -248,7 +248,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "chene.webp",
                 Size = 2500,
                 Weight = 2100000,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -260,7 +260,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "mouche.jpg",
                 Size = 1,
                 Weight = 1,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -272,7 +272,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "araigne.jpg",
                 Size = 4,
                 Weight = 95,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -284,7 +284,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "hirondelle.jpg",
                 Size = 18,
                 Weight = 45,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -296,7 +296,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "lievrejpeg.jpeg",
                 Size = 50,
                 Weight = 4000,
-                UserId = null
+                UserId = "2"
             },
             new SpeciesEntity
             {
@@ -308,7 +308,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Avatar = "paturin.jpg",
                 Size = 23,
                 Weight = 1,
-                UserId = null
+                UserId = "2"
             },
             souris
             
@@ -323,7 +323,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 18,
                 Humidity = 70,
                 Avatar = "foret-temperee.png",
-                userId = null
+                userId = "2"
             },
             new BiodomeEntity
             {
@@ -332,7 +332,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 28,
                 Humidity = 90,
                 Avatar = "foret-tropicale.png",
-                userId = null
+                userId = "2"
             },
             new BiodomeEntity
             {
@@ -341,7 +341,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 32,
                 Humidity = 40,
                 Avatar = "savane.png",
-                userId = null
+                userId = "2"
             },
             new BiodomeEntity
             {
@@ -350,7 +350,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 20,
                 Humidity = 55,
                 Avatar = "prairie.png",
-                userId = null
+                userId = "2"
             },
             new BiodomeEntity
             {
@@ -359,7 +359,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 22,
                 Humidity = 60,
                 Avatar = "labo.png",
-                userId = null
+                userId = "1"
             }
         );
         modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(
@@ -413,7 +413,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Name = "Lampe",
                 ConsumptionId = 2,
                 ProductionId = 1,
-                Visible = false
+                Visible = true,
+                UserId = "2"
             }
             );
     }

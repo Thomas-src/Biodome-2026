@@ -2,7 +2,7 @@
 @model BioDomes.Web.Pages.Admin.EditEquipementModel
 
 @{
-    ViewData["Title"] = "Modifier une espèce";
+    ViewData["Title"] = "Modifier un équipement";
 }
 
 
@@ -24,7 +24,7 @@
             }
             <form method="post" enctype="multipart/form-data">
                 <input type="hidden" asp-for="Equipement.Confirmed"/>
-
+                <input type="hidden" asp-for="Equipement.OwnerName" />
                 <div class="mb-3">
                     <label asp-for="Equipement.Name" class="form-label">Nom*</label>
                     <input asp-for="Equipement.Name" class="form-control" readonly/>

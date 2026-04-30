@@ -17,14 +17,14 @@ public class DeleteEquipementModel : PageModel
 
     public Domains.Core.Equipements.Equipement Equipement { get; set; }
 
-    public IActionResult OnGet(string slug)
+    public IActionResult OnGet(string slug, string ownerName)
     {
         if (string.IsNullOrEmpty(slug))
         {
             return NotFound();
         }
 
-        var equipement = _service.Get(slug);
+        var equipement = _service.GetByKebabCase(slug, ownerName);
 
         if (equipement is null)
         {
@@ -35,25 +35,24 @@ public class DeleteEquipementModel : PageModel
         return Page();
     }
 
-    public IActionResult OnPostDelete(string slug)
+    public IActionResult OnPostDelete(string slug, string ownerName)
     {
         if (string.IsNullOrEmpty(slug))
         {
             return NotFound();
         }
-        
+
         var biodomesHasSpecies = _biodomesService.HasEquipement(slug);
         if (biodomesHasSpecies.Count == 0)
         {
-            _service.Delete(slug);
+            _service.Delete(slug, ownerName);
             TempData["SuccessMessage"] = "Équipement supprimé avec succès";
             return RedirectToPage("/Admin/Equipements");
         }
         else
         {
-            
         }
-        
+
         return Page();
     }
 }

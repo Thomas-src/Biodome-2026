@@ -24,27 +24,30 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
         return result.AsReadOnly();
     }
 
-    public bool AlreadyExist(Equipement equipement)
-    => repository.GetAllEquipements().Contains(equipement);
+    public bool AlreadyExist(Equipement equipement) => repository.GetAllEquipements().Contains(equipement);
     
 
-    public void MakePublic(string equipementName)
+    public void MakePublic(string equipementName, string ownerName)
     {
-        var equipement = Get(equipementName);
+        var equipement = GetByKebabCase(equipementName,ownerName);
 
         if (equipement is not null)
         {
             equipement.Visibility = true;
 
-            repository.Update(equipementName, equipement);
+            repository.Update(equipementName,ownerName, equipement);
         }
     }
 
-    public Equipement? Get(string name) => repository.GetAllEquipements().FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
+    private Equipement? Get(string name) => repository.GetAllEquipements().FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
 
-    public void Delete(string name)
+    public Equipement? GetByKebabCase(string name, string ownerName) => repository.GetAllEquipements()
+        .FirstOrDefault(e => e.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
+                             && e.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+
+    public void Delete(string name, string ownerName)
     {
-        var equipement = Get(name);
+        var equipement = GetByKebabCase(name,ownerName);
 
         if (equipement is null)
         {
@@ -56,7 +59,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
             pictureRepository.Delete(equipement.Avatar, EQUIPEMENT);
         }
 
-        repository.Delete(name);
+        repository.Delete(name,ownerName);
     }
 
     public IReadOnlyList<Equipement> GetAvailableEquipements() =>
@@ -105,7 +108,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
                 newEquipement.Avatar = filename;
             }
 
-            repository.Update(oldEquipement.Name, newEquipement);
+            repository.Update(oldEquipement.Name,oldEquipement.OwnerName, newEquipement);
 
             return true;
         }

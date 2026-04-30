@@ -1,5 +1,7 @@
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
+using BioDomes.Infrastructures.entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,11 +13,12 @@ public class SpeciesAdminModel : PageModel
     private readonly ISpeciesService _speciesService;
     private readonly ILogger<SpeciesAdminModel> _logger;
 
-    public Dictionary<string, int> SpeciesBiodomeCount { get; set; } = new();
+    public Dictionary<(string Nom, string Owner), int> SpeciesBiodomeCount { get; set; } = new();
     public IReadOnlyList<Domains.Core.Species> SpeciesVerified { get; set; } = [];
     public IReadOnlyList<Domains.Core.Species> SpeciesToVerify { get; set; } = [];
 
-    public SpeciesAdminModel(ISpeciesService speciesService, IBiodomeService biodomesService, ILogger<SpeciesAdminModel> logger)
+    public SpeciesAdminModel(ISpeciesService speciesService, IBiodomeService biodomesService,
+        ILogger<SpeciesAdminModel> logger, UserManager<UserEntity> userManager)
     {
         _speciesService = speciesService;
         _biodomesService = biodomesService;
@@ -26,19 +29,17 @@ public class SpeciesAdminModel : PageModel
     {
         SpeciesVerified = _speciesService.GetAvailableSpecies();
         SpeciesToVerify = _speciesService.GetUnavailableSpecies();
-        
-        
         var allSpecies = SpeciesVerified.Concat(SpeciesToVerify).ToList();
         SpeciesBiodomeCount = allSpecies.ToDictionary(
-            s => s.Nom,
-            s => _biodomesService.HasSpecies(s.Nom).Count
+            s => (s.Nom, s.OwnerName),
+            s => _biodomesService.HasSpecies(s.Nom, s.OwnerName).Count
         );
     }
-    
-    public IActionResult OnPostMakePublic(string name)
+
+    public IActionResult OnPostMakePublic(string name, string ownerName)
     {
-        _speciesService.MakePublic(name);
-        TempData["SuccessMessage"] = $"Espèce @{name} rendue publique avec succès";
+        _speciesService.MakePublic(name, ownerName);
+        TempData["SuccessMessage"] = $"Espèce {name} de {ownerName} rendue publique avec succès";
         return RedirectToPage();
     }
 }

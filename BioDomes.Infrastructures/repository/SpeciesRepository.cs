@@ -89,13 +89,13 @@ public class SpeciesRepository : ISpeciesRepository
         );
     }
 
-    public void Update(string name, Species species)
+    public void Update(string name,string ownerName, Species species)
     {
         var oldSpecies = _context.Species
             .Include(s => s.Regim)
             .Include(s => s.TypeEntity)
             .Include(s => s.User)
-            .FirstOrDefault(s => s.Name == name);
+            .FirstOrDefault(s => s.Name.ToLower() == name.ToLower() && s.User.UserName.ToLower() == ownerName.ToLower());
         if (oldSpecies is null)
         {
             throw new ArgumentException("Espèce introuvable");
