@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Web.Pages.Biodomes;
 
-[Authorize]
+[Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Create : PageModel
 {
     private readonly IBiodomeService _service;

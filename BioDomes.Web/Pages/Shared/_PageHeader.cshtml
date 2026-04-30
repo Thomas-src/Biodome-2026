@@ -1,0 +1,10 @@
+@model (string Title, string CreatePage)
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="mb-0">@Model.Title</h1>
+
+    <a class="btn btn-sm btn-outline-primary mb-3"
+       asp-page="@Model.CreatePage">
+        Créer
+    </a>
+</div>

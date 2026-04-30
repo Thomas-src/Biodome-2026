@@ -1,6 +1,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BioDomes.Web.Pages.Species;
 
-[Authorize]
+[Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Create : PageModel
 {
     private readonly ISpeciesClassificationRepository _repositoryClassification;

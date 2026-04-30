@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Equipements;
 
-[Authorize]
+[Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Create : PageModel
 {
     private readonly IEquipementService _service;

@@ -5,19 +5,18 @@
     ViewData["Title"] = "Species";
 }
 <partial name="Shared/_Toast" />
-<h1 class="text-center">Les espèces</h1>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="mb-0">Les espèces</h1>
+
+    <a class="btn btn-sm btn-outline-primary mb-3" asp-page="/Species/Create">
+        Créer
+    </a>
+</div>
 
 @if (User.Identity.IsAuthenticated)
 {
     
     <h2>Vos espèces :</h2>
-
-    <div class="container">
-        <a class="btn btn-sm btn-outline-primary mb-2"
-           asp-page="/Species/Create">
-            Créer
-        </a>
-    </div>
 
     @if (Model.OwnSpecies.Count > 0)
     {

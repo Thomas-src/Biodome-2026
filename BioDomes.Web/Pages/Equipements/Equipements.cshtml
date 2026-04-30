@@ -1,6 +1,4 @@
 @page "/equipements"
-@using System.Security.Claims
-@using Microsoft.EntityFrameworkCore
 @model BioDomes.Web.Pages.Equipements.Equipements
 
 @{
@@ -8,17 +6,10 @@
 }
 
 <partial name="Shared/_Toast" />
-<h1 class="text-center">Page des équipements</h1>
+<partial name="_PageHeader" model='("Les équipements", "/Equipements/Create")' />
 @if (User.Identity.IsAuthenticated)
 {
     <h2>Vos équipements</h2>
-
-    <div class="container">
-        <a class="btn btn-sm btn-outline-primary mb-2"
-           asp-page="/Equipements/Create">
-            Créer
-        </a>
-    </div>
 
     <section>
         @if (Model.OwnEquipements == null || Model.OwnEquipements.Count == 0)
@@ -33,7 +24,6 @@
                     {
                         <div class="col-4 ">
                             <div class="card shadow-sm h-100">
-
                                 <partial name="Shared/_EquipementCard" model="eq"/>
                             </div>
                         </div>
@@ -51,7 +41,6 @@
                 {
                     <div class="col-4">
                         <div class="card shadow-sm h-100">
-
                             <partial name="Shared/_EquipementCard" model="eq"/>
                         </div>
                     </div>
@@ -70,7 +59,6 @@ else
                 {
                     <div class="col-4">
                         <div class="card shadow-sm h-100">
-
                             <partial name="Shared/_EquipementCard" model="eq"/>
                         </div>
                     </div>

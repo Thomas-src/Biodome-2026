@@ -1,12 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Biodomes;
 
+[Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Edit : PageModel
 {
     private readonly IBiodomeService _service;
