@@ -34,8 +34,9 @@ public class BiodomeService : IBiodomeService
         .ToList();
 
 
-    public IReadOnlyList<Biodome> HasEquipement(string equipementName) => _repository.GetAllBiodomes()
-        .Where(b => b.Equipements.Any(e => e.Name.ToLower().Equals(equipementName.ToLower())))
+    public IReadOnlyList<Biodome> HasEquipement(string equipementName, string ownerName) => _repository.GetAllBiodomes()
+        .Where(b => b.Equipements.Any(e =>
+            e.Name.ToLower().Equals(equipementName.ToLower()) && e.OwnerName.ToLower().Equals(ownerName.ToLower())))
         .ToList();
 
 
@@ -107,13 +108,13 @@ public class BiodomeService : IBiodomeService
     public Biodome? GetBiodomeById(int biodomeId) => GetAllBiodomes().FirstOrDefault(b => b.Id == biodomeId);
 
 
-    public void AddSpecyTo(int biomeId, string speciesName, int quantity) =>
+    public void AddSpeciesTo(int biomeId, string speciesName, int quantity) =>
         _repository.AddSpeciesInBiome(biomeId, speciesName, quantity);
 
     public void AddEquipementTo(int biomeId, string equipementName) =>
         _repository.AddEquipementInBiome(biomeId, equipementName);
 
-    public void RemoveSpecyFrom(int biomeId, string speciesName) =>
+    public void RemoveSpeciesFrom(int biomeId, string speciesName) =>
         _repository.RemoveSpeciesInBiome(biomeId, speciesName);
 
     public void RemoveEquipementFrom(int biomeId, string equipementName) =>

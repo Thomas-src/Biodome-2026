@@ -3,7 +3,8 @@ using BioDomes.Domains.Repository;
 
 namespace BioDomes.Domains.Services;
 
-public class EquipementService(IEquipementRepository repository, IPictureRepository pictureRepository) : IEquipementService
+public class EquipementService(IEquipementRepository repository, IPictureRepository pictureRepository)
+    : IEquipementService
 {
     private static string EQUIPEMENT = "equipements";
 
@@ -24,23 +25,21 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
         return result.AsReadOnly();
     }
 
-    public bool AlreadyExist(Equipement equipement) =>  repository.GetAllEquipements().Any(e =>
-            e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
-            (e.Visibility || e.OwnerName == equipement.OwnerName));
+    public bool AlreadyExist(Equipement equipement) => repository.GetAllEquipements().Any(e =>
+        e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
+        (e.Visibility || e.OwnerName == equipement.OwnerName));
 
     public void MakePublic(string equipementName, string ownerName)
     {
-        var equipement = GetByKebabCase(equipementName,ownerName);
+        var equipement = GetByKebabCase(equipementName, ownerName);
 
         if (equipement is not null)
         {
             equipement.Visibility = true;
 
-            repository.Update(equipementName,ownerName, equipement);
+            repository.Update(equipementName, ownerName, equipement);
         }
     }
-
-    private Equipement? Get(string name) => repository.GetAllEquipements().FirstOrDefault(e => e.Name.ToLower() == name.ToLower());
 
     public Equipement? GetByKebabCase(string name, string ownerName) => repository.GetAllEquipements()
         .FirstOrDefault(e => e.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
@@ -48,7 +47,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
 
     public void Delete(string name, string ownerName)
     {
-        var equipement = GetByKebabCase(name,ownerName);
+        var equipement = GetByKebabCase(name, ownerName);
 
         if (equipement is null)
         {
@@ -60,7 +59,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
             pictureRepository.Delete(equipement.Avatar, EQUIPEMENT);
         }
 
-        repository.Delete(name,ownerName);
+        repository.Delete(name, ownerName);
     }
 
     public IReadOnlyList<Equipement> GetAvailableEquipements() =>
@@ -109,7 +108,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
                 newEquipement.Avatar = filename;
             }
 
-            repository.Update(oldEquipement.Name,oldEquipement.OwnerName, newEquipement);
+            repository.Update(oldEquipement.Name, oldEquipement.OwnerName, newEquipement);
 
             return true;
         }

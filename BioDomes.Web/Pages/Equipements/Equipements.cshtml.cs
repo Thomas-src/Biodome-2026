@@ -35,7 +35,7 @@ public class Equipements : PageModel
         
         if (User.Identity.IsAuthenticated)
         {
-            OwnEquipements = _service.FilterOwn(all,  User.Identity.Name);
+            OwnEquipements = _service.FilterOwn(all,  User.Identity.Name); // todo modifier
             RestEquipements = all.Where(x => !OwnEquipements.Contains(x) && x.Visibility).ToList();
         }
         else

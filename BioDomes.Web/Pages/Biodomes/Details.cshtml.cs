@@ -52,7 +52,7 @@ public class Details : PageModel
 
     public IActionResult OnPostAddSpecies(int biomeId, string speciesName, int quantity = 1)
     {
-        _service.AddSpecyTo(biomeId, speciesName, quantity);
+        _service.AddSpeciesTo(biomeId, speciesName, quantity);
     
         return RedirectToPage(new { id = biomeId });
     }
@@ -66,7 +66,7 @@ public class Details : PageModel
     
     public IActionResult OnPostRemoveSpecies(int biomeId, string speciesName)
     {
-        _service.RemoveSpecyFrom(biomeId, speciesName);
+        _service.RemoveSpeciesFrom(biomeId, speciesName);
         // TempData["SuccessMessage"] = $"L'espèce {speciesName} a été retirée du biodome.";
         return RedirectToPage(new { id = biomeId });
     }

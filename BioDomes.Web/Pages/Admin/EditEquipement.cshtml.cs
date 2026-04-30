@@ -106,7 +106,7 @@ public class EditEquipementModel : PageModel
 
         if ((consumptionChanged || productionChanged) && !isConfirm)
         {
-            var impacted = _biodomeService.HasEquipement(Slug).Count;
+            var impacted = _biodomeService.HasEquipement(Slug, existing.OwnerName).Count;
             ViewData["WarningMessage"] =
                 $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?";
             return Page();

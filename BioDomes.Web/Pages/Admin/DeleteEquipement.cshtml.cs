@@ -42,7 +42,7 @@ public class DeleteEquipementModel : PageModel
             return NotFound();
         }
 
-        var biodomesHasSpecies = _biodomesService.HasEquipement(slug);
+        var biodomesHasSpecies = _biodomesService.HasEquipement(slug, ownerName);
         if (biodomesHasSpecies.Count == 0)
         {
             _service.Delete(slug, ownerName);

@@ -30,7 +30,7 @@ public class EquipementsModel : PageModel
         var allSpecies = EquipementsVerified.Concat(EquipementsToVerify).ToList();
         EquipementsBiodomeCount = allSpecies.ToDictionary(
             s => (s.Name, s.OwnerName),
-            s => _biodomeService.HasEquipement(s.Name).Count
+            s => _biodomeService.HasEquipement(s.Name, s.OwnerName).Count
         );
     }
     

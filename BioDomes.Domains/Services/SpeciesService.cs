@@ -42,22 +42,8 @@ public class SpeciesService : ISpeciesService
     }
 
     public IReadOnlyList<Species> FilterOwnerSpecies(string ownerSpecies, IReadOnlyList<Species> species)
-    {
-        IList<Species> result = new List<Species>();
+        => species.Where(sp => sp.OwnerName.ToUpper() == ownerSpecies.ToUpper()).ToList();
 
-        foreach (var sp in species)
-        {
-            if (sp.OwnerName != null)
-            {
-                if (sp.OwnerName.ToUpper() == ownerSpecies.ToUpper())
-                {
-                    result.Add(sp);
-                }
-            }
-        }
-
-        return result.AsReadOnly();
-    }
 
     public void MakePublic(string name, string ownerName)
     {
@@ -114,17 +100,18 @@ public class SpeciesService : ISpeciesService
             .Where(s => s.IsVisible)
             .ToList();
     }
-    
+
     public bool SpeciesExists(Species species) => _repository.GetAllSpecies().Any(e =>
         e.Nom.Equals(species.Nom, StringComparison.OrdinalIgnoreCase) &&
         (e.IsVisible || e.OwnerName == species.OwnerName));
-    
+
     public Species? GetByKebabCase(string kebabCase, string ownerName)
     {
         if (string.IsNullOrWhiteSpace(kebabCase) || string.IsNullOrWhiteSpace(ownerName))
         {
             return null;
         }
+
         return _repository.GetAllSpecies().FirstOrDefault(s =>
             s.Nom.ToKebabCase().Equals(kebabCase, StringComparison.CurrentCultureIgnoreCase) &&
             s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
