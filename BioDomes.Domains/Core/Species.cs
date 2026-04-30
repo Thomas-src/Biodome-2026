@@ -1,3 +1,5 @@
+using BioDomes.Domains.Extensions;
+
 namespace BioDomes.Domains.Core;
 
 public class Species
@@ -65,6 +67,11 @@ public class Species
         get { return _nom; }
     }
 
+    public string getSlug()
+    {
+        return _nom.ToKebabCase();
+    }
+    
     public double Taille
     {
         get { return _taille; }

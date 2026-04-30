@@ -1,6 +1,4 @@
 @page "/Species"
-@using BioDomes.Domains.Core
-@using BioDomes.Domains.Extensions
 @model BioDomes.Web.Pages.Species.SpeciesModel
 
 @{
@@ -8,13 +6,6 @@
 }
 
 <h1 class="text-center">Les espèces</h1>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
 
 @if (User.Identity.IsAuthenticated)
 {

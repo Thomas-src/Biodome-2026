@@ -44,7 +44,7 @@ var connectionString = builder.Environment.IsDevelopment()
 builder.Services.AddDbContext<BioDomesDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true; // todo configurer la confirmation des mails => mdp ? resend bloqué par l'école
+        options.SignIn.RequireConfirmedAccount = true;
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
     })
