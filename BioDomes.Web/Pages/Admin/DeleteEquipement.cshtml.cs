@@ -43,6 +43,7 @@ public class DeleteEquipementModel : PageModel
         if (biodomesHasSpecies.Count == 0)
         {
             _service.Delete(slug);
+            TempData["SuccessMessage"] = "Équipement supprimé avec succès";
             return RedirectToPage("/Admin/Equipements");
         }
         else

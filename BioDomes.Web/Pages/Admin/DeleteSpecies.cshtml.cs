@@ -45,6 +45,7 @@ public class DeleteSpeciesModel : PageModel
         if (biodomesHasSpecies.Count == 0)
         {
             _speciesService.Delete(slug);
+            TempData["SuccessMessage"] = "Espèce supprimée avec succès";
             return RedirectToPage("/Admin/species");
         }
         else

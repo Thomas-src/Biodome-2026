@@ -4,7 +4,13 @@
 @{
     ViewData["Title"] = "Modification des espèces";
 }
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+    TempData["SuccessMessage"] = null;
+}
 <div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="mb-0">Les espèces</h1>
 
@@ -23,15 +29,13 @@
             @foreach (var espece in Model.SpeciesToVerify)
             {
                 var usage = Model.SpeciesBiodomeCount.ContainsKey(espece.Nom) ? Model.SpeciesBiodomeCount[espece.Nom] : 0;
-                var message = $"Êtes-vous sûr de vouloir modifier l’espèce {espece.Nom} ? Utilisée dans {usage} biodome(s).";
-
+                
                 <div class="col-4">
                     <div class="card shadow-sm h-100 border-warning">
                         <partial name="_SpeciesCard" model="espece"/>
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
-                               asp-page="/Species/Edit"
-                               onclick="return confirm('@message');"
+                               asp-page="/Admin/EditSpecies"
                                asp-route-slug="@espece.Nom">
                                 Modifier
                             </a>
@@ -69,16 +73,12 @@
             @foreach (var espece in Model.SpeciesVerified)
             {
                 var usage = Model.SpeciesBiodomeCount.ContainsKey(espece.Nom) ? Model.SpeciesBiodomeCount[espece.Nom] : 0;
-                var message = $"Êtes-vous sûr de vouloir modifier l’espèce {espece.Nom} ? Utilisée dans {usage} biodome(s).";
-
-
                 <div class="col-4">
                     <div class="card shadow-sm h-100">
                         <partial name="_SpeciesCard" model="espece"/>
                         <div class="card-footer d-flex gap-2">
                             <a class="btn btn-sm btn-outline-primary w-50"
                                asp-page="/Species/Edit"
-                               onclick="return confirm('@message');"
                                asp-route-slug="@espece.Nom">
                                 Modifier
                             </a>
@@ -86,7 +86,7 @@
                             {
                                 <a class="btn btn-sm btn-outline-danger w-50"
                                    asp-page="/Admin/DeleteSpecies"
-                                   asp-route-slug="@espece.Nom">
+                                   asp-route-slug="@espece.getSlug()">
                                     Supprimer
                                 </a>
                             }

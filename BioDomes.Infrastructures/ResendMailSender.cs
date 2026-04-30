@@ -18,7 +18,7 @@ public class ResendMailSender : IMyEmailSender
     {
         _http = http;
         _logger = logger;
-        _fromAddress = config.FromAddress; // ex: "BioDomes <noreply@tondomaine.com>"
+        _fromAddress = config.FromAddress;
 
         _http.BaseAddress = new Uri("https://api.resend.com/");
         _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {config.ResendApiKey}");
@@ -34,7 +34,7 @@ public class ResendMailSender : IMyEmailSender
             html = htmlMessage
         };
 
-        _logger.LogInformation("📧 Envoi email vers {Email} | Subject: {Subject}", email, subject);
+        _logger.LogInformation("Envoi email vers {Email} | Subject: {Subject}", email, subject);
 
         var response = await _http.PostAsJsonAsync("emails", payload);
 
@@ -42,12 +42,12 @@ public class ResendMailSender : IMyEmailSender
 
         if (response.IsSuccessStatusCode)
         {
-            _logger.LogInformation("✅ Email envoyé avec succès vers {Email}", email);
+            _logger.LogInformation("Email envoyé avec succès vers {Email}", email);
         }
         else
         {
             _logger.LogError(
-                "❌ Échec envoi email vers {Email} | Status: {StatusCode} | Response: {Response}",
+                "Échec envoi email vers {Email} | Status: {StatusCode} | Response: {Response}",
                 email,
                 (int)response.StatusCode,
                 responseBody

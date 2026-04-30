@@ -1,4 +1,5 @@
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 
 namespace BioDomes.Domains.Services;
@@ -12,6 +13,27 @@ public class SpeciesService : ISpeciesService
     {
         _repository = repository;
         _pictureRepository = pictureRepository;
+    }
+
+    public Species? GetSpeciesBySlug(string slug)
+    {
+        if (string.IsNullOrWhiteSpace(slug))
+        {
+            return null;
+        }
+        slug = slug.ToLowerInvariant();
+
+        foreach (var species in _repository.GetAllSpecies())
+        {
+            var speciesSlug = species.Nom.ToKebabCase();
+
+            if (speciesSlug.Equals(slug))
+            {
+                return species;
+            }
+        }
+
+        return null;
     }
 
     public IReadOnlyList<Species> FilterOwnerSpecies(string ownerSpecies, IReadOnlyList<Species> species)
@@ -93,11 +115,16 @@ public class SpeciesService : ISpeciesService
         return false;
     }
 
-    public Species Get(string name)
+    public Species? Get(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return null;
+        }
+        name = name.ToLowerInvariant();
         foreach (var specy in _repository.GetAllSpecies())
         {
-            if (specy.Nom.Equals(name))
+            if (specy.Nom.ToLowerInvariant().Equals(name))
             {
                 return specy;
             }
@@ -105,12 +132,15 @@ public class SpeciesService : ISpeciesService
         return null;
     }
 
-    public bool Save(Species created, Stream openReadStream)
+    public bool Save(Species created, Stream? openReadStream)
     {
         try
         {
-            created.Avatar = _pictureRepository.Save(created.Avatar, openReadStream, "species");
-            
+            if (openReadStream != null)
+            {
+                created.Avatar = _pictureRepository.Save(created.Avatar, openReadStream, "species");
+            }
+             
             _repository.Save(created);
         } catch (Exception e)
         {
@@ -118,6 +148,48 @@ public class SpeciesService : ISpeciesService
             return false;
         }
         return true;
+    }
+
+    public bool Update(Species oldSpecies, Species newSpecies, Stream? openReadStream)
+    {
+        try
+        {
+            if (oldSpecies == null || newSpecies == null)
+            {
+                return false;
+            }
+            oldSpecies.IsVisible = newSpecies.IsVisible;
+    
+            // ⚠️ ici tu es limité par ton modèle (pas de setters pour Nom/Taille/Poids/DietType)
+            // donc normalement tu dois soit :
+            // - ajouter des méthodes métier dans Species
+            // - soit accepter que seul avatar + visibility changent
+    
+            // 2. Image update (si nouvelle image fournie)
+            if (openReadStream != null)
+            {
+                if (!string.IsNullOrEmpty(oldSpecies.Avatar))
+                {
+                    _pictureRepository.Delete(oldSpecies.Avatar, "species");
+                }
+    
+                oldSpecies.Avatar = _pictureRepository.Save(
+                    oldSpecies.Avatar,
+                    openReadStream,
+                    "species"
+                );
+            }
+    
+            _repository.Update(oldSpecies.Nom, newSpecies);
+    
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("============== UPDATE EXCEPTION ==============");
+            Console.WriteLine(ex);
+            return false;
+        }
     }
 
     public void Delete(string name)

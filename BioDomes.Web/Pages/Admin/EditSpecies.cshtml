@@ -1,0 +1,96 @@
+@page "{slug:slug}"
+@model BioDomes.Web.Pages.Admin.EditSpeciesModel
+
+@{
+    ViewData["Title"] = "Modifier une espèce";
+}
+
+
+<h1 class="mb-4">Modifier l'espèce </h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.Species.CurrentAvatarPath))
+            {
+                <div class="mb-4 text-center">
+                    <label class="form-label">Image actuelle</label>
+                    <div>
+                        <img src="~/images/species/@Model.Species.CurrentAvatarPath"
+                             alt="@Model.Species.Name"
+                             class="img-fluid rounded shadow"
+                             style="max-height: 250px;"/>
+                    </div>
+                </div>
+            }
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Species.Confirmed"/>
+                <div class="mb-3">
+                    <label asp-for="Species.Name" class="form-label">Nom*</label>
+                    <input asp-for="Species.Name" class="form-control"/>
+                    <span asp-validation-for="Species.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Type" class="form-label">Type*</label>
+                    <select class="form-control" asp-for="Species.Type">
+                        <option value="">-- Choisir un organisme --</option>
+                        @foreach (var organisme in Model.AllTypes)
+                        {
+                            <option value="@organisme">@organisme</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Species.Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Regime" class="form-label">Régime*</label>
+                    <select class="form-control" asp-for="Species.Regime">
+                        <option value="">-- Choisir un régime --</option>
+                        @foreach (var regime in Model.Regime)
+                        {
+                            <option value="@regime">@regime</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Species.Regime" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Taille" class="form-label">Taille* (cm)</label>
+                    <input asp-for="Species.Taille" class="form-control" type="number" step="0.01"/>
+                    <span asp-validation-for="Species.Taille" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Species.Poids" class="form-label">Poids* (g)</label>
+                    <input asp-for="Species.Poids" class="form-control" type="number" step="1"/>
+                    <span asp-validation-for="Species.Poids" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nouvel avatar (optionnel)</label>
+                    <input type="file" asp-for="Species.Avatar" class="form-control"/>
+                    <span asp-validation-for="Species.Avatar" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <a asp-page="Admin/Species" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" name="confirm" value="false" class="btn btn-primary">
+                        Enregistrer
+                    </button>
+                </div>
+                @if (ViewData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning mt-3">
+                        @ViewData["WarningMessage"]
+                        <button type="submit" name="confirm" value="true" class="btn btn-danger mt-2">
+                            Confirmer quand même
+                        </button>
+                    </div>
+                }
+            </form>
+
+        </div>
+    </div>
+
+    <p>* indique un champ obligatoire</p>
+</div>
