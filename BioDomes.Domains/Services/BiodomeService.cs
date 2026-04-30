@@ -29,7 +29,8 @@ public class BiodomeService : IBiodomeService
     public IReadOnlyList<Biodome> GetAllBiodomes() => _repository.GetAllBiodomes();
 
     public IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName) => _repository.GetAllBiodomes()
-        .Where(b => b.Species.Any(s => s.Nom.ToLower().Equals(speciesName.ToLower())&&  s.OwnerName.ToLower().Equals(ownerName.ToLower())))
+        .Where(b => b.Species.Any(s =>
+            s.Nom.ToLower().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(ownerName.ToLower())))
         .ToList();
 
 
@@ -103,25 +104,26 @@ public class BiodomeService : IBiodomeService
 
     public double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
 
-    public Biodome GetBiodomeById(int biodomeId) => _repository.GetBiodomeById(biodomeId);
+    public Biodome? GetBiodomeById(int biodomeId) => GetAllBiodomes().FirstOrDefault(b => b.Id == biodomeId);
+
 
     public void AddSpecyTo(int biomeId, string speciesName, int quantity) =>
-        _repository.AddSpecyInBiome(biomeId, speciesName, quantity);
+        _repository.AddSpeciesInBiome(biomeId, speciesName, quantity);
 
     public void AddEquipementTo(int biomeId, string equipementName) =>
         _repository.AddEquipementInBiome(biomeId, equipementName);
 
     public void RemoveSpecyFrom(int biomeId, string speciesName) =>
-        _repository.RemoveSpecyInBiome(biomeId, speciesName);
+        _repository.RemoveSpeciesInBiome(biomeId, speciesName);
 
     public void RemoveEquipementFrom(int biomeId, string equipementName) =>
         _repository.RemoveEquipementInBiome(biomeId, equipementName);
 
     public void Update(Biodome created)
     {
-        var old = _repository.GetBiodomeById(created.Id);
+        var old = GetBiodomeById(created.Id);
 
-        if (!created.DeepEquals(old))
+        if (old != null && !created.DeepEquals(old))
         {
             _repository.Update(created);
         }
@@ -129,12 +131,11 @@ public class BiodomeService : IBiodomeService
 
     public void Update(Biodome created, string fileName, Stream openReadStream)
     {
-        var old = _repository.GetBiodomeById(created.Id);
+        var old = GetBiodomeById(created.Id);
 
-        if (!created.DeepEquals(old))
+        if (old != null && !created.DeepEquals(old))
         {
             created.Image = _pictureRepository.Save(fileName, openReadStream, "biodomes");
-
             _repository.Update(created);
         }
     }

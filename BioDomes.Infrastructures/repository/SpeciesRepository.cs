@@ -62,33 +62,7 @@ public class SpeciesRepository : ISpeciesRepository
         _context.SaveChanges();
     }
 
-    public Species? GetSpecies(string name)
-    {
-        name =  name.ToLower();
-        var entity = _context.Species
-            .Include(s => s.Regim)
-            .Include(s => s.TypeEntity)
-            .Include(s => s.User)
-            .FirstOrDefault(s =>s.Name.ToLower() == name);
-
-        if (entity is null)
-        {
-            _logger.LogInformation("{} not found", name);
-            return null;
-        }
-
-        return new Species(
-            entity.Name,
-            entity.Size,
-            entity.Weight,
-            Enum.Parse<DietType>(entity.Regim.Name),
-            Enum.Parse<SpeciesClassification>(entity.TypeEntity.Name),
-            entity.Avatar,
-            entity.Visible,
-            entity.User.UserName
-        );
-    }
-
+  
     public void Update(string name,string ownerName, Species species)
     {
         var oldSpecies = _context.Species

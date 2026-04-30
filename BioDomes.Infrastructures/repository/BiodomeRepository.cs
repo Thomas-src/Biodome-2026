@@ -100,47 +100,10 @@ public class BiodomeRepository : IBiodomeRepository
 
         _context.SaveChanges();
     }
+    
 
-    public void Delete(string id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Biodome GetBiodomeById(int biodomeId)
-    {
-        return _context.Biodomes
-            .Where(b => b.idBiodomes == biodomeId)
-            .Select(b => new Biodome(
-                b.idBiodomes,
-                b.Name,
-                b.Temperature,
-                b.Humidity,
-                b.Avatar,
-                b.BiodomeSpecies.Select(bs => new Species(
-                    bs.Species.Name,
-                    bs.Species.Size,
-                    bs.Species.Weight,
-                    Enum.Parse<DietType>(bs.Species.Regim.Name),
-                    Enum.Parse<SpeciesClassification>(bs.Species.TypeEntity.Name),
-                    bs.Species.Avatar,
-                    bs.Species.Visible,
-                    bs.Species.User != null ? bs.Species.User.UserName : "unknown",
-                    bs.Quantity
-                )).ToList(),
-                b.Equipment.Select(e => new Equipement(
-                    e.Name,
-                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
-                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
-                    e.Avatar,
-                    e.Visible,
-                    e.User != null ? e.User.UserName : "unknown"
-                )).ToList(),
-                b.user.UserName
-            ))
-            .FirstOrDefault();
-    }
-
-    public void AddSpecyInBiome(int biomeId, string speciesName, int quantity)
+  
+    public void AddSpeciesInBiome(int biomeId, string speciesName, int quantity)
     {
         var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
 
@@ -176,7 +139,7 @@ public class BiodomeRepository : IBiodomeRepository
         }
     }
 
-    public void RemoveSpecyInBiome(int biomeId, string speciesName)
+    public void RemoveSpeciesInBiome(int biomeId, string speciesName)
     {
         var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
 
