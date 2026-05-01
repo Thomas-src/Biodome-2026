@@ -75,16 +75,13 @@ public class Create : PageModel
             User.Identity.Name
         );
 
-        if (_speciesService.SpeciesExists(created))
+        try
         {
-            ModelState.AddModelError("", $"L'espèce {Species.Name} existe déjà !");
-            LoadSelect();
-            return Page();
+            _speciesService.Save(created, Species.Avatar.OpenReadStream());
         }
-
-        if (!_speciesService.Save(created, Species.Avatar.OpenReadStream()))
+        catch (Exception e)
         {
-            ModelState.AddModelError("", $"Erreur lors de la création de l'espèce");
+            ModelState.AddModelError("", $"{e.Message}");
             LoadSelect();
             return Page();
         }

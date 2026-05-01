@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Species;
 
-/*
- * TODO, Faire une liste d'espece que le user as (diviser en deux) et une liste des autres especes
- */
 public class SpeciesModel : PageModel
 {
     private readonly ISpeciesRepository _repository;
@@ -38,16 +35,24 @@ public class SpeciesModel : PageModel
 
     public void OnGet()
     {
-        IReadOnlyList<Domains.Core.Species> speciesList = _repository.GetAllSpecies();
+        try
+        {
+            IReadOnlyList<Domains.Core.Species> speciesList = _speciesService.GetAllSpeices();
 
-        if (User.Identity.IsAuthenticated)
-        {
-            OwnSpecies = _speciesService.FilterOwnerSpecies(User.Identity.Name, speciesList);
-            OtherSpecies = _speciesService.FilterSpecies(User.Identity.Name, speciesList);
+            if (User.Identity.IsAuthenticated)
+            {
+                OwnSpecies = _speciesService.FilterOwnerSpecies(User.Identity.Name, speciesList);
+                OtherSpecies = _speciesService.FilterSpecies(User.Identity.Name, speciesList);
+            }
+            else
+            {
+                OtherSpecies = speciesList.Where(s => s.IsVisible).ToList();
+            }
         }
-        else
+        catch (Exception e)
         {
-            OtherSpecies = speciesList.Where(s => s.IsVisible).ToList();
+            ModelState.AddModelError(string.Empty, e.Message);
         }
+        
     }
 }

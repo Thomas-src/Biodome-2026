@@ -1,6 +1,7 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Domains.Services.interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -86,10 +87,6 @@ public class SpeciesService : ISpeciesService
             .ToList();
     }
 
-    public bool SpeciesExists(Species species) => _repository.GetAllSpecies().Any(e =>
-        e.Nom.Equals(species.Nom, StringComparison.OrdinalIgnoreCase) &&
-        (e.IsVisible || e.OwnerName == species.OwnerName));
-
     public Species? GetByKebabCase(string kebabCase, string ownerName)
     {
         if (string.IsNullOrWhiteSpace(kebabCase) || string.IsNullOrWhiteSpace(ownerName))
@@ -102,8 +99,13 @@ public class SpeciesService : ISpeciesService
             s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
     }
 
-    public bool Save(Species created, Stream? openReadStream)
+    public void Save(Species created, Stream? openReadStream)
     {
+        if (SpeciesExists(created))
+        {
+            throw new Exception($"L'espèce {created.Nom} existe déjà !");
+        }
+        
         try
         {
             if (openReadStream != null)
@@ -113,14 +115,19 @@ public class SpeciesService : ISpeciesService
 
             _repository.Save(created);
         }
-        catch (Exception e)
+        catch (ReadUserException e)
         {
-            Console.WriteLine("==============\nEXCPETION : " + e + "==============");
-            return false;
+            throw new Exception("Error lors de la création de l'espèce");
         }
+        catch (WriteSpeciesException e)
+        {
+            throw new Exception("Error lors de la création de l'espèce");
 
-        return true;
+        }
     }
+    private bool SpeciesExists(Species species) => _repository.GetAllSpecies().Any(e =>
+        e.Nom.Equals(species.Nom, StringComparison.OrdinalIgnoreCase) &&
+        (e.IsVisible || e.OwnerName == species.OwnerName));
 
     public bool Update(Species oldSpecies, Species newSpecies, Stream? openReadStream)
     {
@@ -156,6 +163,18 @@ public class SpeciesService : ISpeciesService
             Console.WriteLine("============== UPDATE EXCEPTION ==============");
             Console.WriteLine(ex);
             return false;
+        }
+    }
+
+    public IReadOnlyList<Species> GetAllSpeices()
+    {
+        try
+        {
+            return _repository.GetAllSpecies();
+        }
+        catch (ReadSpeciesException e)
+        {
+            throw new Exception("Erreur lors du chargement des espèces !");
         }
     }
 

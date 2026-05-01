@@ -1,5 +1,6 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.repository;
@@ -21,31 +22,38 @@ public class SpeciesRepository : ISpeciesRepository
 
     public IReadOnlyList<Species> GetAllSpecies()
     {
-        return _context.Species.Select(s => new Species(s.Name,
-            s.Size,
-            s.Weight,
-            Enum.Parse<DietType>(s.Regim.Name),
-            Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
-            s.Avatar,
-            s.Visible,
-            s.User.UserName)
-        ).ToList();
+        try
+        {
+            return _context.Species.Select(s => new Species(s.Name,
+                s.Size,
+                s.Weight,
+                Enum.Parse<DietType>(s.Regim.Name),
+                Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
+                s.Avatar,
+                s.Visible,
+                s.User.UserName)
+            ).ToList();
+        }
+        catch (Exception e)
+        {
+            throw new ReadSpeciesException("Erreur lors de la lecture des espèces !", e);
+        }
     }
 
     public void Save(Species created)
     {
         // 1. Récuperer l'id de l'utilisateur
         var u = _context.Users.FirstOrDefault(u => u.UserName == created.OwnerName);
-        if (u == null)
+        if (u is null)
         {
-            throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
+            throw new ReadUserException("Utilisateur introuvable");
         }
 
         string userId = u.Id;
 
         // 2. Enregistrer l'espece
 
-        var entity = new entities.SpeciesEntity()
+        var entity = new SpeciesEntity()
         {
             Avatar = created.Avatar,
             Name = created.Nom,
@@ -58,8 +66,17 @@ public class SpeciesRepository : ISpeciesRepository
             Visible = created.IsVisible
         };
 
+        try
+        {
         _context.Species.Add(entity);
         _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new WriteSpeciesException($"Erreur lors de l'ajout de l'espece {entity.Name} en base de données !",
+                e);
+        }
+
     }
 
   
