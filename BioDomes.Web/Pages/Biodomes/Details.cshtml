@@ -1,5 +1,6 @@
 ﻿@page "/biodomes/details/{id:int}"
-@using BioDomes.Domains.Core
+@using System.Text.Json
+@using BioDomes.Domains.Extensions
 @using Microsoft.IdentityModel.Tokens
 @model BioDomes.Web.Pages.Biodomes.Details
 
@@ -8,10 +9,17 @@
 @{
     ViewData["Title"] = "Détails";
 }
+@* todo ajouter dans un layout / head *@
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+@* Export *@
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+@* Zoom *@
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+
 
 
 <partial name="Shared/_Toast" />
-<h1>Vue détaillée</h1>
+<h1>Vue détaillée de @Model.Biodome.Nom</h1>
 <div class="border mx-auto border overflow-hidden" style="max-width: 820px; border-radius: 0.75rem;">
 
     <div class="row g-0">
@@ -21,7 +29,7 @@
                 <h2 class="mb-4">@Model.Biodome.Nom</h2>
                 @if (Model.Owner)
                 {
-                <a href="/biodomes/edit/@Model.Biodome.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
+                    <a href="/biodomes/edit/@Model.Biodome.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
                 }
             </div>
 
@@ -83,12 +91,12 @@
             {
                 <table class="table table-sm mb-0">
                     <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Type</th>
-                            <th>Régime</th>
-                            <th>Quantité</th>
-                        </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Régime</th>
+                        <th>Quantité</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @foreach (var specy in Model.Biodome.Species)
@@ -107,7 +115,7 @@
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0 lh-1"
                                                 style="font-size: 1.1rem;"
-                                                >×</button>
+                                        >×</button>
                                     </form>
                                 </td>
                             }
@@ -162,11 +170,11 @@
             {
                 <table class="table table-sm mb-0">
                     <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Consommation</th>
-                            <th>Production</th>
-                        </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Consommation</th>
+                        <th>Production</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @foreach (var equipement in Model.Biodome.Equipements)
@@ -184,7 +192,7 @@
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0"
                                                 style="font-size: 1.1rem;"
-                                                >×</button>
+                                        >×</button>
                                     </form>
                                 </td>
                             }
@@ -216,4 +224,156 @@
         </div>
     </div>
 
+    <div class="row g-0 border-top">
+        <div class="p-4 border-end">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Statistiques</h5>
+                    <button class="btn btn-sm btn-outline-primary" type="button" onclick="exportAllChartsPDF()">
+                        Exporter le rapport
+                    </button>
+            </div>
+
+        <div style="width: 400px; margin: 30px auto;">
+            <canvas id="classificationChart"></canvas>
+        </div>
+        <div style="width: 400px; margin: 30px auto;">
+            <canvas id="regimChart"></canvas>
+        </div>
+        </div>
+    </div>
 </div>
+<script>
+    const charts = {};
+    const clasificationLabels = @Html.Raw(JsonSerializer.Serialize(Model.ClassificationLabels));
+    const clasificationData = @Html.Raw(JsonSerializer.Serialize(Model.ClassificationCounts));
+    const speciesDetails = @Html.Raw(JsonSerializer.Serialize(Model.ClassificationTooltipData));
+    const totalSpecies = clasificationData.reduce((a, b) => a + b, 0);
+    charts.chart1 = new Chart(document.querySelector('#classificationChart'), {
+        type: 'doughnut',
+        data: {
+            labels: clasificationLabels,
+            datasets: [{
+                label: 'Espèces',
+                data: clasificationData,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '62%',
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des espèces par classification'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const classification = context.label;
+                            const species = speciesDetails[classification];
+                            const speciesValue = context.raw;
+                            const percentage = ((speciesValue / totalSpecies) * 100).toFixed(1);
+                            let result = [`${classification} (${percentage}%)`];
+                           
+                            species.forEach(s => {
+                                result.push(`${s.Name} : ${s.Quantity}`);
+                            });
+
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const regimeLabels = @Html.Raw(JsonSerializer.Serialize(Model.RegimeLabels));
+    const regimeData = @Html.Raw(JsonSerializer.Serialize(Model.RegimeCounts));
+    const regimeDetails = @Html.Raw(JsonSerializer.Serialize(Model.RegimeTooltipData));
+
+    const totalRegimes = regimeData.reduce((a, b) => a + b, 0);
+    charts.chart2 = new Chart(document.querySelector('#regimChart'), {
+        type: 'doughnut',
+        data: {
+            labels: regimeLabels,
+            datasets: [{
+                label: 'Espèces',
+                data: regimeData,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '62%',
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des espèces par régime alimentaire'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const regime = context.label;
+                            const species = regimeDetails[regime] || [];
+                            const value = context.raw;
+                            const percentage = ((value / totalRegimes) * 100).toFixed(1);
+
+                            const result = [
+                                `${regime} (${percentage}%)`
+                            ];
+
+                            species.forEach(s => {
+                                result.push(`${s.Name} : ${s.Quantity}`);
+                            });
+
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    /**
+     * Généré par ia (chatgpt)
+     */
+    async function exportAllChartsPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const chartsList = Object.values(charts);
+
+        let y = 10; // position verticale dans le PDF
+        const pageWidth = 210;
+        const imgWidth = 180;
+
+        for (let i = 0; i < chartsList.length; i++) {
+            const chart = chartsList[i];
+
+            // Convertit le canvas Chart.js en image
+            const imgData = chart.toBase64Image('image/png', 1);
+
+            // Calcul hauteur proportionnelle
+            const imgHeight = (chart.canvas.height * imgWidth) / chart.canvas.width;
+
+            // Si dépasse la page → nouvelle page
+            if (y + imgHeight > 280) {
+                pdf.addPage();
+                y = 10;
+            }
+
+            pdf.addImage(imgData, 'PNG', 15, y, imgWidth, imgHeight);
+            y += imgHeight + 10;
+        }
+
+        pdf.save(`biodome-@Model.Biodome.Nom.ToKebabCase()-statistiques.pdf`);
+    }
+</script>

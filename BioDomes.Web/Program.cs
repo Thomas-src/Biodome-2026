@@ -71,7 +71,7 @@ builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 builder.Services.AddTransient<ISpeciesService, SpeciesService>();
 builder.Services.AddTransient<IResearchService, ResearchOrganismService>();
 builder.Services.AddTransient<IEquipementService, EquipementService>();
-
+builder.Services.AddTransient<IStatsService, StatsService>();
 
 // Mail service
 builder.Services.AddSingleton(sp => builder.Configuration.GetSection("MailConfig").Get<MailConfig>());
