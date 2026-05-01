@@ -1,5 +1,6 @@
 ﻿using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Domains.Services.interfaces;
 
 namespace BioDomes.Domains.Services;
@@ -9,7 +10,17 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
 {
     private static string EQUIPEMENT = "equipements";
 
-    public IReadOnlyList<Equipement> GetAllEquipements() => repository.GetAllEquipements();
+    public IReadOnlyList<Equipement> GetAllEquipements()
+    {
+        try
+        {
+            return repository.GetAllEquipements();
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"{e.Message}");
+        }
+    }
 
     public IReadOnlyList<Equipement> FilterOwn(IReadOnlyList<Equipement> all, string identityName)
     {
@@ -25,10 +36,6 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
 
         return result.AsReadOnly();
     }
-
-    public bool AlreadyExist(Equipement equipement) => repository.GetAllEquipements().Any(e =>
-        e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
-        (e.Visibility || e.OwnerName == equipement.OwnerName));
 
     public bool MakePublic(string equipementName, string ownerName)
     {
@@ -90,12 +97,29 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
 
     public void Save(Equipement created, Stream openReadStream)
     {
-        // 1. Sauvegarder l'image
-        created.Avatar = pictureRepository.Save(created.Avatar, openReadStream, EQUIPEMENT);
+        //1. Voir s'il existe deja
+        if (AlreadyExist(created))
+        {
+            throw new Exception($"L'équipement {created.Name} existe déjà !");
+        }
 
-        // 2. Sauvegarder l'équipement
-        repository.Save(created);
+        try
+        {
+            // 2. Sauvegarder l'image
+            created.Avatar = pictureRepository.Save(created.Avatar, openReadStream, EQUIPEMENT);
+
+            // 3. Sauvegarder l'équipement
+            repository.Save(created);
+        }
+        catch (WriteEquipementException e)
+        {
+            throw new Exception($"Erreur la création de {created.Name} !");
+        }
     }
+
+    private bool AlreadyExist(Equipement equipement) => repository.GetAllEquipements().Any(e =>
+        e.Name.Equals(equipement.Name, StringComparison.OrdinalIgnoreCase) &&
+        (e.Visibility || e.OwnerName == equipement.OwnerName));
 
     public bool Update(Equipement oldEquipement, Equipement newEquipement, Stream? openReadStream)
     {

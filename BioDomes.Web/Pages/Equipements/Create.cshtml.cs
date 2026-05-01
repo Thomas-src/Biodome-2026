@@ -67,20 +67,13 @@ public class Create : PageModel
             User.Identity.Name
             );
 
-        if (_service.AlreadyExist(created))
-        {
-            ModelState.AddModelError("", $"L'équipement {Equipement.Name} existe déjà !");
-            LoadSelect();
-            return Page();
-        }
-
         try
         {
             _service.Save(created, Equipement.Avatar.OpenReadStream());
         }
         catch (Exception e)
         {
-            ModelState.AddModelError("", $"Erreur lors de la création de l'équipement!");
+            ModelState.AddModelError("", $"{e.Message}");
             LoadSelect();
             return Page();
         }

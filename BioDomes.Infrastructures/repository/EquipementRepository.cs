@@ -1,6 +1,7 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using Microsoft.EntityFrameworkCore;
@@ -18,21 +19,28 @@ public class EquipementRepository : IEquipementRepository
 
     public IReadOnlyList<Equipement> GetAllEquipements()
     {
-        return _dbContext.Equipment
-            .Include(e => e.Consumption)
-            .Include(e => e.Production)
-            .Include(e => e.User)
-            .Select(e => new Equipement(
-                e.Name,
-                e.Consumption != null
-                    ? Enum.Parse<Consumptions>(e.Consumption.Name)
-                    : Consumptions.None,
-                Enum.Parse<Production>(e.Production.Name),
-                e.Avatar,
-                e.Visible,
-                e.User.UserName ?? "unknown"
-            ))
-            .ToList();
+        try
+        {
+            return _dbContext.Equipment
+                .Include(e => e.Consumption)
+                .Include(e => e.Production)
+                .Include(e => e.User)
+                .Select(e => new Equipement(
+                    e.Name,
+                    e.Consumption != null
+                        ? Enum.Parse<Consumptions>(e.Consumption.Name)
+                        : Consumptions.None,
+                    Enum.Parse<Production>(e.Production.Name),
+                    e.Avatar,
+                    e.Visible,
+                    e.User.UserName ?? "unknown"
+                ))
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            throw new ReadEquipementException("Erreur lors de la lecture des équipement !", e);
+        }
     }
 
     public void Save(Equipement created)
@@ -41,7 +49,7 @@ public class EquipementRepository : IEquipementRepository
 
         if (u == null)
         {
-            throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
+            throw new ReadUserException("Utilisateur introuvable !");
         }
 
         string userId = u.Id;
@@ -74,8 +82,15 @@ public class EquipementRepository : IEquipementRepository
             };
         }
 
-        _dbContext.Add(entity);
-        _dbContext.SaveChanges();
+        try
+        {
+            _dbContext.Add(entity);
+            _dbContext.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new WriteEquipementException("Erreur lors de l'ajout de l'équipement en base de données", e);
+        }
     }
 
     public void Delete(string name, string ownerName)
