@@ -1,5 +1,6 @@
 ﻿using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services.interfaces;
 
 namespace BioDomes.Domains.Services;
 
@@ -37,7 +38,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
         {
             return false;
         }
-        
+
         var alreadyVisible = repository.GetAllEquipements().Any(s =>
             s.Name.Equals(equipementName, StringComparison.CurrentCultureIgnoreCase) &&
             s.Visibility &&

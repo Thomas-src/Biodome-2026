@@ -1,5 +1,6 @@
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
+using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Equipements;

@@ -1,6 +1,7 @@
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services.interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Domains.Services;

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
+using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

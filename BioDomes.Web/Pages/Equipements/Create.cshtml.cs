@@ -3,6 +3,7 @@ using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
+using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

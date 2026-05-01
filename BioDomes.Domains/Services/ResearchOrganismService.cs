@@ -1,5 +1,6 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services.interfaces;
 
 namespace BioDomes.Domains.Services;
 
