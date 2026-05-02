@@ -4,12 +4,12 @@ using BioDomes.Domains.Services.interfaces;
 
 namespace BioDomes.Domains.Services;
 
-public class StatsService : IStatsService
+public class StatsService(IFoodChainService foodChainService) : IStatsService
 {
     public StatsData GetBiodomeStats(Biodome biodome)
     {
         var species = biodome.Species;
-        return new StatsData(biodome, GetNbByClassification(species), GetNbByRegim(species));
+        return new StatsData(biodome, GetNbByClassification(species), GetNbByRegim(species),foodChainService.Build(species));
     }
 
     private static Dictionary<string, List<Species>> GetNbByClassification(IReadOnlyList<Species> species)

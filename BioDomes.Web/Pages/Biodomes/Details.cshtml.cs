@@ -29,6 +29,8 @@ public class Details : PageModel
     public List<int> RegimeCounts { get; set; } = [];
     public Dictionary<string, List<SpeciesChartDto>> RegimeTooltipData { get; set; } = new();
 
+    // chart 3
+    public FoodChain FoodChain { get; set; } = new();
     public Details(IBiodomeService service, ISpeciesRepository speciesRepository,
         IEquipementRepository equipementRepository, IStatsService statsService)
     {
@@ -79,7 +81,8 @@ public class Details : PageModel
                     .ToDictionary(x => x.Key, x => x.Value
                         .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
                     );
-                
+                // chart 3
+                FoodChain = stats.Foodchain;
             }
         }
 

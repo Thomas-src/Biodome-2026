@@ -41,8 +41,11 @@ public class Species(
     }
     
     public double Taille => taille;
+    public string TailleUnite => taille  >= 100 ? $"{taille / 100.0:0.##} m" : $"{taille} cm";
 
     public double Poids => poids;
+    
+    public string PoidsUnite => poids >= 1000 ? $"{poids / 1000.0:0.##} kg" : $"{poids} g";
 
     public DietType DietType => dietType;
 

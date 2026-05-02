@@ -15,10 +15,12 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 @* Zoom *@
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+@* Chaine alimentaire *@
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-graph@4.3.1/build/index.umd.min.js"></script>
 
 
 
-<partial name="Shared/_Toast" />
+<partial name="Shared/_Toast"/>
 <h1>Vue détaillée de @Model.Biodome.Nom</h1>
 <div class="border mx-auto border overflow-hidden" style="max-width: 820px; border-radius: 0.75rem;">
 
@@ -64,7 +66,7 @@
 
         <div class="col-auto">
             <img src="~/images/biodomes/@Model.Biodome.Image"
-                 style="width: 220px; height: 100%; object-fit: cover; display: block; min-height: 220px;" />
+                 style="width: 220px; height: 100%; object-fit: cover; display: block; min-height: 220px;"/>
         </div>
     </div>
 
@@ -110,12 +112,13 @@
                             {
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveSpecies" class="d-inline">
-                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
-                                        <input type="hidden" name="speciesName" value="@specy.Nom" />
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                                        <input type="hidden" name="speciesName" value="@specy.Nom"/>
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0 lh-1"
                                                 style="font-size: 1.1rem;"
-                                        >×</button>
+                                        >×
+                                        </button>
                                     </form>
                                 </td>
                             }
@@ -130,7 +133,7 @@
                 <div class="collapse mt-3" id="addSpeciesPanel">
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddSpecies">
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="speciesName" class="form-select form-select-sm">
                                     @foreach (var specy in Model.AvailableSpecies)
@@ -139,7 +142,7 @@
                                     }
                                 </select>
                                 <input type="number" name="quantity" value="1" min="1"
-                                       class="form-control form-control-sm" style="width: 70px;" />
+                                       class="form-control form-control-sm" style="width: 70px;"/>
                                 <button type="submit" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
                             </div>
                         </form>
@@ -187,12 +190,13 @@
                             {
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveEquipement" class="d-inline">
-                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
-                                        <input type="hidden" name="equipementName" value="@equipement.Name" />
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                                        <input type="hidden" name="equipementName" value="@equipement.Name"/>
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0"
                                                 style="font-size: 1.1rem;"
-                                        >×</button>
+                                        >×
+                                        </button>
                                     </form>
                                 </td>
                             }
@@ -207,7 +211,7 @@
                 <div class="collapse mt-3" id="addEquipementPanel">
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddEquipement">
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="equipementName" class="form-select form-select-sm">
                                     @foreach (var equipement in Model.AvailableEquipements)
@@ -224,7 +228,7 @@
         </div>
     </div>
 
-@if (Model.Owner && Model.Biodome.Species.Count>0)
+    @if (Model.Owner && Model.Biodome.Species.Count > 0)
     {
         <div class="row g-0 border-top">
             <div class="p-4 border-end">
@@ -240,6 +244,9 @@
                 </div>
                 <div style="width: 400px; margin: 30px auto;">
                     <canvas id="regimChart"></canvas>
+                </div>
+                <div style="width: 100%; height: 500px; margin: 30px auto;">
+                    <canvas id="foodChainChart"></canvas>
                 </div>
             </div>
         </div>
@@ -275,13 +282,13 @@
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             const classification = context.label;
                             const species = speciesDetails[classification];
                             const speciesValue = context.raw;
                             const percentage = ((speciesValue / totalSpecies) * 100).toFixed(1);
                             let result = [`${classification} (${percentage}%)`];
-                           
+
                             species.forEach(s => {
                                 result.push(`${s.Name} : ${s.Quantity}`);
                             });
@@ -345,11 +352,229 @@
         }
     });
 
+    // chart 3 généré par ia
+    const nodes = @Html.Raw(JsonSerializer.Serialize(Model.FoodChain.Nodes));
+    const edges = @Html.Raw(JsonSerializer.Serialize(Model.FoodChain.Links));
+
+    const foodCanvas = document.querySelector('#foodChainChart');
+    const W = foodCanvas.parentElement.offsetWidth || 400;
+    const H = foodCanvas.parentElement.offsetHeight || 500;
+
+    const chartNodes = nodes.map(n => ({
+        id: n.Id,
+        label: n.Label,
+        color: n.Color,
+        image: `/images/species/${n.Image}`,
+        x: n.X * W,
+        y: n.Y * H,
+    }));
+
+    const chartEdges = edges
+        .map(e => ({
+            source: chartNodes.findIndex(n => n.id === e.From),
+            target: chartNodes.findIndex(n => n.id === e.To),
+        }))
+        .filter(e => e.source !== -1 && e.target !== -1);
+
+    // Préchargement de toutes les images avant création du chart
+    const imageCache = {};
+    let loaded = 0;
+
+    chartNodes.forEach(n => {
+        const img = new Image();
+        img.onload = () => {
+            imageCache[n.id] = img;
+            loaded++;
+            if (loaded === chartNodes.length) buildChart();
+        };
+        img.onerror = () => {
+            loaded++;
+            if (loaded === chartNodes.length) buildChart();
+        };
+        img.src = n.image;
+    });
+
+    function buildChart() {
+        charts.chart3 = new Chart(foodCanvas, {
+            type: "graph",
+            data: {
+                labels: chartNodes.map(n => n.label),
+                datasets: [{
+                    label: "Chaîne alimentaire",
+                    data: chartNodes,
+                    edges: chartEdges,
+
+                    pointRadius: 0,   // <-- les bulles sont gérées par le plugin, pas Chart.js
+                    pointHoverRadius: 0,
+                    pointBackgroundColor: "transparent",
+                    pointBorderWidth: 0,
+
+                    edgeLineBorderColor: "transparent",
+                    edgeLineBorderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {padding: 60},
+                graph: {
+                    directed: true,   // <-- ici, pas dans le dataset
+                    arrowHeadSize: 10,
+                },
+                plugins: {
+                    legend: {display: false},
+                    title: {display: true, text: "Chaîne alimentaire"},
+                    tooltip: {callbacks: {label: ctx => ctx.raw.label}}
+                },
+                scales: {
+                    x: {display: false},
+                    y: {display: false}
+                }
+            },
+            plugins: [{
+                id: "nodeImages",
+                afterDraw(chart) {
+                    const ctx2 = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    const dataset = chart.data.datasets[0];
+
+                    // Passe 1 : dessiner les flèches par-dessus les lignes, arrêtées au bord des bulles
+                    chartEdges.forEach(edge => {
+                        const src = meta.data[edge.source];
+                        const tgt = meta.data[edge.target];
+                        if (!src || !tgt) return;
+
+                        const {x: x1, y: y1} = src.getProps(["x", "y"], true);
+                        const {x: x2, y: y2} = tgt.getProps(["x", "y"], true);
+
+                        const rSrc = nodes[edge.source].Radius;
+                        const rTgt = nodes[edge.target].Radius;
+
+                        const gapStart = 14;
+                        const gapEnd = 10;
+                        const angle = Math.atan2(y2 - y1, x2 - x1);
+                        const startX = x1 + (rSrc + gapStart) * Math.cos(angle);
+                        const startY = y1 + (rSrc + gapStart) * Math.sin(angle);
+
+                        const endX = x2 - (rTgt + gapEnd) * Math.cos(angle);
+                        const endY = y2 - (rTgt + gapEnd) * Math.sin(angle);
+                        // --- Ligne raccourcie ---
+                        ctx2.save();
+                        ctx2.strokeStyle = "rgba(100,100,100,0.6)";
+                        ctx2.lineWidth = 2;
+                        ctx2.beginPath();
+                        ctx2.moveTo(startX, startY);
+                        ctx2.lineTo(endX, endY);
+                        ctx2.stroke();
+                        ctx2.restore();
+
+                        // --- Flèche ---
+                        const arrowSize = 10;
+                        const arrowAngle = 0.5;
+
+                        ctx2.save();
+                        ctx2.fillStyle = "rgba(100,100,100,0.8)";
+                        ctx2.beginPath();
+                        ctx2.moveTo(endX, endY);
+                        ctx2.lineTo(
+                            endX - arrowSize * Math.cos(angle - arrowAngle),
+                            endY - arrowSize * Math.sin(angle - arrowAngle)
+                        );
+                        ctx2.lineTo(
+                            endX - arrowSize * Math.cos(angle + arrowAngle),
+                            endY - arrowSize * Math.sin(angle + arrowAngle)
+                        );
+                        ctx2.closePath();
+                        ctx2.fill();
+                        ctx2.restore();
+                    });
+
+                    // Passe 2 : dessiner les bulles + images par-dessus les flèches
+                    dataset.data.forEach((node, i) => {
+                        const el = meta.data[i];
+                        if (!el) return;
+
+                        const {x, y} = el.getProps(["x", "y"], true);
+                        const r = nodes[i].Radius;
+                        const img = imageCache[node.id];
+
+                        // Fond coloré de la bulle
+                        ctx2.save();
+                        ctx2.beginPath();
+                        ctx2.arc(x, y, r, 0, Math.PI * 2);
+                        ctx2.fillStyle = node.color;
+                        ctx2.fill();
+                        ctx2.strokeStyle = "rgba(255,255,255,0.8)";
+                        ctx2.lineWidth = 3;
+                        ctx2.stroke();
+                        ctx2.restore();
+
+                        // Image clippée dans la bulle
+                        ctx2.save();
+                        if (img) {
+                            ctx2.beginPath();
+                            ctx2.arc(x, y, r - 3, 0, Math.PI * 2);
+                            ctx2.closePath();
+                            ctx2.clip();
+                            ctx2.drawImage(img, x - (r - 3), y - (r - 3), (r - 3) * 2, (r - 3) * 2);
+                        }
+                        ctx2.restore();
+
+                        // Label sous la bulle
+                        ctx2.save();
+                        ctx2.font = "500 11px sans-serif";
+                        ctx2.fillStyle = "#333";
+                        ctx2.textAlign = "center";
+                        ctx2.textBaseline = "top";
+                        ctx2.fillText(node.label, x, y + r + 4);
+                        ctx2.restore();
+                    });
+                }
+            }, {
+                // Légende manuelle avec la flèche
+                id: "foodChainLegend",
+                afterDraw(chart) {
+                    const ctx2 = chart.ctx;
+                    const {left, bottom} = chart.chartArea;
+
+                    const lx = left + 10;
+                    const ly = bottom + 40;
+
+                    // Ligne + flèche
+                    ctx2.save();
+                    ctx2.strokeStyle = "rgba(100,100,100,0.8)";
+                    ctx2.lineWidth = 2;
+                    ctx2.beginPath();
+                    ctx2.moveTo(lx, ly);
+                    ctx2.lineTo(lx + 30, ly);
+                    ctx2.stroke();
+
+                    // Tête de flèche
+                    ctx2.fillStyle = "rgba(100,100,100,0.8)";
+                    ctx2.beginPath();
+                    ctx2.moveTo(lx + 30, ly);
+                    ctx2.lineTo(lx + 22, ly - 4);
+                    ctx2.lineTo(lx + 22, ly + 4);
+                    ctx2.closePath();
+                    ctx2.fill();
+
+                    // Texte
+                    ctx2.font = "12px sans-serif";
+                    ctx2.fillStyle = "#555";
+                    ctx2.textAlign = "left";
+                    ctx2.textBaseline = "middle";
+                    ctx2.fillText("est mangé par", lx + 36, ly);
+                    ctx2.restore();
+                }
+            }]
+        });
+    }
+
     /**
      * Généré par ia (chatgpt)
      */
     async function exportAllChartsPDF() {
-        const { jsPDF } = window.jspdf;
+        const {jsPDF} = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
 
         const chartsList = Object.values(charts);
