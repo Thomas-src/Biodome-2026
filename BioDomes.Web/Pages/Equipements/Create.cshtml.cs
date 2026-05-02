@@ -17,22 +17,20 @@ public class Create : PageModel
     private readonly IConsumptionRepository _consumptionRepository;
     private readonly IProductionRepository _productionRepository;
 
-    public Create(IEquipementService service,  IConsumptionRepository consumptionRepository, IProductionRepository productionRepository)
+    public Create(IEquipementService service, IConsumptionRepository consumptionRepository,
+        IProductionRepository productionRepository)
     {
         _service = service;
         _consumptionRepository = consumptionRepository;
         _productionRepository = productionRepository;
     }
 
-    [BindProperty]
-    public InputModel Equipement { get; set; }
+    [BindProperty] public InputModel Equipement { get; set; }
 
-    [BindProperty]
-    public IReadOnlyList<Consumptions>? Consumptions { get; set; }
-    
-    [BindProperty]
-    public IReadOnlyList<Production> Productions { get; set; }
-    
+    [BindProperty] public IReadOnlyList<Consumptions>? Consumptions { get; set; }
+
+    [BindProperty] public IReadOnlyList<Production> Productions { get; set; }
+
     public void OnGet()
     {
         LoadSelect();
@@ -46,26 +44,16 @@ public class Create : PageModel
             return Page();
         }
 
-        Consumptions cons;
-        Production prod = Enum.Parse<Production>(Equipement.Production);
-        
-        if (Enum.TryParse<Consumptions>(Equipement.Consumption, out var consumption))
-        {
-            cons = consumption;
-        }
-        else
-        {
-            cons = Domains.Core.Equipements.Consumptions.None;
-        }
-        
+        var cons = GetCons(out var prod);
+
         Equipement created = new Equipement(
             Equipement.Name,
-            cons, 
+            cons,
             prod,
             Equipement.Avatar.FileName,
             false,
             User.Identity.Name
-            );
+        );
 
         try
         {
@@ -77,9 +65,26 @@ public class Create : PageModel
             LoadSelect();
             return Page();
         }
-        
+
         TempData["SuccessMessage"] = $"L'équipement {Equipement.Name} a été ajoutée avec succès !";
-        return  RedirectToPage("Equipements");
+        return RedirectToPage("Equipements");
+    }
+
+    private Consumptions GetCons(out Production production)
+    {
+        Consumptions consumptions;
+        production = Enum.Parse<Production>(Equipement.Production);
+
+        if (Enum.TryParse<Consumptions>(Equipement.Consumption, out var consumption))
+        {
+            consumptions = consumption;
+        }
+        else
+        {
+            consumptions = Domains.Core.Equipements.Consumptions.None;
+        }
+
+        return consumptions;
     }
 
     private void LoadSelect()
@@ -93,13 +98,13 @@ public class Create : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [RegularExpression(@"^[a-zA-Z\s\-]+$",
             ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-        public string Name{get;set;}
-        
+        public string Name { get; set; }
+
         public string? Consumption { get; set; }
-        
+
         [Required(ErrorMessage = "La production est obligatoire")]
         public string Production { get; set; }
-        
+
         [Required(ErrorMessage = "Une image est obligatoire")]
         public IFormFile Avatar { get; set; }
     }

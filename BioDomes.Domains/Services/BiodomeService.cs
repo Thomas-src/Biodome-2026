@@ -71,7 +71,7 @@ public class BiodomeService : IBiodomeService
         if (created.Humidite > humiditeMax)
         {
             throw new ArgumentException(
-                $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {humiditeMax} g/m");
+                $"Un biome avec une température de {created.Temperature}°C peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
         }
         
         // 2. Enregistrer l'image
@@ -157,8 +157,18 @@ public class BiodomeService : IBiodomeService
         }
     }
 
+    // TODO CORRIGER
     public void Update(Biodome created, string fileName, Stream openReadStream)
     {
+        double humiditeMax = CalculateHumiditeMax(created.Temperature);
+        
+        if (created.Humidite > humiditeMax)
+        {
+            throw new ArgumentException(
+                $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
+        }
+
+        
         var old = GetBiodomeById(created.Id);
 
         if (old != null && !created.DeepEquals(old))

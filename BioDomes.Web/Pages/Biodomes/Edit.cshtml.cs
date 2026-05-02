@@ -45,15 +45,8 @@ public class Edit : PageModel
         {
             return Page();
         }
-
-        double humiditeMax = _service.CalculateHumiditeMax(Biome.temperature.Value);
-
-        if (Biome.humidite.Value > humiditeMax)
-        {
-            ModelState.AddModelError("Biome.humidite",
-                $"Un biome avec une température de {Biome.temperature.Value}° peut avoir une humidité max de {humiditeMax} g/m³");
-            return Page();
-        }
+        
+        // TODO refactor ca dans le service + ajouter un bouton delete
 
         string fileName;
 
@@ -77,14 +70,22 @@ public class Edit : PageModel
             User.Identity.Name
         );
 
-        if (Biome.Avatar != null)
+        try
         {
-            _service.Update(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
+            if (Biome.Avatar != null)
+            {
+                _service.Update(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
+            }
+            else
+            {
+                _service.Update(created);
+            }
         }
-        else
+        catch (ArgumentException e)
         {
-            _service.Update(created);
+            ModelState.AddModelError("Biome.humidite", e.Message);
         }
+        
 
 
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";

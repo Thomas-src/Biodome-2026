@@ -56,8 +56,8 @@ public class Details : PageModel
             if (Biodome.CreatorName == User.Identity.Name)
             {
                 Owner = true;
-                AvailableEquipements = _equipementRepository.GetAllEquipements().Where(x => x.Visibility).ToList();
-                AvailableSpecies = _speciesRepository.GetAllSpecies().Where(x => x.IsVisible).ToList();
+                AvailableEquipements = _equipementRepository.GetAllEquipements().Where(x => x.Visibility || x.OwnerName == Biodome.CreatorName).ToList();
+                AvailableSpecies = _speciesRepository.GetAllSpecies().Where(x => x.IsVisible || x.OwnerName == Biodome.CreatorName).ToList();
                 // todo afficher les stats
                 var stats = _statsService.GetBiodomeStats(biodome);
 

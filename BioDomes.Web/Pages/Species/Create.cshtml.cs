@@ -117,16 +117,20 @@ public class Create : PageModel
         // ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
         public string Type { get; set; }
 
+        
+        // TODO FAIRE UNE VALIDATEUR PERSONNALISE CF ligne 115
         [Required(ErrorMessage = "Le régime est obligatoire")]
         // [RegularExpression(@"^[a-zA-Z\s\-]+$",
         // ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
         public string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]
-        [Range(0, 10000, ErrorMessage = "La taille doit être entre 0 et 10000")]
+        [Range(1, 10000, ErrorMessage = "La taille doit être entre 1 et 10000")]
         public double? Taille { get; set; }
 
         [Required(ErrorMessage = "Le poids est obligatoire")]
+        [Range(1, Double.MaxValue, ErrorMessage = "Le poids doit être au moins de 1g")]
+
         public double? Poids { get; set; }
 
         [Required(ErrorMessage = "Un avatar est obligatoire")]
