@@ -352,7 +352,6 @@
         const chartsList = Object.values(charts);
 
         let y = 10; // position verticale dans le PDF
-        const pageWidth = 210;
         const imgWidth = 180;
 
         for (let i = 0; i < chartsList.length; i++) {
@@ -374,6 +373,6 @@
             y += imgHeight + 10;
         }
 
-        pdf.save(`biodome-@Model.Biodome.Nom.ToKebabCase()-statistiques.pdf`);
+        pdf.save(`biodome-@Model.Biodome.Nom.ToSlug()-statistiques.pdf`);
     }
 </script>

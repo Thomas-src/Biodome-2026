@@ -2,7 +2,6 @@
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
-using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Authorization;

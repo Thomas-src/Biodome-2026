@@ -33,24 +33,16 @@
 
                 <div class="mb-3">
                     <label asp-for="Species.Type" class="form-label">Type*</label>
-                    <select class="form-control" asp-for="Species.Type">
+                    <select class="form-control" asp-for="Species.Type" asp-items="@(new SelectList(Model.AllTypes))">
                         <option value="">-- Choisir un organisme --</option>
-                        @foreach (var organisme in Model.AllTypes)
-                        {
-                            <option value="@organisme">@organisme</option>
-                        }
                     </select>
                     <span asp-validation-for="Species.Type" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Species.Regime" class="form-label">Régime*</label>
-                    <select class="form-control" asp-for="Species.Regime">
+                    <select class="form-control" asp-for="Species.Regime" asp-items="@(new SelectList(Model.Regime))">
                         <option value="">-- Choisir un régime --</option>
-                        @foreach (var regime in Model.Regime)
-                        {
-                            <option value="@regime">@regime</option>
-                        }
                     </select>
                     <span asp-validation-for="Species.Regime" class="text-danger"></span>
                 </div>

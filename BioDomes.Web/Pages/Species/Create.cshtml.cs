@@ -1,12 +1,8 @@
-using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using BioDomes.Domains;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
-using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
-using BioDomes.Infrastructures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BioDomes.Web.Validators;
@@ -23,9 +19,8 @@ public class Create : PageModel
 
     [BindProperty] public InputModel Species { get; set; }
 
-    [BindProperty] public IReadOnlyList<string> AllTypes { get; set; } = new List<string>();
-
-    [BindProperty] public IReadOnlyList<string> Regime { get; set; } = new List<string>();
+    public IReadOnlyList<string> AllTypes { get; set; } = new List<string>();
+    public IReadOnlyList<string> RegimeOptions { get; set; } = new List<string>();
 
     public Create(ISpeciesService service, ISpeciesClassificationRepository repositoryClassification,
         IDietTypeRepository dietTypeRepository)
@@ -61,9 +56,7 @@ public class Create : PageModel
             LoadSelect();
             return Page();
         }
-
-        // "images/species/lion.jpg"
-
+        
         var created = new Domains.Core.Species(
             Species.Name,
             Species.Taille,
@@ -97,7 +90,7 @@ public class Create : PageModel
             .Select(s => s.ToString())
             .ToList();
 
-        Regime = _dietTypeRepository
+        RegimeOptions  = _dietTypeRepository
             .GetAllDietTypes()
             .Select(s => s.ToString())
             .ToList();

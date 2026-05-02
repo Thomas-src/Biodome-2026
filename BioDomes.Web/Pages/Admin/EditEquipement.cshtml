@@ -33,24 +33,16 @@
 
                 <div class="mb-3">
                     <label asp-for="Equipement.Consumption" class="form-label">Consommation*</label>
-                    <select class="form-control" asp-for="Equipement.Consumption">
+                    <select class="form-control" asp-for="Equipement.Consumption" asp-items="@(new SelectList(Model.AllConsumptions))">
                         <option value="">-- Choisir une consommation --</option>
-                        @foreach (var consumption in Model.AllConsumptions)
-                        {
-                            <option value="@consumption">@consumption</option>
-                        }
                     </select>
                     <span asp-validation-for="Equipement.Consumption" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Equipement.Production" class="form-label">Production*</label>
-                    <select class="form-control" asp-for="Equipement.Production">
+                    <select class="form-control" asp-for="Equipement.Production" asp-items="@(new SelectList(Model.AllProductions))">
                         <option value="">-- Choisir une production --</option>
-                        @foreach (var production in Model.AllProductions)
-                        {
-                            <option value="@production">@production</option>
-                        }
                     </select>
                     <span asp-validation-for="Equipement.Production" class="text-danger"></span>
                 </div>
