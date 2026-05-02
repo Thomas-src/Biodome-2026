@@ -152,6 +152,7 @@ public class EditSpeciesModel : PageModel
         public string Type { get; set; }
 
         [Required(ErrorMessage = "Le régime est obligatoire")]
+        [IsSpeciesRegim]
         public string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]

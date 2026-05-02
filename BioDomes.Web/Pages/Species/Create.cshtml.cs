@@ -113,15 +113,12 @@ public class Create : PageModel
 
         [Required(ErrorMessage = "Le type est obligatoire")]
         [IsSpeciesClassification]
-        // [RegularExpression(@"^[a-zA-Z\s\-]+$",
-        // ErrorMessage = "Le type ne peut contenir que des lettres, espaces ou tirets")]
-        public string Type { get; set; }
+         public string Type { get; set; }
 
         
         // TODO FAIRE UNE VALIDATEUR PERSONNALISE CF ligne 115
         [Required(ErrorMessage = "Le régime est obligatoire")]
-        // [RegularExpression(@"^[a-zA-Z\s\-]+$",
-        // ErrorMessage = "Le régime ne peut contenir que des lettres, espaces ou tirets")]
+        [IsSpeciesRegim]  
         public string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]

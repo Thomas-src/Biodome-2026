@@ -13,9 +13,9 @@ public class IsSpeciesClassificationAttribute : ValidationAttribute
             return new ValidationResult("La classification est obligatoire");
         }
 
-        string classification = value.ToString();
+        var classification = value.ToString();
 
-        bool isValid = Enum.TryParse(typeof(SpeciesClassification), classification, true, out _);
+        var isValid = Enum.TryParse(typeof(SpeciesClassification), classification, true, out _);
 
         if (!isValid)
         {

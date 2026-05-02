@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace BioDomes.Web.Pages.Account;
 
 public class LoginModel(
-    SignInManager<Infrastructures.entities.UserEntity> signInManager,
-    UserManager<Infrastructures.entities.UserEntity> userManager) : PageModel
+    SignInManager<Infrastructures.entities.UserEntity> signInManager) : PageModel
 {
     public string? ReturnUrl { get; set; }
 
@@ -51,8 +49,8 @@ public class LoginModel(
             return Page();
         }
 
-        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername!) ??
-                   await signInManager.UserManager.FindByNameAsync(EmailOrUsername!);
+        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername) ??
+                   await signInManager.UserManager.FindByNameAsync(EmailOrUsername);
 
         if (user == null)
         {
