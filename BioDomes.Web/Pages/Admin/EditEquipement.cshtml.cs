@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
+using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -133,19 +134,20 @@ public class EditEquipementModel : PageModel
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "La consommation est obligatoire")]
-        public string Consumption { get; set; }
+        public required string Consumption { get; set; }
 
         [Required(ErrorMessage = "La production est obligatoire")]
-        public string Production { get; set; }
+        public required string Production { get; set; }
 
+        [IsImageValid]
         public IFormFile? Avatar { get; set; }
-        public bool Confirmed { get; set; } = false;
+        public bool Confirmed { get; set; }
         public string? CurrentAvatarPath { get; set; }
         
         [BindProperty(SupportsGet = true)]
-        public string OwnerName { get; set; }
+        public required string OwnerName { get; set; }
     }
 }

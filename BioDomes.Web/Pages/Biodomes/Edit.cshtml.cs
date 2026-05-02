@@ -4,6 +4,7 @@ using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
+using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -38,32 +39,20 @@ public class Edit : PageModel
 
     public IActionResult OnPost(int id)
     {
-        Biodome = _service.GetBiodomeById(id);
-
-
-        if (!ModelState.IsValid)
+        var biodome = _service.GetBiodomeById(id);
+        if (biodome == null)
         {
-            return Page();
+            return NotFound();
         }
-        
+        Biodome = biodome;
         // TODO refactor ca dans le service + ajouter un bouton delete
+        var fileName = Biome.Avatar != null ? Biome.Avatar.FileName : Biodome.Image;
 
-        string fileName;
-
-        if (Biome.Avatar != null)
-        {
-            fileName = Biome.Avatar.FileName;
-        }
-        else
-        {
-            fileName = Biodome.Image;
-        }
-
-        Biodome created = new Biodome(
+        var created = new Biodome(
             Biodome.Id,
             Biome.Name,
-            Biome.temperature.Value,
-            Biome.humidite.Value,
+            Biome.temperature,
+            Biome.humidite,
             fileName,
             Biodome.Species,
             Biodome.Equipements,
@@ -85,9 +74,6 @@ public class Edit : PageModel
         {
             ModelState.AddModelError("Biome.humidite", e.Message);
         }
-        
-
-
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
         return RedirectToPage("/Biodomes/Details", new { id = Biodome.Id });
     }
@@ -101,13 +87,12 @@ public class Edit : PageModel
 
         [Required(ErrorMessage = "La temperature est obligatoire")]
         [Range(-100, 100, ErrorMessage = "La taille doit être entre -100 et 100")]
-        public double? temperature { get; set; }
+        public double temperature { get; set; }
 
         [Required(ErrorMessage = "L'humidité est obligatoire")]
         [Range(-100, 100, ErrorMessage = "L'humitidé doit être entre -100 et 100")]
-        public double? humidite { get; set; }
-
-// Un avatar est obligatoire à la création
+        public double humidite { get; set; }
+        [IsImageValid]
         public IFormFile? Avatar { get; set; }
 
         public string? AvatarPath { get; set; }

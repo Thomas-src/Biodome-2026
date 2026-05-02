@@ -63,22 +63,7 @@ public class RegisterModel : PageModel
         {
             ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans pour vous inscrire.");
         }
-
-        if (Input.Avatar is not null)
-        {
-            var allowed = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
-
-            if (!allowed.Contains(Input.Avatar.ContentType))
-            {
-                ModelState.AddModelError("Input.Avatar", "Seuls les formats JPG, PNG, GIF et WebP sont acceptés.");
-            }
-
-            if (Input.Avatar.Length > 2 * 1024 * 1024)
-            {
-                ModelState.AddModelError("Input.Avatar", "L'avatar ne peut pas dépasser 2 Mo.");
-            }
-        }
-
+        
         if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
         {
             ModelState.AddModelError("Input.SelectedAvatar", "Veuillez sélectionner ou uploader un avatar.");
@@ -163,7 +148,7 @@ public class RegisterModel : PageModel
         foreach (var error in result.Errors)
         {
             _logger.LogError(error.Description);
-            ModelState.AddModelError(string.Empty, error.Description);
+            ModelState.AddModelError(string.Empty, "Une erreur s'est produite");
         }
 
         return Page();
@@ -201,13 +186,15 @@ public class RegisterModel : PageModel
         [Required(ErrorMessage = "La date de naissance est obligatoire.")]
         [DataType(DataType.Date)]
         [Display(Name = "Date de naissance")]
-        public DateOnly DateNaissance { get; set; }
+        public required DateOnly DateNaissance { get; set; }
 
-        [Display(Name = "Avatar")] public IFormFile? Avatar { get; set; }
+        [Display(Name = "Avatar")]
+        [IsImageValid]
+        public IFormFile? Avatar { get; set; }
 
         [Required(ErrorMessage = "Veuillez choisir un organisme de recherche.")]
         [Display(Name = "Organisme de recherche")]
-        public string ResearchOrganism { get; set; }
+        public required string  ResearchOrganism { get; set; }
     }
 
     private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()

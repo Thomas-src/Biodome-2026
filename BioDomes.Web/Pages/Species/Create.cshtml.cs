@@ -66,8 +66,8 @@ public class Create : PageModel
 
         var created = new Domains.Core.Species(
             Species.Name,
-            Species.Taille.Value,
-            Species.Poids.Value,
+            Species.Taille,
+            Species.Poids,
             diet,
             type,
             Species.Avatar.FileName,
@@ -109,28 +109,26 @@ public class Create : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [RegularExpression(@"^[a-zA-Z\s\-]+$",
             ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "Le type est obligatoire")]
         [IsSpeciesClassification]
-         public string Type { get; set; }
+        public required string Type { get; set; }
 
-        
-        // TODO FAIRE UNE VALIDATEUR PERSONNALISE CF ligne 115
         [Required(ErrorMessage = "Le régime est obligatoire")]
-        [IsSpeciesRegim]  
-        public string Regime { get; set; }
+        [IsSpeciesRegim]
+        public required string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]
         [Range(1, 10000, ErrorMessage = "La taille doit être entre 1 et 10000")]
-        public double? Taille { get; set; }
+        public required double Taille { get; set; }
 
         [Required(ErrorMessage = "Le poids est obligatoire")]
-        [Range(1, Double.MaxValue, ErrorMessage = "Le poids doit être au moins de 1g")]
-
-        public double? Poids { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = "Le poids doit être au moins de 1g")]
+        public required double Poids { get; set; }
 
         [Required(ErrorMessage = "Un avatar est obligatoire")]
-        public IFormFile Avatar { get; set; }
+        [IsImageValid]
+        public required IFormFile Avatar { get; set; }
     }
 }

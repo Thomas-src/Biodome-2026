@@ -5,6 +5,7 @@ using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.entities;
+using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -78,22 +79,7 @@ public class EditModel : PageModel
         }
 
         CurrentAvatar = user.Avatar;
-
-        if (Input.Avatar is not null)
-        {
-            var allowed = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
-
-            if (!allowed.Contains(Input.Avatar.ContentType))
-            {
-                ModelState.AddModelError("Input.Avatar", "Seuls les formats JPG, PNG, GIF et WebP sont acceptés.");
-            }
-
-            if (Input.Avatar.Length > 2 * 1024 * 1024)
-            {
-                ModelState.AddModelError("Input.Avatar", "L'avatar ne peut pas dépasser 2 Mo.");
-            }
-        }
-
+        
         if (Input.DateNaissance > DateOnly.FromDateTime(DateTime.Today).AddYears(-18))
         {
             ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans.");
@@ -195,7 +181,9 @@ public class EditModel : PageModel
         [Display(Name = "Date de naissance")]
         public DateOnly DateNaissance { get; set; }
 
-        [Display(Name = "Avatar")] public IFormFile? Avatar { get; set; }
+        [Display(Name = "Avatar")] 
+        [IsImageValid]
+        public IFormFile? Avatar { get; set; }
 
         public string? SelectedAvatar { get; set; }
 
@@ -214,6 +202,5 @@ public class EditModel : PageModel
         return (IUserEmailStore<UserEntity>)_userStore;
     }
 
-    private void LoadOrganismes()
-        => Organismes = _researchOrganismService.GetAllOrganisms();
+    private void LoadOrganismes() => Organismes = _researchOrganismService.GetAllOrganisms();
 }

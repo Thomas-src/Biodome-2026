@@ -4,6 +4,7 @@ using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
+using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,13 +22,7 @@ public class Create : PageModel
         _service = service;
     }
 
-    [BindProperty]
-    public InputModel Biome { get; set; }
-
-    public void OnGet()
-    {
-        
-    }
+    [BindProperty] public InputModel Biome { get; set; }
 
     public IActionResult OnPost()
     {
@@ -36,29 +31,26 @@ public class Create : PageModel
             return Page();
         }
 
-        Biodome created = new Biodome(
+        var created = new Biodome(
             -1,
             Biome.Name,
-            Biome.temperature.Value,
-            Biome.humidite.Value,
+            Biome.temperature,
+            Biome.humidite,
             Biome.Avatar.FileName,
             new List<Domains.Core.Species>(),
             new List<Equipement>(),
             User.Identity.Name
-            );
-
+        );
+        
         try
         {
-        _service.Save(created, Biome.Avatar.OpenReadStream());
-
+            _service.Save(created, Biome.Avatar.OpenReadStream());
         }
         catch (ArgumentException e)
         {
             ModelState.AddModelError("Biome.humidite", e.Message);
             return Page();
         }
-        
-
         TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
         return RedirectToPage("Biodomes");
     }
@@ -68,19 +60,18 @@ public class Create : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [RegularExpression(@"^[a-zA-Z\s\-]+$",
             ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "La temperature est obligatoire")]
         [Range(-100, 100, ErrorMessage = "La taille doit être entre -100 et 100")]
-        public double? temperature { get; set; }
+        public required double temperature { get; set; }
 
         [Required(ErrorMessage = "L'humidité est obligatoire")]
         [Range(-100, 100, ErrorMessage = "L'humitidé doit être entre -100 et 100")]
-        public double? humidite { get; set; }
+        public required double humidite { get; set; }
 
         [Required(ErrorMessage = "Un avatar est obligatoire")]
-        public IFormFile Avatar { get; set; }
-
+        [IsImageValid]
+        public required IFormFile Avatar { get; set; }
     }
-
 }

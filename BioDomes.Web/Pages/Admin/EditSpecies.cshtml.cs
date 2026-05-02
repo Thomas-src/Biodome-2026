@@ -145,26 +145,28 @@ public class EditSpeciesModel : PageModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "Le type est obligatoire")]
         [IsSpeciesClassification]
-        public string Type { get; set; }
+        public required string Type { get; set; }
 
         [Required(ErrorMessage = "Le régime est obligatoire")]
         [IsSpeciesRegim]
-        public string Regime { get; set; }
+        public required string Regime { get; set; }
 
         [Required(ErrorMessage = "La taille est obligatoire")]
         [Range(0, 10000, ErrorMessage = "La taille doit être entre 0 et 10000")]
-        public double Taille { get; set; }
+        public required double Taille { get; set; }
 
         [Required(ErrorMessage = "Le poids est obligatoire")]
-        public double Poids { get; set; }
+        public required double Poids { get; set; }
 
+        [IsImageValid]
         public IFormFile? Avatar { get; set; }
-        public bool Confirmed { get; set; } = false;
-        public string OwnerName { get; set; }
+
+        public bool Confirmed { get; set; }
+        public required string OwnerName { get; set; }
         public string? CurrentAvatarPath { get; set; }
     }
     
