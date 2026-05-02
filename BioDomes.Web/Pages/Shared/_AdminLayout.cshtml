@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Administration BioDomes</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BioDomes.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" asp-page="/Admin/Species">
+                <img src="~/images/logo.webp"
+                     alt="Logo BioDomes"
+                     style="max-width:45px;" />
+
+                Administration BioDomes
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#adminNavbar"
+                    aria-controls="adminNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse text-center text-sm-start"id="adminNavbar">
+                <ul class="navbar-nav me-auto ms-sm-5 gap-sm-4">
+                    <li class="nav-item">
+                        <a class="nav-link text-white fs-5"
+                           asp-page="/Admin/Species">
+                            Gestion des espèces
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fs-5"
+                           asp-page="/Admin/Equipements">
+                            Gestion des équipements
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center gap-2 text-white"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            @{
+                                var avatar = User.FindFirst("Avatar")?.Value ?? "1.png";
+                            }
+                            <img src="~/images/avatars/@avatar"
+                                 class="rounded-circle"
+                                 style="width:36px; height:36px; object-fit:cover;"
+                                 alt="avatar" />
+                            <span>Administrateur</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end text-center">
+
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-page="/Account/Edit">
+                                    Modifier mon profil
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-page="/Index">
+                                    Retour au site public
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+
+                            <li>
+                                <form method="post" asp-page="/Account/Logout">
+                                    <button type="submit"
+                                            class="dropdown-item text-center">
+                                        Déconnexion
+                                    </button>
+                                </form>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        <div class="mb-4">
+            <h2 class="fw-bold">
+                Espace Administration
+            </h2>
+        </div>
+
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer mt-5">
+    <div class="container text-center">
+        &copy; 2026 - BioDomes Administration
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
