@@ -8,22 +8,10 @@ namespace BioDomes.Web.Pages.Equipements;
 public class Equipements : PageModel
 {
     private readonly IEquipementService _service;
-    
-    private IReadOnlyList<Equipement> _restEquipements;
 
-    public IReadOnlyList<Equipement> RestEquipements
-    {
-        get { return _restEquipements; }
-        set { _restEquipements = value; }
-    }
-    
-    private IReadOnlyList<Equipement> _ownEquipements = new List<Equipement>();
+    public IReadOnlyList<Equipement> RestEquipements { get; set; }
 
-    public IReadOnlyList<Equipement> OwnEquipements
-    {
-        get { return _ownEquipements; }
-        set { _ownEquipements = value; }
-    }
+    public IReadOnlyList<Equipement> OwnEquipements { get; set; } = new List<Equipement>();
 
     public Equipements(IEquipementService service)
     {
@@ -32,7 +20,6 @@ public class Equipements : PageModel
     
     public void OnGet()
     {
-
         try
         {
             IReadOnlyList<Equipement> all = _service.GetAllEquipements();
@@ -51,7 +38,5 @@ public class Equipements : PageModel
         {
             ModelState.AddModelError(string.Empty, e.Message);
         }
-
-        
     }
 }

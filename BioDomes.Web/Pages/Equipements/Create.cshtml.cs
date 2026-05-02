@@ -45,19 +45,6 @@ public class Create : PageModel
             return Page();
         }
 
-
-        var allowed = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
-
-        if (!allowed.Contains(Equipement.Avatar.ContentType))
-        {
-            ModelState.AddModelError("Equipement.Avatar", "Seuls les formats JPG, PNG, GIF et WebP sont acceptés.");
-        }
-
-        if (Equipement.Avatar.Length > 2 * 1024 * 1024)
-        {
-            ModelState.AddModelError("Equipement.Avatar", "L'avatar ne peut pas dépasser 2 Mo.");
-        }
-
         var cons = GetCons(out var prod);
 
         var created = new Equipement(

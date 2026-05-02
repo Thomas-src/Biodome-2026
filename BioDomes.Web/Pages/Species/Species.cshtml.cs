@@ -8,28 +8,14 @@ namespace BioDomes.Web.Pages.Species;
 
 public class SpeciesModel : PageModel
 {
-    private readonly ISpeciesRepository _repository;
     private readonly ISpeciesService _speciesService;
 
-    private IReadOnlyList<Domains.Core.Species> _ownSpecies;
+    public IReadOnlyList<Domains.Core.Species> OwnSpecies { get; set; }
 
-    public IReadOnlyList<Domains.Core.Species> OwnSpecies
+    public IReadOnlyList<Domains.Core.Species> OtherSpecies { get; set; }
+
+    public SpeciesModel(ISpeciesService speciesService)
     {
-        get { return _ownSpecies; }
-        set { _ownSpecies = value; }
-    }
-
-    private IReadOnlyList<Domains.Core.Species> _otherSpecies;
-
-    public IReadOnlyList<Domains.Core.Species> OtherSpecies
-    {
-        get { return _otherSpecies; }
-        set { _otherSpecies = value; }
-    }
-
-    public SpeciesModel(ISpeciesRepository repository, ISpeciesService speciesService)
-    {
-        _repository = repository;
         _speciesService = speciesService;
     }
 
@@ -37,7 +23,7 @@ public class SpeciesModel : PageModel
     {
         try
         {
-            IReadOnlyList<Domains.Core.Species> speciesList = _speciesService.GetAllSpeices();
+            var speciesList = _speciesService.GetAllSpeices();
 
             if (User.Identity.IsAuthenticated)
             {
@@ -53,6 +39,5 @@ public class SpeciesModel : PageModel
         {
             ModelState.AddModelError(string.Empty, e.Message);
         }
-        
     }
 }

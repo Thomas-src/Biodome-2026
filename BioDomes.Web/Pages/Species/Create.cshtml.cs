@@ -40,25 +40,45 @@ public class Create : PageModel
     {
         if (!ModelState.IsValid)
         {
-            LoadSelect();
-            return Page();
+            return ReturnPageWithSelects();
         }
 
-        if (!Enum.TryParse<DietType>(Species.Regime, out var diet))
+        if (!TryParseEnums(out var diet, out var type))
+        {
+            return ReturnPageWithSelects();
+        }
+
+        var created = BuildSpecies(diet, type);
+        if (!TrySaveSpecies(created))
+        {
+            return ReturnPageWithSelects();
+        }
+        TempData["SuccessMessage"] = $"L'espèce {Species.Name} a été ajoutée avec succès !";
+        return RedirectToPage("Species");
+    }
+
+    private bool TryParseEnums(out DietType diet, out SpeciesClassification type)
+    {
+        var isDietValid = Enum.TryParse(Species.Regime, out diet);
+
+        if (!isDietValid)
         {
             ModelState.AddModelError("Species.Regime", "Régime invalide");
-            LoadSelect();
-            return Page();
         }
 
-        if (!Enum.TryParse<SpeciesClassification>(Species.Type, out var type))
+        var isTypeValid = Enum.TryParse(Species.Type, out type);
+
+        if (!isTypeValid)
         {
             ModelState.AddModelError("Species.Type", "Type invalide");
-            LoadSelect();
-            return Page();
         }
-        
-        var created = new Domains.Core.Species(
+
+        return isDietValid && isTypeValid;
+    }
+
+    private Domains.Core.Species BuildSpecies(DietType diet, SpeciesClassification type)
+    {
+        return new Domains.Core.Species(
             Species.Name,
             Species.Taille,
             Species.Poids,
@@ -66,22 +86,27 @@ public class Create : PageModel
             type,
             Species.Avatar.FileName,
             false,
-            User.Identity.Name
-        );
+            User.Identity.Name);
+    }
 
+    private bool TrySaveSpecies(Domains.Core.Species species)
+    {
         try
         {
-            _speciesService.Save(created, Species.Avatar.OpenReadStream());
+            _speciesService.Save(species, Species.Avatar.OpenReadStream());
+            return true;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            ModelState.AddModelError("", $"{e.Message}");
-            LoadSelect();
-            return Page();
+            ModelState.AddModelError(string.Empty, exception.Message);
+            return false;
         }
+    }
 
-        TempData["SuccessMessage"] = $"L'espèce {Species.Name} a été ajoutée avec succès !";
-        return RedirectToPage("Species");
+    private IActionResult ReturnPageWithSelects()
+    {
+        LoadSelect();
+        return Page();
     }
 
     private void LoadSelect()
@@ -91,7 +116,7 @@ public class Create : PageModel
             .Select(s => s.ToString())
             .ToList();
 
-        RegimeOptions  = _dietTypeRepository
+        RegimeOptions = _dietTypeRepository
             .GetAllDietTypes()
             .Select(s => s.ToString())
             .ToList();
