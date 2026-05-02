@@ -50,7 +50,7 @@ public class Biodomes : PageModel
     {
         try
         {
-            AllBiodomes = _service.GetAllBiodomes();
+            AllBiodomes = _service.GetAllStableBiodomes();
 
             AllBiodomes = _service.SearchBiodomes(
                 SearchTemperatureMin,

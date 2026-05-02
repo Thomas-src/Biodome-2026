@@ -5,7 +5,7 @@ namespace BioDomes.Domains.Services.interfaces;
 public interface IBiodomeService
 {
     IReadOnlyList<Biodome> GetBestThreeBiodome();
-    IReadOnlyList<Biodome> GetAllBiodomes();
+    IReadOnlyList<Biodome> GetAllStableBiodomes();
     IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName);
     IReadOnlyList<Biodome> HasEquipement(string equipementName, string ownerName);
     IReadOnlyList<Biodome> GetUserBiodomes(string username);
@@ -15,7 +15,6 @@ public interface IBiodomeService
 
     void Save(Biodome created, Stream openReadStream);
 
-    double CalculateHumiditeMax(double temp);
     Biodome? GetBiodomeById(int biodomeId);
     void Update(Biodome created);
     void Update(Biodome created, string fileName, Stream openReadStream);

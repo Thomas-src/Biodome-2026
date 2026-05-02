@@ -11,14 +11,11 @@ public class BiodomeService : IBiodomeService
 {
     private readonly IBiodomeRepository _repository;
     private readonly IPictureRepository _pictureRepository;
-    private readonly ILogger<BiodomeService> _logger;
 
-    public BiodomeService(IBiodomeRepository repository, IPictureRepository pictureRepository,
-        ILogger<BiodomeService> logger)
+    public BiodomeService(IBiodomeRepository repository, IPictureRepository pictureRepository)
     {
         _repository = repository;
         _pictureRepository = pictureRepository;
-        _logger = logger;
     }
 
     public IReadOnlyList<Biodome> GetBestThreeBiodome()
@@ -28,17 +25,17 @@ public class BiodomeService : IBiodomeService
             .Take(3)
             .ToList();
 
-    public IReadOnlyList<Biodome> GetAllBiodomes()
+    public IReadOnlyList<Biodome> GetAllStableBiodomes()
     {
         try
         {
-            return _repository.GetAllBiodomes();
+            return _repository.GetAllBiodomes().Where(b => BiodomeEtat.Optimal.Equals(b.Etat) && b.Species.Count>0).ToList();;
         }
         catch (ReadBiodomesException e)
         {
             throw new Exception("Impossible de charger les biodomes !");
         }
-    } 
+    }
 
     public IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName) => _repository.GetAllBiodomes()
         .Where(b => b.Species.Any(s =>
@@ -73,14 +70,14 @@ public class BiodomeService : IBiodomeService
             throw new ArgumentException(
                 $"Un biome avec une température de {created.Temperature}°C peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
         }
-        
+
         // 2. Enregistrer l'image
         created.Image = _pictureRepository.Save(created.Image, openReadStream, "biodomes");
 
         // 3. Enregistrer le biome
         try
         {
-        _repository.Create(created);
+            _repository.Create(created);
         }
         catch (Exception e)
         {
@@ -91,7 +88,7 @@ public class BiodomeService : IBiodomeService
     public IReadOnlyList<Biodome> SearchBiodomes(double? temperatureMin, double? temperatureMax, double? humiditeMin,
         double? humiditeMax, string? equipement, string? espece)
     {
-        var query = _repository.GetAllBiodomes().AsQueryable();
+        var query = GetAllStableBiodomes().AsQueryable();
 
         if (temperatureMin.HasValue)
         {
@@ -130,9 +127,9 @@ public class BiodomeService : IBiodomeService
         return query.ToList();
     }
 
-    public double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
+    private double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
 
-    public Biodome? GetBiodomeById(int biodomeId) => GetAllBiodomes().FirstOrDefault(b => b.Id == biodomeId);
+    public Biodome? GetBiodomeById(int biodomeId) => _repository.GetAllBiodomes().FirstOrDefault(b => b.Id == biodomeId);
 
 
     public void AddSpeciesTo(int biomeId, string speciesName, int quantity) =>
@@ -161,14 +158,14 @@ public class BiodomeService : IBiodomeService
     public void Update(Biodome created, string fileName, Stream openReadStream)
     {
         double humiditeMax = CalculateHumiditeMax(created.Temperature);
-        
+
         if (created.Humidite > humiditeMax)
         {
             throw new ArgumentException(
                 $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
         }
 
-        
+
         var old = GetBiodomeById(created.Id);
 
         if (old != null && !created.DeepEquals(old))

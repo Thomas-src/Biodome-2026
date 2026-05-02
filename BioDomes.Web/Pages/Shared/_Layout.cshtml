@@ -1,6 +1,6 @@
 ﻿@using BioDomes.Domains.Core
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,51 +17,82 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-page="/Index">
-                <img class="w h-25" src="~/images/logo.webp" alt="Logo biodome" style="max-width:50px;" />
+                <img class="w h-25" src="~/images/logo.webp" alt="Logo biodome" style="max-width:50px;"/>
                 BioDomes : Terrarium Zero
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1 ms-5 gap-5">
+
+            <!-- text-center + text-sm-start -->
+            <div class="collapse navbar-collapse text-center text-sm-start" id="mainNavbar">
+
+                <!-- Menu gauche -->
+                <ul class="navbar-nav me-auto ms-sm-5 gap-sm-4">
                     <li class="nav-item">
-                        <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Index">Accueil</a>
+                        <a class="nav-link text-dark fs-5 text-decoration-underline"
+                           asp-area="" asp-page="/Index">
+                            Accueil
+                        </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Biodomes/Biodomes">Biodomes</a>
+                        <a class="nav-link text-dark fs-5 text-decoration-underline"
+                           asp-area="" asp-page="/Biodomes/Biodomes">
+                            Biodomes
+                        </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Species/Species">Espèces</a>
+                        <a class="nav-link text-dark fs-5 text-decoration-underline"
+                           asp-area="" asp-page="/Species/Species">
+                            Espèces
+                        </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-dark fs-5 text-decoration-underline" asp-area="" asp-page="/Equipements/Equipements">Equipements</a>
+                        <a class="nav-link text-dark fs-5 text-decoration-underline"
+                           asp-area="" asp-page="/Equipements/Equipements">
+                            Equipements
+                        </a>
                     </li>
+                </ul>
+
+                <!-- Partie droite -->
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item dropdown ms-auto">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center gap-2"
                                href="#"
                                role="button"
                                data-bs-toggle="dropdown"
                                aria-expanded="false">
+
                                 @{
                                     var avatar = User.FindFirst("Avatar")?.Value ?? "1.png";
                                 }
+
                                 <img src="~/images/avatars/@avatar"
                                      class="rounded-circle"
-                                     style="width:32px; height:32px; object-fit:cover;"  alt="avatar"/>
+                                     style="width:32px; height:32px; object-fit:cover;"
+                                     alt="avatar"/>
 
                                 <span class="text-dark">Mon compte</span>
                             </a>
 
-                            <ul class="dropdown-menu dropdown-menu-end">
+                            <ul class="dropdown-menu dropdown-menu-end text-center">
 
                                 @if (User.IsInRole(Roles.Research.ToRoleName()))
                                 {
                                     <li>
-                                        <a class="dropdown-item"  asp-page="/Biodomes/UserBiodomes">
+                                        <a class="dropdown-item" asp-page="/Biodomes/UserBiodomes">
                                             Mes biodomes
                                         </a>
                                     </li>
@@ -75,11 +106,6 @@
                                 @if (User.IsInRole(Roles.Admin.ToRoleName()))
                                 {
                                     <li>
-                                        <a class="dropdown-item" asp-page="/Admin/Dashboard">
-                                            Tableau de bord admin
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a class="dropdown-item" asp-page="/Admin/Species">
                                             Modifier les espèces
                                         </a>
@@ -89,9 +115,11 @@
                                             Modifier les équipements
                                         </a>
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <a class="dropdown-item"  asp-page="/Biodomes/UserBiodomes">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Biodomes/UserBiodomes">
                                             Mes biodomes
                                         </a>
                                     </li>
@@ -102,11 +130,13 @@
                                     </li>
                                 }
 
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
 
                                 <li>
                                     <form method="post" asp-page="/Account/Logout">
-                                        <button type="submit" class="dropdown-item">
+                                        <button type="submit" class="dropdown-item text-center">
                                             Déconnexion
                                         </button>
                                     </form>
@@ -116,9 +146,17 @@
                     }
                     else
                     {
-                        <li class="nav-item ms-auto">
-                            <a class="nav-link text-dark fs-5 text-decoration-underline" asp-page="/Account/Login">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fs-5 text-decoration-underline"
+                               asp-page="/Account/Login">
                                 Se connecter
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fs-5 text-decoration-underline"
+                               asp-page="/Account/Register">
+                                S'inscrire
                             </a>
                         </li>
                     }
