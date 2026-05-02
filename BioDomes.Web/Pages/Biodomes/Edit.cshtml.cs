@@ -24,17 +24,23 @@ public class Edit : PageModel
         _service = service;
     }
 
-    public void OnGet(int id)
+    public IActionResult OnGet(int id)
     {
-        Biodome = _service.GetBiodomeById(id);
+        var biodome = _service.GetBiodomeById(id);
+        if (biodome == null)
+        {
+            return NotFound();
+        }
+        Biodome = biodome;
 
         Biome = new InputModel
         {
             Name = Biodome.Nom,
-            temperature = Biodome.Temperature,
-            humidite = Biodome.Humidite,
+            Temperature = Biodome.Temperature,
+            Humidite = Biodome.Humidite,
             AvatarPath = Biodome.Image
         };
+        return Page();
     }
 
     public IActionResult OnPost(int id)
@@ -51,8 +57,8 @@ public class Edit : PageModel
         var created = new Biodome(
             Biodome.Id,
             Biome.Name,
-            Biome.temperature,
-            Biome.humidite,
+            Biome.Temperature,
+            Biome.Humidite,
             fileName,
             Biodome.Species,
             Biodome.Equipements,
@@ -83,15 +89,15 @@ public class Edit : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [RegularExpression(@"^[a-zA-Z\s\-]+$",
             ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "La temperature est obligatoire")]
         [Range(-100, 100, ErrorMessage = "La taille doit être entre -100 et 100")]
-        public double temperature { get; set; }
+        public required double Temperature { get; set; }
 
         [Required(ErrorMessage = "L'humidité est obligatoire")]
         [Range(-100, 100, ErrorMessage = "L'humitidé doit être entre -100 et 100")]
-        public double humidite { get; set; }
+        public required double Humidite { get; set; }
         [IsImageValid]
         public IFormFile? Avatar { get; set; }
 

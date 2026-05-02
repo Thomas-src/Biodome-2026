@@ -4,6 +4,7 @@ using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
+using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -119,6 +120,7 @@ public class Create : PageModel
         public string Production { get; set; }
 
         [Required(ErrorMessage = "Une image est obligatoire")]
+        [IsImageValid]
         public IFormFile Avatar { get; set; }
     }
 }
