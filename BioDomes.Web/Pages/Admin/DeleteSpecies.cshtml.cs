@@ -15,7 +15,8 @@ public class DeleteSpeciesModel : PageModel
     private readonly IBiodomeService _biodomesService;
     private readonly ILogger<DeleteSpeciesModel> _logger;
 
-    public DeleteSpeciesModel(ISpeciesService speciesService, IBiodomeService biodomesService, ILogger<DeleteSpeciesModel> logger)
+    public DeleteSpeciesModel(ISpeciesService speciesService, IBiodomeService biodomesService,
+        ILogger<DeleteSpeciesModel> logger)
     {
         _speciesService = speciesService;
         _biodomesService = biodomesService;
@@ -45,29 +46,24 @@ public class DeleteSpeciesModel : PageModel
 
     public IActionResult OnPostDelete(string slug, string ownerName)
     {
-        _logger.LogInformation("OnPostDelete");
         if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(ownerName))
         {
-            _logger.LogInformation("Slug: or owner is empty {} - {}",slug, ownerName);
+            _logger.LogInformation("Slug: or owner is empty {} - {}", slug, ownerName);
             return NotFound();
         }
-
         slug = slug.ToKebabCase();
         var species = _speciesService.GetByKebabCase(slug, ownerName);
         if (species is null)
         {
-            _logger.LogInformation("Species not found for owner: {} - {}",slug, ownerName);
+            _logger.LogInformation("Species not found for owner: {} - {}", slug, ownerName);
             return NotFound();
         }
-
-
         var biodomesHasSpecies = _biodomesService.HasSpecies(species.Nom, ownerName);
         if (biodomesHasSpecies.Count > 0)
         {
             TempData["ErrorMessage"] = "Impossible de supprimer : cette espèce est utilisée dans un ou plusieurs biodômes.";
             return RedirectToPage("/Admin/species");
         }
-
         _speciesService.Delete(species.Nom, ownerName);
         TempData["SuccessMessage"] = "Espèce supprimée avec succès";
         return RedirectToPage("/Admin/species");

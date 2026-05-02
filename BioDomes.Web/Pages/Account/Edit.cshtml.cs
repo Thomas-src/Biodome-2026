@@ -18,11 +18,10 @@ namespace BioDomes.Web.Pages.Account;
 [ValidateAntiForgeryToken]
 public class EditModel : PageModel
 {
-    private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;
-    private readonly IUserStore<Infrastructures.entities.UserEntity> _userStore;
+    private readonly UserManager<UserEntity> _userManager;
+    private readonly IUserStore<UserEntity> _userStore;
     private readonly ILogger<EditModel> _logger;
     private readonly IResearchService _researchOrganismService;
-    private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
     private readonly IPictureRepository _pictureRepository;
     private readonly SignInManager<UserEntity> _signInManager;
 
@@ -37,7 +36,6 @@ public class EditModel : PageModel
         _userManager = userManager;
         _userStore = userStore;
         _logger = logger;
-        _emailStore = GetEmailStore();
         _researchOrganismService = researchOrganismService;
         _pictureRepository = pictureRepository;
         _signInManager = signInManager;
@@ -74,92 +72,133 @@ public class EditModel : PageModel
     {
         LoadOrganismes();
 
-        var user = await _userManager.GetUserAsync(User);
+        var user = await GetCurrentUserAsync();
         if (user is null)
         {
             return RedirectToPage("/Account/Login");
         }
 
         CurrentAvatar = user.Avatar;
-        
-        if (Input.DateNaissance > DateOnly.FromDateTime(DateTime.Today).AddYears(-18))
-        {
-            ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans.");
-        }
 
-        if (!string.IsNullOrWhiteSpace(Input.Password) && Input.Password != Input.ConfirmPassword)
-        {
-            ModelState.AddModelError("Input.ConfirmPassword", "Les mots de passe ne correspondent pas.");
-        }
+        ValidateInputs();
 
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        await _userStore.SetUserNameAsync(user, Input.Nom, CancellationToken.None);
+        await UpdateUserProfileAsync(user);
+        await UpdateAvatarAsync(user);
+        await UpdateAvatarClaimAsync(user);
 
-        user.DateOfBirth = Input.DateNaissance;
-        user.ResearchOrganismId = Input.ResearchOrganism;
+        var updateResult = await _userManager.UpdateAsync(user);
 
-        if (Input.Avatar is not null)
+        if (!updateResult.Succeeded)
         {
-            var filename = _pictureRepository.Save(Input.Avatar.FileName, Input.Avatar.OpenReadStream(), "avatars");
-            user.Avatar = filename;
-            _logger.LogInformation("Avatar mis à jour via upload: {f}", filename);
-        }
-        else if (!string.IsNullOrEmpty(Input.SelectedAvatar))
-        {
-            user.Avatar = Input.SelectedAvatar;
-            _logger.LogInformation("Avatar mis à jour via sélection: {s}", Input.SelectedAvatar);
-        }
-
-        if (Input.Avatar is not null || !string.IsNullOrEmpty(Input.SelectedAvatar))
-        {
-            var existingClaims = await _userManager.GetClaimsAsync(user);
-            var avatarClaim = existingClaims.FirstOrDefault(c => c.Type == "Avatar");
-
-            if (avatarClaim != null)
-            {
-                await _userManager.RemoveClaimAsync(user, avatarClaim);
-            }
-
-            await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
-        }
-
-        await _signInManager.RefreshSignInAsync(user);
-        _logger.LogInformation("BEFORE UPDATE Avatar = {a}", user.Avatar);
-        var result = await _userManager.UpdateAsync(user);
-        _logger.LogInformation("AFTER UPDATE SUCCESS = {s}", result.Succeeded);
-
-        if (result.Succeeded && !string.IsNullOrWhiteSpace(Input.Password))
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var pwResult = await _userManager.ResetPasswordAsync(user, token, Input.Password);
-
-            if (!pwResult.Succeeded)
-            {
-                foreach (var error in pwResult.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
-        }
-
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
+            AddErrorsToModelState(updateResult.Errors);
             return Page();
         }
+
+        await UpdatePasswordIfNeededAsync(user);
+        await _signInManager.RefreshSignInAsync(user);
 
         _logger.LogInformation("Profil mis à jour pour {Email}", user.Email);
         TempData["Success"] = "Profil mis à jour avec succès.";
 
         return RedirectToPage();
+    }
+
+    private async Task<UserEntity?> GetCurrentUserAsync()
+    {
+        return await _userManager.GetUserAsync(User);
+    }
+
+    private void ValidateInputs()
+    {
+        CheckInputs();
+    }
+
+    private async Task UpdateUserProfileAsync(UserEntity user)
+    {
+        await _userStore.SetUserNameAsync(user, Input.Nom, CancellationToken.None);
+
+        user.DateOfBirth = Input.DateNaissance;
+        user.ResearchOrganismId = Input.ResearchOrganism;
+    }
+
+    private async Task UpdateAvatarAsync(UserEntity user)
+    {
+        if (Input.Avatar is not null)
+        {
+            var filename = _pictureRepository.Save(
+                Input.Avatar.FileName,
+                Input.Avatar.OpenReadStream(),
+                "avatars");
+
+            user.Avatar = filename;
+
+            _logger.LogInformation(
+                "Avatar mis à jour via upload: {Filename}",
+                filename);
+
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Input.SelectedAvatar))
+        {
+            user.Avatar = Input.SelectedAvatar;
+
+            _logger.LogInformation(
+                "Avatar mis à jour via sélection: {SelectedAvatar}",
+                Input.SelectedAvatar);
+        }
+    }
+
+    private async Task UpdateAvatarClaimAsync(UserEntity user)
+    {
+        if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
+        {
+            return;
+        }
+
+        var existingClaims = await _userManager.GetClaimsAsync(user);
+        var avatarClaim = existingClaims.FirstOrDefault(c => c.Type == "Avatar");
+
+        if (avatarClaim is not null)
+        {
+            await _userManager.RemoveClaimAsync(user, avatarClaim);
+        }
+
+        await _userManager.AddClaimAsync(
+            user,
+            new Claim("Avatar", user.Avatar ?? "1.png"));
+    }
+
+    private async Task UpdatePasswordIfNeededAsync(UserEntity user)
+    {
+        if (string.IsNullOrWhiteSpace(Input.Password))
+        {
+            return;
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(
+            user,
+            token,
+            Input.Password);
+
+        if (!result.Succeeded)
+        {
+            AddErrorsToModelState(result.Errors);
+        }
+    }
+
+    private void AddErrorsToModelState(IEnumerable<IdentityError> errors)
+    {
+        foreach (var error in errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
     }
 
     public class InputModel
@@ -183,7 +222,7 @@ public class EditModel : PageModel
         [Display(Name = "Date de naissance")]
         public DateOnly DateNaissance { get; set; }
 
-        [Display(Name = "Avatar")] 
+        [Display(Name = "Avatar")]
         [IsImageValid]
         public IFormFile? Avatar { get; set; }
 
@@ -202,6 +241,19 @@ public class EditModel : PageModel
 
 
         return (IUserEmailStore<UserEntity>)_userStore;
+    }
+
+    private void CheckInputs()
+    {
+        if (Input.DateNaissance > DateOnly.FromDateTime(DateTime.Today).AddYears(-18))
+        {
+            ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(Input.Password) && Input.Password != Input.ConfirmPassword)
+        {
+            ModelState.AddModelError("Input.ConfirmPassword", "Les mots de passe ne correspondent pas.");
+        }
     }
 
     private void LoadOrganismes() => Organismes = _researchOrganismService.GetAllOrganisms();

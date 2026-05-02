@@ -43,14 +43,12 @@ public class EditSpeciesModel : PageModel
     {
         LoadSelect();
 
-        var existing = _speciesService.GetByKebabCase(slug,ownerName);
+        var existing = _speciesService.GetByKebabCase(slug, ownerName);
         if (existing == null)
         {
             _logger.LogInformation("{} not found", slug);
             return NotFound();
         }
-
-
         Species = new InputModel
         {
             Name = existing.Nom,
@@ -80,7 +78,6 @@ public class EditSpeciesModel : PageModel
 
     public IActionResult OnPost(string confirm)
     {
-        _logger.LogInformation("POST slug = {slug}", Slug);
         LoadSelect();
 
         if (!ModelState.IsValid)
@@ -88,37 +85,76 @@ public class EditSpeciesModel : PageModel
             return Page();
         }
 
-        var existing = _speciesService.GetByKebabCase(Slug,Species.OwnerName);
-        if (existing == null)
+        var existing = GetExistingSpecies();
+
+        if (existing is null)
         {
             return NotFound();
         }
-            
 
-        if (!Enum.TryParse<DietType>(Species.Regime, out var diet))
+        if (!TryParseEnums(out var diet, out var type))
+        {
+            return Page();
+        }
+
+        if (RequiresConfirmation(existing, diet, confirm))
+        {
+            return Page();
+        }
+
+        if (!UpdateSpecies(existing, diet, type))
+        {
+            ModelState.AddModelError(string.Empty, "Erreur lors de la modification");
+            return Page();
+        }
+
+        TempData["SuccessMessage"] = "Espèce modifiée avec succès";
+
+        return RedirectToPage("Species");
+    }
+
+    private Domains.Core.Species? GetExistingSpecies()
+    {
+        return _speciesService.GetByKebabCase(Slug, Species.OwnerName);
+    }
+
+    private bool TryParseEnums(out DietType diet, out SpeciesClassification type)
+    {
+        var isDietValid = Enum.TryParse(Species.Regime, out diet);
+
+        if (!isDietValid)
         {
             ModelState.AddModelError("Species.Regime", "Régime invalide");
-            return Page();
         }
 
-        if (!Enum.TryParse<SpeciesClassification>(Species.Type, out var type))
+        var isTypeValid = Enum.TryParse(Species.Type, out type);
+
+        if (!isTypeValid)
         {
             ModelState.AddModelError("Species.Type", "Type invalide");
-            return Page();
         }
 
+        return isDietValid && isTypeValid;
+    }
+
+    private bool RequiresConfirmation(Domains.Core.Species existing, DietType diet, string confirm)
+    {
         var poidsChanged = Math.Abs(existing.Poids - Species.Poids) > 0.001;
         var regimeChanged = existing.DietType != diet;
         var isConfirm = confirm.Equals("true");
-
-        if ((poidsChanged || regimeChanged) && !isConfirm)
+        if ((!poidsChanged && !regimeChanged) || isConfirm)
         {
-            var impacted = _biodomeService.HasSpecies(Slug, Species.OwnerName).Count;
-            ViewData["WarningMessage"] = $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?"; 
-
-            return Page();
+            return false;
         }
 
+        var impacted = _biodomeService.HasSpecies(Slug, Species.OwnerName).Count;
+        ViewData["WarningMessage"] = $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?";
+
+        return true;
+    }
+
+    private bool UpdateSpecies(Domains.Core.Species existing, DietType diet, SpeciesClassification type)
+    {
         var updated = new Domains.Core.Species(
             existing.Nom,
             Species.Taille,
@@ -127,25 +163,18 @@ public class EditSpeciesModel : PageModel
             type,
             Species.Avatar?.FileName ?? existing.Avatar,
             existing.IsVisible,
-            existing.OwnerName
-        );
+            existing.OwnerName);
 
         var stream = Species.Avatar?.OpenReadStream();
 
-        if (_speciesService.Update(existing, updated, stream))
-        {
-            TempData["SuccessMessage"] = "Espèce modifiée avec succès";
-            return RedirectToPage("Species");
-        }
-
-        ModelState.AddModelError("", "Erreur lors de la modification");
-        return Page();
+        return _speciesService.Update(existing, updated, stream);
     }
 
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "Le type est obligatoire")]
@@ -163,13 +192,10 @@ public class EditSpeciesModel : PageModel
         [Required(ErrorMessage = "Le poids est obligatoire")]
         public required double Poids { get; set; }
 
-        [IsImageValid]
-        public IFormFile? Avatar { get; set; }
+        [IsImageValid] public IFormFile? Avatar { get; set; }
 
         public bool Confirmed { get; set; }
         public required string OwnerName { get; set; }
         public string? CurrentAvatarPath { get; set; }
     }
-    
-    
 }

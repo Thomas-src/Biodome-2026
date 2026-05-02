@@ -58,8 +58,7 @@ public class Create : PageModel
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        [RegularExpression(@"^[a-zA-Z\s\-]+$",
-            ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "La temperature est obligatoire")]

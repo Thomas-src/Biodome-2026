@@ -32,6 +32,7 @@ public class Details : PageModel
 
     // chart 3
     public FoodChain FoodChain { get; set; } = new();
+
     public Details(IBiodomeService service, ISpeciesRepository speciesRepository,
         IEquipementRepository equipementRepository, IStatsService statsService)
     {
@@ -49,11 +50,15 @@ public class Details : PageModel
         {
             return NotFound();
         }
-        else
-        {
-            Biodome = biodome;
-        }
+        Biodome = biodome;
 
+        LoadStats();
+
+        return Page();
+    }
+
+    private void LoadStats()
+    {
         if (User.Identity.IsAuthenticated)
         {
             if (Biodome.CreatorName == User.Identity.Name)
@@ -61,34 +66,27 @@ public class Details : PageModel
                 Owner = true;
                 AvailableEquipements = _equipementRepository.GetAllEquipements().Where(x => x.Visibility || x.OwnerName == Biodome.CreatorName).ToList();
                 AvailableSpecies = _speciesRepository.GetAllSpecies().Where(x => x.IsVisible || x.OwnerName == Biodome.CreatorName).ToList();
-                // todo afficher les stats
-                var stats = _statsService.GetBiodomeStats(biodome);
+                var stats = _statsService.GetBiodomeStats(Biodome);
 
                 // chart 1
                 ClassificationLabels = stats.QuantityByClassification.Keys.ToList();
+                ClassificationCounts = stats.QuantityByClassification.Values.Select(v => v.Count).ToList();
 
-                ClassificationCounts = stats.QuantityByClassification
-                    .Values.Select(v => v.Count).ToList();
-
-                ClassificationTooltipData = stats.QuantityByClassification
-                    .ToDictionary(x => x.Key, x => x.Value
-                        .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
-                    );
+                ClassificationTooltipData = stats.QuantityByClassification.ToDictionary(x => x.Key, x => x.Value
+                    .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
+                );
                 // chart 2 
                 RegimeLabels = stats.QuantityByRegim.Keys.ToList();
 
                 RegimeCounts = stats.QuantityByRegim.Values.Select(v => v.Count).ToList();
-                RegimeTooltipData = stats.QuantityByRegim
-                    .ToDictionary(x => x.Key, x => x.Value
-                        .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
-                    );
+                RegimeTooltipData = stats.QuantityByRegim.ToDictionary(x => x.Key, x => x.Value
+                    .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
+                );
                 // chart 3
                 FoodChain = stats.Foodchain;
             }
         }
 
-
-        return Page();
     }
 
     public IActionResult OnPostAddSpecies(int biomeId, string speciesName, int quantity = 1)

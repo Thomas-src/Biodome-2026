@@ -7,6 +7,7 @@ using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Domains.Services.mail;
+using BioDomes.Infrastructures.entities;
 using BioDomes.Web.Validators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,21 +19,19 @@ namespace BioDomes.Web.Pages.Account;
 [ValidateAntiForgeryToken]
 public class RegisterModel : PageModel
 {
-    private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;
-    private readonly IUserStore<Infrastructures.entities.UserEntity> _userStore;
+    private readonly UserManager<UserEntity> _userManager;
+    private readonly IUserStore<UserEntity> _userStore;
     private readonly ILogger<RegisterModel> _logger;
     private readonly IResearchService _researchOrganismService;
-    private readonly SignInManager<Infrastructures.entities.UserEntity> _signInManager;
-    private readonly IUserEmailStore<Infrastructures.entities.UserEntity> _emailStore;
+    private readonly IUserEmailStore<UserEntity> _emailStore;
     private readonly IMyEmailSender _emailSender;
     private readonly IPictureRepository _pictureRepository;
 
     public RegisterModel(
-        UserManager<Infrastructures.entities.UserEntity> userManager,
-        IUserStore<Infrastructures.entities.UserEntity> userStore,
+        UserManager<UserEntity> userManager,
+        IUserStore<UserEntity> userStore,
         ILogger<RegisterModel> logger,
         IResearchService researchOrganismService,
-        SignInManager<Infrastructures.entities.UserEntity> signInManager,
         IMyEmailSender emailSender,
         IPictureRepository pictureRepository)
     {
@@ -41,7 +40,6 @@ public class RegisterModel : PageModel
         _logger = logger;
         _emailStore = GetEmailStore();
         _researchOrganismService = researchOrganismService;
-        _signInManager = signInManager;
         _emailSender = emailSender;
         _pictureRepository = pictureRepository;
     }
@@ -56,103 +54,153 @@ public class RegisterModel : PageModel
 
     public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
-        returnUrl ??= Url.Content("~/");
-        ReturnUrl = returnUrl;
+        InitializePage(returnUrl);
         LoadOrganismes();
-
-        if (Input.DateNaissance > DateOnly.FromDateTime(DateTime.Today).AddYears(-18))
-        {
-            ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans pour vous inscrire.");
-        }
-        
-        if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
-        {
-            ModelState.AddModelError("Input.SelectedAvatar", "Veuillez sélectionner ou uploader un avatar.");
-        }
+        ValidateInputs();
 
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        var existingUser = await _userManager.FindByEmailAsync(Input.Email);
-        if (existingUser != null)
+        if (await EmailAlreadyExistsAsync())
         {
-            ModelState.AddModelError("Input.Email", "Cette adresse e-mail est déjà utilisée.");
             return Page();
         }
+        var user = await BuildUserAsync();
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        var creationResult = await _userManager.CreateAsync(user, Input.Password);
 
+        if (!creationResult.Succeeded)
+        {
+            HandleCreationErrors(creationResult.Errors);
+            return Page();
+        }
+        await FinalizeUserRegistrationAsync(user);
+        return RedirectToPage("/Account/RegisterSuccess", new { email = Input.Email });
+    }
+
+    private void InitializePage(string? returnUrl)
+    {
+        ReturnUrl = returnUrl ?? Url.Content("~/");
+    }
+
+    private void ValidateInputs()
+    {
+        CheckInputs();
+    }
+
+    private async Task<bool> EmailAlreadyExistsAsync()
+    {
+        var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+        if (existingUser is null)
+        {
+            return false;
+        }
+        ModelState.AddModelError("Input.Email", "Cette adresse e-mail est déjà utilisée.");
+        return true;
+    }
+
+    private async Task<UserEntity> BuildUserAsync()
+    {
         var user = CreateUser();
-
         await _userStore.SetUserNameAsync(user, Input.Nom, CancellationToken.None);
-        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
+        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         user.DateOfBirth = Input.DateNaissance;
         user.ResearchOrganismId = Input.ResearchOrganism;
+        AssignAvatar(user);
 
+        return user;
+    }
+
+    private void AssignAvatar(UserEntity user)
+    {
         if (Input.Avatar is not null)
         {
-            var filename = _pictureRepository.Save(Input.Avatar.FileName, Input.Avatar.OpenReadStream(), "avatars");
+            var filename = _pictureRepository.Save(
+                Input.Avatar.FileName,
+                Input.Avatar.OpenReadStream(),
+                "avatars");
+
             user.Avatar = filename;
-        }
-        else if (!string.IsNullOrWhiteSpace(Input.SelectedAvatar))
-        {
-            var allowedAvatars = new[]
-            {
-                "1.png",
-                "2.png",
-                "3.png",
-                "4.png"
-            };
-
-            if (!allowedAvatars.Contains(Input.SelectedAvatar))
-            {
-                ModelState.AddModelError("Input.SelectedAvatar", "Avatar invalide.");
-                return Page();
-            }
-
-            user.Avatar = Input.SelectedAvatar;
+            return;
         }
 
-        var result = await _userManager.CreateAsync(user, Input.Password);
-        if (result.Succeeded)
+        if (string.IsNullOrWhiteSpace(Input.SelectedAvatar))
         {
-            await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
-            await _userManager.AddToRoleAsync(user, AppRoles.Research);
+            return;
+        }
 
-            _logger.LogInformation("Nouvel utilisateur créé : {Email}", Input.Email);
+        if (!IsValidAvatar(Input.SelectedAvatar))
+        {
+            ModelState.AddModelError(
+                "Input.SelectedAvatar",
+                "Avatar invalide.");
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-            _logger.LogInformation("Token de l'utilisateur {}", token);
-            _logger.LogInformation("Token encodé de l'utilisateur {}", encodedToken);
+            return;
+        }
 
-            var confirmationLink = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId = user.Id, token = encodedToken },
-                protocol: Request.Scheme
-            );
+        user.Avatar = Input.SelectedAvatar;
+    }
 
-            await _emailSender.SendEmailAsync(
-                Input.Email,
-                "Confirme ton compte BioDomes",
-                $@"
+    private bool IsValidAvatar(string selectedAvatar)
+    {
+        var allowedAvatars = new[]
+        {
+            "1.png",
+            "2.png",
+            "3.png",
+            "4.png"
+        };
+
+        return allowedAvatars.Contains(selectedAvatar);
+    }
+
+    private async Task FinalizeUserRegistrationAsync(UserEntity user)
+    {
+        await _userManager.AddClaimAsync(user, new Claim("Avatar", user.Avatar ?? "1.png"));
+        await _userManager.AddToRoleAsync(user, AppRoles.Research);
+        _logger.LogInformation("Nouvel utilisateur créé : {Email}", Input.Email);
+
+        await SendConfirmationEmailAsync(user);
+    }
+
+    private async Task SendConfirmationEmailAsync(UserEntity user)
+    {
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+        _logger.LogInformation("Token encodé de l'utilisateur {Token}", encodedToken);
+
+        var confirmationLink = Url.Page("/Account/ConfirmEmail", pageHandler: null,
+            values: new
+            {
+                userId = user.Id,
+                token = encodedToken
+            },
+            protocol: Request.Scheme);
+
+        await _emailSender.SendEmailAsync(
+            Input.Email,
+            "Confirme ton compte BioDomes",
+            $@"
 <h2>Bienvenue {Input.Nom}</h2>
 <p>Clique sur le lien pour activer ton compte :</p>
 <a href='{confirmationLink}'>Confirmer mon compte</a>
 ");
+    }
 
-            return RedirectToPage("/Account/RegisterSuccess", new { email = Input.Email });
-        }
-
-        foreach (var error in result.Errors)
+    private void HandleCreationErrors(IEnumerable<IdentityError> errors)
+    {
+        foreach (var error in errors)
         {
             _logger.LogError(error.Description);
+
             ModelState.AddModelError(string.Empty, "Une erreur s'est produite");
         }
-
-        return Page();
     }
 
     [BindProperty] public InputModel Input { get; set; }
@@ -195,17 +243,17 @@ public class RegisterModel : PageModel
 
         [Required(ErrorMessage = "Veuillez choisir un organisme de recherche.")]
         [Display(Name = "Organisme de recherche")]
-        public required string  ResearchOrganism { get; set; }
+        public required string ResearchOrganism { get; set; }
     }
 
-    private IUserEmailStore<Infrastructures.entities.UserEntity> GetEmailStore()
+    private IUserEmailStore<UserEntity> GetEmailStore()
     {
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
 
-        return (IUserEmailStore<Infrastructures.entities.UserEntity>)_userStore;
+        return (IUserEmailStore<UserEntity>)_userStore;
     }
 
     private void LoadOrganismes()
@@ -213,16 +261,30 @@ public class RegisterModel : PageModel
         Organismes = _researchOrganismService.GetAllOrganisms();
     }
 
-    private Infrastructures.entities.UserEntity CreateUser()
+    private UserEntity? CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<Infrastructures.entities.UserEntity>();
+            return Activator.CreateInstance<UserEntity>();
         }
         catch
         {
-            throw new InvalidOperationException(
-                $"Can't create an instance of '{nameof(IdentityUser)}'. Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively override the register page.");
+            ModelState.AddModelError("", "Une erreur s'est produite");
+        }
+
+        return null;
+    }
+
+    private void CheckInputs()
+    {
+        if (Input.DateNaissance > DateOnly.FromDateTime(DateTime.Today).AddYears(-18))
+        {
+            ModelState.AddModelError("Input.DateNaissance", "Vous devez avoir au moins 18 ans pour vous inscrire.");
+        }
+
+        if (Input.Avatar is null && string.IsNullOrWhiteSpace(Input.SelectedAvatar))
+        {
+            ModelState.AddModelError("Input.SelectedAvatar", "Veuillez sélectionner ou uploader un avatar.");
         }
     }
 }

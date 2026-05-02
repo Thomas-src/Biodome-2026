@@ -4,7 +4,4 @@ namespace BioDomes.Web.Pages.Account;
 
 public class RegisterSuccessModel : PageModel
 {
-    public void OnGet()
-    {
-    }
 }

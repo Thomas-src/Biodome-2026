@@ -45,16 +45,14 @@ public class DeleteEquipementModel : PageModel
         }
 
         var biodomesHasSpecies = _biodomesService.HasEquipement(slug, ownerName);
-        if (biodomesHasSpecies.Count == 0)
+        if (biodomesHasSpecies.Count > 0)
         {
-            _service.Delete(slug, ownerName);
-            TempData["SuccessMessage"] = "Équipement supprimé avec succès";
-            return RedirectToPage("/Admin/Equipements");
+            TempData["ErrorMessage"] = "L'équipement est utilisé dans au moins un biodome, il est donc impossible de le supprimer";
+            return RedirectToPage("/Admin/species");
         }
-        else
-        {
-        }
-
-        return Page();
+        _service.Delete(slug, ownerName);
+        TempData["SuccessMessage"] = "Équipement supprimé avec succès";
+        return RedirectToPage("/Admin/Equipements");
+      
     }
 }

@@ -23,11 +23,9 @@ public class ConfirmEmailModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(string userId, string token)
     {
-        _logger.LogInformation($"ConfirmEmail - UserId: {userId}, token: {token}");
-
         if (userId == null || token == null)
         {
-            _logger.LogInformation("All null");
+            _logger.LogInformation("User or token null");
             return RedirectToPage("/Index");
         }
 
@@ -38,15 +36,10 @@ public class ConfirmEmailModel : PageModel
             StatusMessage = "Utilisateur introuvable.";
             return Page();
         }
-
         var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
         var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
         IsSuccess = result.Succeeded;
-        StatusMessage = result.Succeeded
-            ? "Votre adresse e-mail a été confirmée avec succès."
-            : "Une erreur est survenue lors de la confirmation de votre e-mail.";
-
+        StatusMessage = result.Succeeded ? "Votre adresse e-mail a été confirmée avec succès." : "Une erreur est survenue lors de la confirmation de votre e-mail.";
         return Page();
     }
 }

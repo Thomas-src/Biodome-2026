@@ -49,34 +49,23 @@ public class LoginModel(
         {
             return Page();
         }
-
-        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername) ??
-                   await signInManager.UserManager.FindByNameAsync(EmailOrUsername);
+        var user = await signInManager.UserManager.FindByEmailAsync(EmailOrUsername) ?? await signInManager.UserManager.FindByNameAsync(EmailOrUsername);
 
         if (user == null)
         {
             ModelState.AddModelError(string.Empty, "Identifiants incorrects.");
             return Page();
         }
-
-        var result = await signInManager.PasswordSignInAsync(
-            user.UserName,
-            Password,
-            RememberMe,
-            lockoutOnFailure: false
-        );
+        var result = await signInManager.PasswordSignInAsync(user.UserName, Password, RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
         {
             return LocalRedirect(returnUrl);
         }
-
-
         if (result.IsLockedOut)
         {
             return RedirectToPage("./Lockout");
         }
-
 
         ModelState.AddModelError(string.Empty, "Tentative de connexion invalide.");
         return Page();

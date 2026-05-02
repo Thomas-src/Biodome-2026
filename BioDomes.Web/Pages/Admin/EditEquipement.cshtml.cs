@@ -22,9 +22,7 @@ public class EditEquipementModel : PageModel
 
     [BindProperty(SupportsGet = true)] public string Slug { get; set; }
 
-    public EditEquipementModel(
-        IEquipementService equipementService,
-        IBiodomeService biodomeService,
+    public EditEquipementModel(IEquipementService equipementService, IBiodomeService biodomeService,
         ILogger<EditEquipementModel> logger)
     {
         _equipementService = equipementService;
@@ -65,71 +63,108 @@ public class EditEquipementModel : PageModel
     {
         LoadSelects();
 
-        _logger.LogInformation("{} confirmed", confirm);
         if (!ModelState.IsValid)
         {
-            foreach (var state in ModelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    _logger.LogWarning(
-                        "ModelState error on {Field}: {Error}",
-                        state.Key,
-                        error.ErrorMessage
-                    );
-                }
-            }
+            LogModelStateErrors();
             return Page();
         }
 
+        var existing = GetExistingEquipement();
 
-        var existing = _equipementService.GetByKebabCase(Slug, Equipement.OwnerName);
-        if (existing == null)
+        if (existing is null)
         {
-            _logger.LogInformation("{} not found for user {}", Slug, Equipement.OwnerName);
             return NotFound();
         }
 
+        if (!TryParseEnums(out var consumption, out var production))
+        {
+            return Page();
+        }
 
-        if (!Enum.TryParse<Consumptions>(Equipement.Consumption, out var consumption))
+        if (RequiresConfirmation(existing, consumption, production, confirm))
+        {
+            return Page();
+        }
+
+        UpdateEquipement(existing, consumption, production);
+
+        TempData["SuccessMessage"] = "Équipement modifié avec succès";
+
+        return RedirectToPage("Equipements");
+    }
+
+    private void LogModelStateErrors()
+    {
+        foreach (var state in ModelState)
+        {
+            foreach (var error in state.Value.Errors)
+            {
+                _logger.LogWarning("ModelState error on {Field}: {Error}", state.Key, error.ErrorMessage);
+            }
+        }
+    }
+
+    private Equipement? GetExistingEquipement()
+    {
+        var existing = _equipementService.GetByKebabCase(Slug, Equipement.OwnerName);
+
+        if (existing is null)
+        {
+            _logger.LogInformation("{Slug} not found for user {Owner}", Slug, Equipement.OwnerName);
+        }
+
+        return existing;
+    }
+
+    private bool TryParseEnums(out Consumptions consumption, out Production production)
+    {
+        var isConsumptionValid = Enum.TryParse(Equipement.Consumption, out consumption);
+
+        if (!isConsumptionValid)
         {
             ModelState.AddModelError("Equipement.Consumption", "Consommation invalide");
-            return Page();
         }
 
-        if (!Enum.TryParse<Production>(Equipement.Production, out var production))
+        var isProductionValid = Enum.TryParse(Equipement.Production, out production);
+
+        if (!isProductionValid)
         {
             ModelState.AddModelError("Equipement.Production", "Production invalide");
-            return Page();
         }
 
+        return isConsumptionValid && isProductionValid;
+    }
+
+    private bool RequiresConfirmation(Equipement existing, Consumptions consumption, Production production, string confirm)
+    {
         var consumptionChanged = existing.Consumption != consumption;
+
         var productionChanged = existing.Production != production;
+
         var isConfirm = confirm.Equals("true");
 
-        if ((consumptionChanged || productionChanged) && !isConfirm)
+        if ((!consumptionChanged && !productionChanged) || isConfirm)
         {
-            var impacted = _biodomeService.HasEquipement(Slug, existing.OwnerName).Count;
-            ViewData["WarningMessage"] =
-                $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?";
-            return Page();
+            return false;
         }
 
+        var impacted = _biodomeService.HasEquipement(Slug, existing.OwnerName).Count;
+        ViewData["WarningMessage"] = $"Attention : cette modification impactera {impacted} biodôme{(impacted > 1 ? "s" : "")}. Confirmez-vous ?";
+
+        return true;
+    }
+
+    private void UpdateEquipement(Equipement existing, Consumptions consumption, Production production)
+    {
         var updated = new Equipement(
             existing.Name,
             consumption,
             production,
             Equipement.Avatar?.FileName ?? existing.Avatar,
             existing.Visibility,
-            existing.OwnerName
-        );
-
+            existing.OwnerName);
         var stream = Equipement.Avatar?.OpenReadStream();
-
         _equipementService.Update(existing, updated, stream);
-
-        TempData["SuccessMessage"] = "Équipement modifié avec succès";
-        return RedirectToPage("Equipements");
     }
 
     public class InputModel
@@ -143,12 +178,10 @@ public class EditEquipementModel : PageModel
         [Required(ErrorMessage = "La production est obligatoire")]
         public required string Production { get; set; }
 
-        [IsImageValid]
-        public IFormFile? Avatar { get; set; }
+        [IsImageValid] public IFormFile? Avatar { get; set; }
         public bool Confirmed { get; set; }
         public string? CurrentAvatarPath { get; set; }
-        
-        [BindProperty(SupportsGet = true)]
-        public required string OwnerName { get; set; }
+
+        [BindProperty(SupportsGet = true)] public required string OwnerName { get; set; }
     }
 }

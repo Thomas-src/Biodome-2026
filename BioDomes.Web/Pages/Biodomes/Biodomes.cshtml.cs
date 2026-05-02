@@ -43,9 +43,7 @@ public class Biodomes : PageModel
 
     [BindProperty(SupportsGet = true)]
     public string? SearchEspece { get; set; }
-
     
-
     public void OnGet()
     {
         try

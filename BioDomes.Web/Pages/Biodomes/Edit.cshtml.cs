@@ -51,6 +51,11 @@ public class Edit : PageModel
         {
             return NotFound();
         }
+
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
         Biodome = biodome;
         // TODO refactor ca dans le service + ajouter un bouton delete
         var fileName = Biome.Avatar != null ? Biome.Avatar.FileName : Biodome.Image;
