@@ -1,6 +1,7 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Repository;
+using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using Microsoft.EntityFrameworkCore;
@@ -30,35 +31,42 @@ public class BiodomeRepository : IBiodomeRepository
 
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {
-        return _context.Biodomes
-            .Select(b => new Biodome(
-                b.idBiodomes,
-                b.Name,
-                b.Temperature,
-                b.Humidity,
-                b.Avatar,
-                b.BiodomeSpecies.Select(bs => new Species(
-                    bs.Species.Name,
-                    bs.Species.Size,
-                    bs.Species.Weight,
-                    Enum.Parse<DietType>(bs.Species.Regim.Name),
-                    Enum.Parse<SpeciesClassification>(bs.Species.TypeEntity.Name),
-                    bs.Species.Avatar,
-                    bs.Species.Visible,
-                    bs.Species.User != null ? bs.Species.User.UserName : "unknown",
-                    bs.Quantity
-                )).ToList(),
-                b.Equipment.Select(e => new Equipement(
-                    e.Name,
-                    e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
-                    e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
-                    e.Avatar,
-                    e.Visible,
-                    e.User != null ? e.User.UserName : "unknown"
-                )).ToList(),
-                b.user.UserName
-            ))
-            .ToList();
+        try
+        {
+            return _context.Biodomes
+                .Select(b => new Biodome(
+                    b.idBiodomes,
+                    b.Name,
+                    b.Temperature,
+                    b.Humidity,
+                    b.Avatar,
+                    b.BiodomeSpecies.Select(bs => new Species(
+                        bs.Species.Name,
+                        bs.Species.Size,
+                        bs.Species.Weight,
+                        Enum.Parse<DietType>(bs.Species.Regim.Name),
+                        Enum.Parse<SpeciesClassification>(bs.Species.TypeEntity.Name),
+                        bs.Species.Avatar,
+                        bs.Species.Visible,
+                        bs.Species.User != null ? bs.Species.User.UserName : "unknown",
+                        bs.Quantity
+                    )).ToList(),
+                    b.Equipment.Select(e => new Equipement(
+                        e.Name,
+                        e.Consumption != null ? Enum.Parse<Consumptions>(e.Consumption.Name) : Consumptions.None,
+                        e.Production != null ? Enum.Parse<Production>(e.Production.Name) : Production.Lumière,
+                        e.Avatar,
+                        e.Visible,
+                        e.User != null ? e.User.UserName : "unknown"
+                    )).ToList(),
+                    b.user.UserName
+                ))
+                .ToList();
+        }
+        catch (Exception e)
+        {
+            throw new ReadBiodomesException("Lecture impossible des biodomes en base de données !");
+        }
     }
 
     public void Create(Biodome biodome)
@@ -66,7 +74,7 @@ public class BiodomeRepository : IBiodomeRepository
         var u = _context.Users.FirstOrDefault(u => u.UserName == biodome.CreatorName);
         if (u == null)
         {
-            throw new ArgumentException("Plusieurs utilisateurs possedent le meme username");
+            throw new ReadUserException("Plusieurs utilisateurs possedent le meme username");
         }
 
         string userId = u.Id;
@@ -79,8 +87,18 @@ public class BiodomeRepository : IBiodomeRepository
             Avatar = biodome.Image,
             userId = userId
         };
+
+        try
+        {
         _context.Biodomes.Add(entity);
         _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new WriteBiodomeException("Impossible d'ajouter le biodome en base de donnée !");
+        }
+        
+
     }
 
     public void Update(Biodome biodome)

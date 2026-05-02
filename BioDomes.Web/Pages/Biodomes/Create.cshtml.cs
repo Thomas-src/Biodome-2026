@@ -36,14 +36,6 @@ public class Create : PageModel
             return Page();
         }
 
-        double humiditeMax = _service.CalculateHumiditeMax(Biome.temperature.Value);
-
-        if (Biome.humidite.Value > humiditeMax)
-        {
-            ModelState.AddModelError("Biome.humidite", $"Un biome avec une température de {Biome.temperature.Value}° peut avoir une humidité max de {humiditeMax} g/m³");
-            return Page();
-        }
-
         Biodome created = new Biodome(
             -1,
             Biome.Name,
@@ -54,8 +46,18 @@ public class Create : PageModel
             new List<Equipement>(),
             User.Identity.Name
             );
-        
+
+        try
+        {
         _service.Save(created, Biome.Avatar.OpenReadStream());
+
+        }
+        catch (ArgumentException e)
+        {
+            ModelState.AddModelError("Biome.humidite", e.Message);
+            return Page();
+        }
+        
 
         TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
         return RedirectToPage("Biodomes");

@@ -48,15 +48,23 @@ public class Biodomes : PageModel
 
     public void OnGet()
     {
-        AllBiodomes = _service.GetAllBiodomes();
+        try
+        {
+            AllBiodomes = _service.GetAllBiodomes();
 
-        AllBiodomes = _service.SearchBiodomes(
-            SearchTemperatureMin,
-            SearchTemperatureMax,
-            SearchHumiditeMin,
-            SearchHumiditeMax,
-            SearchEquipement,
-            SearchEspece
-        );
+            AllBiodomes = _service.SearchBiodomes(
+                SearchTemperatureMin,
+                SearchTemperatureMax,
+                SearchHumiditeMin,
+                SearchHumiditeMax,
+                SearchEquipement,
+                SearchEspece
+            );
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError(string.Empty, e.Message);
+        }
+
     }
 }
