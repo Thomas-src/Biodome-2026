@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Admin;
 
+[ValidateAntiForgeryToken]
 public class EditEquipementModel : PageModel
 {
     private readonly IEquipementService _equipementService;

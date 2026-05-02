@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Web.Pages.Biodomes;
-
+[ValidateAntiForgeryToken]
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Create : PageModel
 {

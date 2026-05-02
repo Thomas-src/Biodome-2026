@@ -40,8 +40,9 @@
                         Annuler
                     </a>
                     <form method="post" asp-page-handler="Delete">
-                        <input type="hidden" name="slug" value="@Model.Equipement.Name" />
-                        <input type="hidden" name="ownerName" value="@Model.Equipement.OwnerName" />
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="slug" value="@Model.Equipement.Name"/>
+                        <input type="hidden" name="ownerName" value="@Model.Equipement.OwnerName"/>
                         <button type="submit" class="btn btn-danger">
                             Supprimer définitivement
                         </button>

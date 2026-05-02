@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Account;
 
+[ValidateAntiForgeryToken]
 public class LoginModel(
     SignInManager<Infrastructures.entities.UserEntity> signInManager) : PageModel
 {

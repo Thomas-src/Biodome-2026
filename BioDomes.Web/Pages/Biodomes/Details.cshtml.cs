@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Biodomes;
 
+[ValidateAntiForgeryToken]
 public class Details : PageModel
 {
     private readonly IBiodomeService _service;

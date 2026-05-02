@@ -112,6 +112,7 @@
                             {
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveSpecies" class="d-inline">
+                                        @Html.AntiForgeryToken()
                                         <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                                         <input type="hidden" name="speciesName" value="@specy.Nom"/>
                                         <button type="submit"
@@ -133,13 +134,11 @@
                 <div class="collapse mt-3" id="addSpeciesPanel">
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddSpecies">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
-                                <select name="speciesName" class="form-select form-select-sm">
-                                    @foreach (var specy in Model.AvailableSpecies)
-                                    {
-                                        <option value="@specy.Nom">@specy.Nom</option>
-                                    }
+                                <select name="speciesName" class="form-select form-select-sm"
+                                        asp-items="@(new SelectList(Model.AvailableSpecies))">
                                 </select>
                                 <input type="number" name="quantity" value="1" min="1"
                                        class="form-control form-control-sm" style="width: 70px;"/>
@@ -190,6 +189,7 @@
                             {
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveEquipement" class="d-inline">
+                                        @Html.AntiForgeryToken()
                                         <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                                         <input type="hidden" name="equipementName" value="@equipement.Name"/>
                                         <button type="submit"
@@ -211,6 +211,7 @@
                 <div class="collapse mt-3" id="addEquipementPanel">
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddEquipement">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="equipementName" class="form-select form-select-sm">

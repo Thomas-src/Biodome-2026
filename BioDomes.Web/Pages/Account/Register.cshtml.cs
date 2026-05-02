@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace BioDomes.Web.Pages.Account;
 
+[ValidateAntiForgeryToken]
 public class RegisterModel : PageModel
 {
     private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;

@@ -1,10 +1,10 @@
-﻿using BioDomes.Domains.Services;
-using BioDomes.Domains.Services.interfaces;
+﻿using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Admin;
 
+[ValidateAntiForgeryToken]
 public class DeleteEquipementModel : PageModel
 {
     private readonly IEquipementService _service;
@@ -36,6 +36,7 @@ public class DeleteEquipementModel : PageModel
         return Page();
     }
 
+    
     public IActionResult OnPostDelete(string slug, string ownerName)
     {
         if (string.IsNullOrEmpty(slug))

@@ -35,7 +35,7 @@
     else
     {
         <form method="post" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
-
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <p class="text-muted text-center small mb-1">

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace BioDomes.Web.Pages.Equipements;
 
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
+[ValidateAntiForgeryToken]
 public class Create : PageModel
 {
     private readonly IEquipementService _service;

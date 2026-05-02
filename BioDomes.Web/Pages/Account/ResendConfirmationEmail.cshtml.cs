@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace BioDomes.Web.Pages.Account;
 
+[ValidateAntiForgeryToken]
 public class ResendConfirmationEmailModel : PageModel
 {
     private readonly UserManager<UserEntity> _userManager;

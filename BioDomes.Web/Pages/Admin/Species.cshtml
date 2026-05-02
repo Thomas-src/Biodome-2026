@@ -27,6 +27,7 @@
                                 Modifier
                             </a>
                             <form method="post" asp-page-handler="MakePublic">
+                                @Html.AntiForgeryToken()
                                 <input type="hidden" name="name" value="@espece.Nom"/>
                                 <input type="hidden" name="ownerName" value="@espece.OwnerName"/>
                                 <button type="submit" class="btn btn-sm btn-outline-success">

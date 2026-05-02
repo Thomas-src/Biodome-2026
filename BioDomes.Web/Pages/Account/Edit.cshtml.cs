@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
@@ -13,7 +14,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BioDomes.Web.Pages.Account;
 
-[Authorize]
+[Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
+[ValidateAntiForgeryToken]
 public class EditModel : PageModel
 {
     private readonly UserManager<Infrastructures.entities.UserEntity> _userManager;

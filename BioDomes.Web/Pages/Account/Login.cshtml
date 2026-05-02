@@ -1,33 +1,33 @@
-        @page
-    @model BioDomes.Web.Pages.Account.LoginModel
+@page
+@model BioDomes.Web.Pages.Account.LoginModel
 
-    @{
-        ViewData["Title"] = "Connection";
-    }
+@{
+    ViewData["Title"] = "Connection";
+}
 
-    <section class="rounded-4 m-auto p-3 w-75 bg-" style="background-color: aliceblue;">
-        <h1 class="title text-center">Authentification</h1>
-        <form method="post" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
-        
-            <div class="d-flex flex-column">
-                <label asp-for="EmailOrUsername" class="form-label">Email ou nom d'utilisateur*</label>
-                <input asp-for="EmailOrUsername" class="form-control" placeholder="Ex johndoe@gmail.com" />
-                <span asp-validation-for="EmailOrUsername" class="text-danger"></span>
-            </div>
+<section class="rounded-4 m-auto p-3 w-75 bg-" style="background-color: aliceblue;">
+    <h1 class="title text-center">Authentification</h1>
+    <form method="post" class="d-flex flex-column m-auto w-75 mt-3 gap-2">
+        @Html.AntiForgeryToken()
+        <div class="d-flex flex-column">
+            <label asp-for="EmailOrUsername" class="form-label">Email ou nom d'utilisateur*</label>
+            <input asp-for="EmailOrUsername" class="form-control" placeholder="Ex johndoe@gmail.com"/>
+            <span asp-validation-for="EmailOrUsername" class="text-danger"></span>
+        </div>
 
-            <div class="d-flex flex-column mb-1">
-                <label asp-for="Password" class="form-label">Mot de passe*</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+        <div class="d-flex flex-column mb-1">
+            <label asp-for="Password" class="form-label">Mot de passe*</label>
+            <input asp-for="Password" class="form-control"/>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
 
-            <div class="form-check">
-                <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label">Se souvenir de moi</label>
-            </div>
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
+        <div class="form-check">
+            <input asp-for="RememberMe" class="form-check-input"/>
+            <label asp-for="RememberMe" class="form-check-label">Se souvenir de moi</label>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
 
-            <a id="register" asp-page="./Register">Pas encore de compte ? Créer un compte</a>
-        </form>
-    </section>
+        <a id="register" asp-page="./Register">Pas encore de compte ? Créer un compte</a>
+    </form>
+</section>

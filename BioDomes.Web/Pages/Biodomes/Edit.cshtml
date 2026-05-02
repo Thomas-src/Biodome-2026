@@ -14,7 +14,7 @@
         <div class="col-md-4">
 
             <form method="post" enctype="multipart/form-data" asp-route-id="@Model.Biodome.Id">
-                
+                @Html.AntiForgeryToken()
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>

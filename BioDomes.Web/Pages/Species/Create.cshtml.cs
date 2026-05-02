@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BioDomes.Web.Pages.Species;
 
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
+[ValidateAntiForgeryToken]
 public class Create : PageModel
 {
     private readonly ISpeciesClassificationRepository _repositoryClassification;

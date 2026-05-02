@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace BioDomes.Web.Pages.Biodomes;
 
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
+[ValidateAntiForgeryToken]
 public class Edit : PageModel
 {
     private readonly IBiodomeService _service;
