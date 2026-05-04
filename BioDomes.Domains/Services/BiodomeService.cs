@@ -144,8 +144,29 @@ public class BiodomeService : IBiodomeService
     public void RemoveEquipementFrom(int biomeId, string equipementName) =>
         _repository.RemoveEquipementInBiome(biomeId, equipementName);
 
+    public void DeleteBiodome(int biomeId)
+    {
+        try
+        {
+        _repository.DeleteBiodome(biomeId);
+
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Impossible du supprimer le biodome !");
+        }
+    }
+
     public void Update(Biodome created)
     {
+        double humiditeMax = CalculateHumiditeMax(created.Temperature);
+
+        if (created.Humidite > humiditeMax)
+        {
+            throw new ArgumentException(
+                $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
+        }
+        
         var old = GetBiodomeById(created.Id);
 
         if (old != null && !created.DeepEquals(old))
@@ -154,7 +175,6 @@ public class BiodomeService : IBiodomeService
         }
     }
 
-    // TODO CORRIGER
     public void Update(Biodome created, string fileName, Stream openReadStream)
     {
         double humiditeMax = CalculateHumiditeMax(created.Temperature);

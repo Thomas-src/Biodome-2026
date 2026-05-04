@@ -54,6 +54,7 @@ public class Edit : PageModel
 
         if (!ModelState.IsValid)
         {
+            Biodome = biodome;
             return Page();
         }
         Biodome = biodome;
@@ -85,9 +86,10 @@ public class Edit : PageModel
         catch (ArgumentException e)
         {
             ModelState.AddModelError("Biome.humidite", e.Message);
+            return Page();
         }
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
-        return RedirectToPage("/Biodomes/Details", new { id = Biodome.Id });
+        return RedirectToPage("/biodomes/details", new { id = Biodome.Id });
     }
 
     public class InputModel
