@@ -18,12 +18,12 @@ public class Biodomes : PageModel
         _service = service;
     }
 
-    public IReadOnlyList<Biodome> _allbiodomes;
+    public IReadOnlyList<Biodome> Allbiodomes;
 
     public IReadOnlyList<Biodome> AllBiodomes
     {
-        get { return _allbiodomes; }
-        set { _allbiodomes = value; }
+        get => Allbiodomes;
+        set => Allbiodomes = value;
     }
     
     [BindProperty(SupportsGet = true)]

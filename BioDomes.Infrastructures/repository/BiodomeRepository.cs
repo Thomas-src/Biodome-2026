@@ -90,15 +90,13 @@ public class BiodomeRepository : IBiodomeRepository
 
         try
         {
-        _context.Biodomes.Add(entity);
-        _context.SaveChanges();
+            _context.Biodomes.Add(entity);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new WriteBiodomeException("Impossible d'ajouter le biodome en base de donnée !");
         }
-        
-
     }
 
     public void Update(Biodome biodome)
@@ -118,9 +116,8 @@ public class BiodomeRepository : IBiodomeRepository
 
         _context.SaveChanges();
     }
-    
 
-  
+
     public void AddSpeciesInBiome(int biomeId, string speciesName, int quantity)
     {
         var specy = _context.Species.FirstOrDefault(s => s.Name == speciesName);
@@ -133,16 +130,21 @@ public class BiodomeRepository : IBiodomeRepository
 
         if (existing == null)
         {
-                    var newEntry = new BiodomeSpeciesEntity
-                    {
-                        BiodomeId = biomeId,
-                        SpeciesId = specy.IdSpecies,
-                        Quantity = quantity
-                    };
-            
-                    _context.BiodomeSpecies.Add(newEntry);
-                    _context.SaveChanges();
+            var newEntry = new BiodomeSpeciesEntity
+            {
+                BiodomeId = biomeId,
+                SpeciesId = specy.IdSpecies,
+                Quantity = quantity
+            };
+
+            _context.BiodomeSpecies.Add(newEntry);
         }
+        else
+        {
+            existing.Quantity += quantity;
+        }
+
+        _context.SaveChanges();
     }
 
     public void AddEquipementInBiome(int biomeId, string equipementName)
@@ -192,13 +194,12 @@ public class BiodomeRepository : IBiodomeRepository
 
         try
         {
-        _context.Biodomes.Remove(biodome);
-        _context.SaveChanges();
+            _context.Biodomes.Remove(biodome);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new DeleteBiodomeException("Impossible de supprimer le biodome !", e);
         }
-
     }
 }
