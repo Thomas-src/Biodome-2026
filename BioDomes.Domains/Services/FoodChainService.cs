@@ -5,7 +5,7 @@ namespace BioDomes.Domains.Services;
 
 
 /**
- * Générée par ia (claude)
+ * Générée par ia (claude), service pour la création de graphiques
  */
 public class FoodChainService : IFoodChainService
 {

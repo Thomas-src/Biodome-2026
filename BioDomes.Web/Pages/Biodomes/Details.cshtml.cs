@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace BioDomes.Web.Pages.Biodomes;
 
 [ValidateAntiForgeryToken]
-public class Details : PageModel
+public class DetailsModel : PageModel
 {
     private readonly IBiodomeService _service;
     private readonly IEquipementRepository _equipementRepository;
@@ -18,7 +18,9 @@ public class Details : PageModel
 
     public bool Owner { get; set; } = false;
     public IReadOnlyList<Domains.Core.Species> AvailableSpecies { get; set; } = new List<Domains.Core.Species>();
-    public IReadOnlyList<Domains.Core.Equipements.Equipement> AvailableEquipements { get; set; } = new List<Domains.Core.Equipements.Equipement>();
+
+    public IReadOnlyList<Domains.Core.Equipements.Equipement> AvailableEquipements { get; set; } =
+        new List<Domains.Core.Equipements.Equipement>();
 
     // chart 1
     public List<string> ClassificationLabels { get; set; } = [];
@@ -33,7 +35,7 @@ public class Details : PageModel
     // chart 3
     public FoodChain FoodChain { get; set; } = new();
 
-    public Details(IBiodomeService service, ISpeciesRepository speciesRepository,
+    public DetailsModel(IBiodomeService service, ISpeciesRepository speciesRepository,
         IEquipementRepository equipementRepository, IStatsService statsService)
     {
         _service = service;
@@ -59,35 +61,34 @@ public class Details : PageModel
 
     private void LoadStats()
     {
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity.IsAuthenticated && Biodome.CreatorName == User.Identity.Name)
         {
-            if (Biodome.CreatorName == User.Identity.Name)
-            {
-                Owner = true;
-                AvailableEquipements = _equipementRepository.GetAllEquipements().Where(x => x.Visibility || x.OwnerName == Biodome.CreatorName).ToList();
-                AvailableSpecies = _speciesRepository.GetAllSpecies().Where(x => x.IsVisible || x.OwnerName == Biodome.CreatorName).ToList();
-                var stats = _statsService.GetBiodomeStats(Biodome);
+            Owner = true;
+            AvailableEquipements = _equipementRepository.GetAllEquipements()
+                .Where(x => x.Visibility || x.OwnerName == Biodome.CreatorName).ToList();
+            AvailableSpecies = _speciesRepository.GetAllSpecies()
+                .Where(x => x.IsVisible || x.OwnerName == Biodome.CreatorName).ToList();
+            var stats = _statsService.GetBiodomeStats(Biodome);
 
-                // chart 1
-                ClassificationLabels = stats.QuantityByClassification.Keys.ToList();
-                ClassificationCounts = stats.QuantityByClassification.Values.Select(v => v.Count).ToList();
+            // chart 1
+            ClassificationLabels = stats.QuantityByClassification.Keys.ToList();
+            ClassificationCounts = stats.QuantityByClassification.Values.Select(v => v.Count).ToList();
 
-                ClassificationTooltipData = stats.QuantityByClassification.ToDictionary(x => x.Key, x => x.Value
-                    .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
-                );
-                // chart 2 
-                RegimeLabels = stats.QuantityByRegim.Keys.ToList();
+            ClassificationTooltipData = stats.QuantityByClassification.ToDictionary(x => x.Key, x => x.Value
+                .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
+            );
+            // chart 2 
+            RegimeLabels = stats.QuantityByRegim.Keys.ToList();
 
-                RegimeCounts = stats.QuantityByRegim.Values.Select(v => v.Count).ToList();
-                RegimeTooltipData = stats.QuantityByRegim.ToDictionary(x => x.Key, x => x.Value
-                    .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
-                );
-                // chart 3
-                FoodChain = stats.Foodchain;
-            }
+            RegimeCounts = stats.QuantityByRegim.Values.Select(v => v.Count).ToList();
+            RegimeTooltipData = stats.QuantityByRegim.ToDictionary(x => x.Key, x => x.Value
+                .Select(s => new SpeciesChartDto(s.Nom, s.Quantity)).ToList()
+            );
+            // chart 3
+            FoodChain = stats.Foodchain;
         }
-
     }
+
 
     public IActionResult OnPostAddSpecies(int biomeId, string speciesName, int quantity = 1)
     {
