@@ -138,7 +138,7 @@
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="speciesName" class="form-select form-select-sm"
-                                        asp-items="@(new SelectList(Model.AvailableSpecies))">
+                                        asp-items="@(new SelectList(Model.AvailableSpecies, "Nom", "Nom"))">
                                 </select>
                                 <input type="number" name="quantity" value="1" min="1"
                                        class="form-control form-control-sm" style="width: 70px;"/>
@@ -214,11 +214,8 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
                             <div class="d-flex gap-2 align-items-center">
-                                <select name="equipementName" class="form-select form-select-sm">
-                                    @foreach (var equipement in Model.AvailableEquipements)
-                                    {
-                                        <option value="@equipement.Name">@equipement.Name</option>
-                                    }
+                                <select name="equipementName" class="form-select form-select-sm" 
+                                        asp-items="@(new SelectList(Model.AvailableEquipements, "Name", "Name"))">>
                                 </select>
                                 <button type="post" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
                             </div>

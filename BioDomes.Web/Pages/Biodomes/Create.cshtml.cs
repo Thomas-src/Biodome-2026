@@ -52,7 +52,7 @@ public class Create : PageModel
             return Page();
         }
         TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
-        return RedirectToPage("Biodomes");
+        return RedirectToPage("UserBiodomes");
     }
 
     public class InputModel
