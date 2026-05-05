@@ -17,8 +17,8 @@ public class Details : PageModel
     public Biodome Biodome { get; set; }
 
     public bool Owner { get; set; } = false;
-    public IReadOnlyList<Domains.Core.Species> AvailableSpecies { get; set; }
-    public IReadOnlyList<Domains.Core.Equipements.Equipement> AvailableEquipements { get; set; }
+    public IReadOnlyList<Domains.Core.Species> AvailableSpecies { get; set; } = new List<Domains.Core.Species>();
+    public IReadOnlyList<Domains.Core.Equipements.Equipement> AvailableEquipements { get; set; } = new List<Domains.Core.Equipements.Equipement>();
 
     // chart 1
     public List<string> ClassificationLabels { get; set; } = [];
@@ -121,4 +121,21 @@ public class Details : PageModel
         string Name,
         int Quantity
     );
+
+    public IActionResult OnPostDelete(int biomeId)
+    {
+        try
+        {
+        _service.DeleteBiodome(biomeId);
+
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", e.Message);
+            return Page();
+        }
+
+        TempData["SuccessMessage"] = $"Le biodome à bien été supprimé !";
+        return RedirectToPage("Biodomes");
+    }
 }

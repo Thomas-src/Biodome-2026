@@ -185,4 +185,20 @@ public class BiodomeRepository : IBiodomeRepository
             _context.SaveChanges();
         }
     }
+
+    public void DeleteBiodome(int biomeId)
+    {
+        var biodome = _context.Biodomes.Include(b => b.Equipment).FirstOrDefault(b => b.idBiodomes == biomeId);
+
+        try
+        {
+        _context.Biodomes.Remove(biodome);
+        _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw new DeleteBiodomeException("Impossible de supprimer le biodome !", e);
+        }
+
+    }
 }

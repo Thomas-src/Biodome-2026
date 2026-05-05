@@ -22,4 +22,5 @@ public interface IBiodomeService
     void AddEquipementTo(int biomeId, string equipementName);
     void RemoveSpeciesFrom(int biomeId, string speciesName);
     void RemoveEquipementFrom(int biomeId, string equipementName);
+    void DeleteBiodome(int biomeId);
 }

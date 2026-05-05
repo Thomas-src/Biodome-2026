@@ -31,7 +31,16 @@
                 <h2 class="mb-4">@Model.Biodome.Nom</h2>
                 @if (Model.Owner)
                 {
-                    <a href="/biodomes/edit/@Model.Biodome.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
+                    <div class="d-flex gap-3 align-items-center">
+                        <a href="/biodomes/edit/@Model.Biodome.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <form method="post" asp-page-handler="Delete">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
                 }
             </div>
 
