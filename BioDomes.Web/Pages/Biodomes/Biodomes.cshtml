@@ -14,7 +14,7 @@
     <div class="card-body">
         <form method="get">
             <div class="row g-3">
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label class="form-label">Température (°C)</label>
                     <div class="d-flex gap-2">
                         <input asp-for="SearchTemperatureMin" type="number" step="0.1"
@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label class="form-label">Humidité (%)</label>
                     <div class="d-flex gap-2">
                         <input asp-for="SearchHumiditeMin" type="number" step="0.1"
@@ -34,13 +34,13 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label asp-for="SearchEquipement" class="form-label">Équipement</label>
                     <input asp-for="SearchEquipement" type="text"
                            class="form-control" placeholder="ex: capteur CO2" />
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label asp-for="SearchEspece" class="form-label">Espèce</label>
                     <input asp-for="SearchEspece" type="text"
                            class="form-control" placeholder="ex: lion" />
@@ -61,10 +61,12 @@
 }
 else
 {
-    <div class="d-flex flex-wrap justify-content-start gap-3">
+    <div class="row g-3">
         @foreach (var biodome in Model.AllBiodomes)
         {
-            <partial name="Shared/_BiodomeCard" model="biodome" />
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <partial name="Shared/_BiodomeCard" model="biodome" />
+            </div>
         }
     </div>
 }

@@ -22,7 +22,7 @@
                 <div class="row g-3">
                     @foreach (var eq in Model.OwnEquipements)
                     {
-                        <div class="col-4 ">
+                        <div class="col-12 col-sm-6 col-md-4">
                             <div class="card shadow-sm h-100">
                                 <partial name="Shared/_EquipementCard" model="eq"/>
                             </div>
@@ -39,7 +39,7 @@
             <div class="row g-3">
                 @foreach (var eq in Model.RestEquipements)
                 {
-                    <div class="col-4">
+                    <div class="col-12 col-sm-6 col-md-4">
                         <div class="card shadow-sm h-100">
                             <partial name="Shared/_EquipementCard" model="eq"/>
                         </div>
@@ -57,7 +57,7 @@ else
             <div class="row g-3">
                 @foreach (var eq in Model.RestEquipements)
                 {
-                    <div class="col-4">
+                    <div class="col-12 col-sm-6 col-md-4">
                         <div class="card shadow-sm h-100">
                             <partial name="Shared/_EquipementCard" model="eq"/>
                         </div>

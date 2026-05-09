@@ -16,11 +16,11 @@
         <div class="row g-3 mb-4">
             @foreach (var espece in Model.SpeciesToVerify)
             {
-                <div class="col-4">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card shadow-sm h-100 border-warning">
                         <partial name="_SpeciesCard" model="espece"/>
-                        <div class="card-footer d-flex gap-2">
-                            <a class="btn btn-sm btn-outline-primary w-50"
+                        <div class="card-footer d-flex flex-column flex-md-row gap-2">
+                            <a class="btn btn-sm btn-outline-primary w-100 w-md-50"
                                asp-page="/Admin/EditSpecies"
                                asp-route-slug="@espece.Nom"
                                asp-route-ownerName="@espece.OwnerName">
@@ -30,14 +30,13 @@
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="name" value="@espece.Nom"/>
                                 <input type="hidden" name="ownerName" value="@espece.OwnerName"/>
-                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                <button type="submit" class="btn btn-sm btn-outline-success w-100">
                                     Rendre publique
                                 </button>
                             </form>
                             @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
-                                <a class="btn btn-sm btn-outline-danger w-50"
-                                   asp-page="/Admin/DeleteSpecies"
+                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50"                                  asp-page="/Admin/DeleteSpecies"
                                    asp-route-slug="@espece.Nom"
                                    asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
@@ -51,8 +50,7 @@
     }
     else
     {
-        <p class="text-muted mb-4">Aucune espèce en attente de vérification.</p>
-    }
+        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce en attente de vérification.</p>    }
 
     <h2>Espèces vérifiées @Model.SpeciesVerified.Count</h2>
 
@@ -61,11 +59,11 @@
         <div class="row g-3 mb-4">
             @foreach (var espece in Model.SpeciesVerified)
             {
-               <div class="col-4">
+               <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card shadow-sm h-100">
                         <partial name="_SpeciesCard" model="espece"/>
-                        <div class="card-footer d-flex gap-2">
-                            <a class="btn btn-sm btn-outline-primary w-50"
+                        <div class="card-footer d-flex flex-column flex-md-row gap-2">
+                            <a class="btn btn-sm btn-outline-primary w-100 w-md-50"
                                asp-page="/Admin/EditSpecies"
                                asp-route-slug="@espece.Nom"
                                asp-route-ownerName="@espece.OwnerName">
@@ -73,8 +71,7 @@
                             </a>
                             @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
-                                <a class="btn btn-sm btn-outline-danger w-50"
-                                   asp-page="/Admin/DeleteSpecies"
+                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50"                                   asp-page="/Admin/DeleteSpecies"
                                    asp-route-slug="@espece.GetSlug()"
                                    asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
@@ -88,8 +85,7 @@
     }
     else
     {
-        <p class="text-muted mb-4">Aucune espèce vérifiée.</p>
-    }
+        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce vérifiée.</p>    }
 </div>
 
 
