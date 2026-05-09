@@ -33,7 +33,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             ResearchOrganismId = "1",
             Avatar = "3.png"
         };
-        admin.PasswordHash = ph.HashPassword(admin, "Test1234$"); // todo mettre mdp, email et nom dans la config
+        admin.PasswordHash = ph.HashPassword(admin, "Test1234$");
         
         var research = new UserEntity()
         {
@@ -46,8 +46,22 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             ResearchOrganismId = "1",
             Avatar = "1.png"
         };
-        admin.PasswordHash = ph.HashPassword(research, "Test1234$"); // todo mettre mdp, email et nom dans la config
+        admin.PasswordHash = ph.HashPassword(research, "Test1234$");
 
+        var research2 = new UserEntity()
+        {
+            Id = "3",
+            Email = "research@helmo.be",
+            EmailConfirmed = true, 
+            UserName = "Chercheur 2",
+            NormalizedUserName = "Chercheur 2".ToUpper(),
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,12,01)),
+            ResearchOrganismId = "3",
+            Avatar = "4.png"
+        };
+        research2.PasswordHash = ph.HashPassword(admin, "Helmo1234$");
+
+        
         builder.HasData(admin,research);
     }
 
