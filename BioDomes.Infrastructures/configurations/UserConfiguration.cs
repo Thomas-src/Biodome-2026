@@ -17,6 +17,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
     }
     public static readonly string AdminId =  "1";
     public static readonly string ResearchId =  "2";
+    public static readonly string Research2Id =  "3";
 
     private void SeedUsers(EntityTypeBuilder<UserEntity> builder)
     {
@@ -29,40 +30,40 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             EmailConfirmed = true, 
             UserName = "Admin",
             NormalizedUserName = "Admin".ToUpper(),
-            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,11,1)),
             ResearchOrganismId = "1",
             Avatar = "3.png"
         };
         admin.PasswordHash = ph.HashPassword(admin, "Test1234$");
         
-        var research = new UserEntity()
+        var chercheurUliege = new UserEntity()
         {
             Id = ResearchId,
-            Email = "research@company.com",
+            Email = "research@ulg.be",
             EmailConfirmed = true, 
-            UserName = "Chercheur",
-            NormalizedUserName = "Chercheur".ToUpper(),
-            DateOfBirth = DateOnly.FromDateTime(new DateTime(2000,1,1)),
+            UserName = "Chercheur Liège",
+            NormalizedUserName = "Chercheur Liege".ToUpper(),
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2002,03,12)),
             ResearchOrganismId = "1",
             Avatar = "1.png"
         };
-        admin.PasswordHash = ph.HashPassword(research, "Test1234$");
+        chercheurUliege.PasswordHash = ph.HashPassword(chercheurUliege, "Liege1234$");
 
-        var research2 = new UserEntity()
+        var chercheurHelmo = new UserEntity()
         {
-            Id = "3",
+            Id = Research2Id,
             Email = "research@helmo.be",
             EmailConfirmed = true, 
-            UserName = "Chercheur 2",
-            NormalizedUserName = "Chercheur 2".ToUpper(),
-            DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,12,01)),
+            UserName = "Chercheur Helmo",
+            NormalizedUserName = "Chercheur Helmo".ToUpper(),
+            DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,12,21)),
             ResearchOrganismId = "3",
             Avatar = "4.png"
         };
-        research2.PasswordHash = ph.HashPassword(admin, "Helmo1234$");
+        chercheurHelmo.PasswordHash = ph.HashPassword(chercheurHelmo, "Helmo1234$");
 
         
-        builder.HasData(admin,research);
+        builder.HasData(admin,chercheurUliege,chercheurHelmo);
     }
 
 }

@@ -373,6 +373,25 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             new BiodomeSpeciesEntity { BiodomeId = 2, SpeciesId = 9, Quantity = 10 }
         );
         
+        modelBuilder.Entity<BiodomeHistoryEntity>().HasData(
+            new BiodomeHistoryEntity
+            {
+                Id = 1,
+                BiodomeId = 2,
+                SpeciesId = 10,
+                Delta = 3,
+                UpdateAt = new DateTime(2026, 5, 10, 12, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 2,
+                BiodomeId = 2,
+                SpeciesId = 9,
+                Delta = 10,
+                UpdateAt = new DateTime(2026, 5, 10, 12, 0, 0, DateTimeKind.Utc)
+            }
+        );
+        
         // Prodution pour équipements 
         modelBuilder.Entity<ProductionEntity>().HasData(
         new ProductionEntity
@@ -436,6 +455,11 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             new IdentityUserRole<string>
             {
                 UserId = UserConfiguration.ResearchId,
+                RoleId = IdentityRoleConfiguration.ResearchID
+            },
+            new IdentityUserRole<string>
+            {
+                UserId = UserConfiguration.Research2Id,
                 RoleId = IdentityRoleConfiguration.ResearchID
             }
         );

@@ -1,14 +1,14 @@
 ﻿using BioDomes.Domains.Core;
 using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
-using BioDomes.Domains.Services;
+using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.Repository;
 
 namespace BioDomes.Infrastructures.repository;
 
-public class BiodomeHistoryRepository(BioDomesDbContext context,SpeciesService speciesService, BiodomeRepository biodomeRepository) : IBiodomeHistoryRepository
+public class BiodomeHistoryRepository(BioDomesDbContext context,ISpeciesService speciesService) : IBiodomeHistoryRepository
 {
     public void Save(int biodomeId, int speciesId, int quantity)
     {
