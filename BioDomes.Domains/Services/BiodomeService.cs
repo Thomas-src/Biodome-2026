@@ -129,26 +129,26 @@ public class BiodomeService : IBiodomeService
 
     private double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
 
-    public Biodome? GetBiodomeById(int biodomeId) => _repository.GetAllBiodomes().FirstOrDefault(b => b.Id == biodomeId);
+    public Biodome? GetBiodomeBySlug(string biodomeSlug) => _repository.FindBiodome(biodomeSlug);
 
 
-    public void AddSpeciesTo(int biomeId, string speciesName, int quantity) =>
-        _repository.AddSpeciesInBiome(biomeId, speciesName, quantity);
+    public void AddSpeciesTo(string biodomeSlug, string speciesName, int quantity) =>
+        _repository.AddSpeciesInBiome(biodomeSlug, speciesName, quantity);
 
-    public void AddEquipementTo(int biomeId, string equipementName) =>
-        _repository.AddEquipementInBiome(biomeId, equipementName);
+    public void AddEquipementTo(string biodomeSlug, string equipementName) =>
+        _repository.AddEquipementInBiome(biodomeSlug, equipementName);
 
-    public void RemoveSpeciesFrom(int biomeId, string speciesName) =>
-        _repository.RemoveSpeciesInBiome(biomeId, speciesName);
+    public void RemoveSpeciesFrom(string biodomeSlug, string speciesName) =>
+        _repository.RemoveSpeciesInBiome(biodomeSlug, speciesName);
 
-    public void RemoveEquipementFrom(int biomeId, string equipementName) =>
-        _repository.RemoveEquipementInBiome(biomeId, equipementName);
+    public void RemoveEquipementFrom(string biodomeSlug, string equipementName) =>
+        _repository.RemoveEquipementInBiome(biodomeSlug, equipementName);
 
-    public void DeleteBiodome(int biomeId)
+    public void DeleteBiodome(string biodomeSlug)
     {
         try
         {
-        _repository.DeleteBiodome(biomeId);
+        _repository.DeleteBiodome(biodomeSlug);
 
         }
         catch (Exception e)
@@ -167,7 +167,7 @@ public class BiodomeService : IBiodomeService
                 $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
         }
         
-        var old = GetBiodomeById(created.Id);
+        var old = GetBiodomeBySlug(created.Slug);
 
         if (old != null && !created.DeepEquals(old))
         {
@@ -186,7 +186,7 @@ public class BiodomeService : IBiodomeService
         }
 
 
-        var old = GetBiodomeById(created.Id);
+        var old = GetBiodomeBySlug(created.Slug);
 
         if (old != null && !created.DeepEquals(old))
         {

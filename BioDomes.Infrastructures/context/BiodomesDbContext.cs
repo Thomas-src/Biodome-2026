@@ -13,7 +13,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     {
     }
 
-    private static SpeciesEntity souris = new SpeciesEntity
+    private static readonly SpeciesEntity Souris = new SpeciesEntity
     {
         IdSpecies = 10,
         Name = "Souris",
@@ -33,9 +33,9 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<SpeciesTypeEntity> SpeciesTypes { get; set; }
     public DbSet<SpeciesRegimeEntity> SpeciesRegimes { get; set; }
     
-    public DbSet<ConsumptionEntity> consumptions { get; set; }
+    public DbSet<ConsumptionEntity> Consumptions { get; set; }
     
-    public DbSet<ProductionEntity> productions { get; set; }
+    public DbSet<ProductionEntity> Productions { get; set; }
     
     public DbSet<BiodomeSpeciesEntity> BiodomeSpecies { get; set; }
 
@@ -310,11 +310,10 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Weight = 1,
                 UserId = "2"
             },
-            souris
+            Souris
             
         );
 
-        var list =  new List<SpeciesEntity> { souris };
         modelBuilder.Entity<BiodomeEntity>().HasData(
             new BiodomeEntity
             {
@@ -323,7 +322,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 18,
                 Humidity = 70,
                 Avatar = "foret-temperee.png",
-                userId = "2"
+                userId = "2",
+                Slug = "foret-temperee"
             },
             new BiodomeEntity
             {
@@ -332,7 +332,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 28,
                 Humidity = 90,
                 Avatar = "foret-tropicale.png",
-                userId = "2"
+                userId = "2",
+                Slug = "foret-tropicale"
             },
             new BiodomeEntity
             {
@@ -341,7 +342,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 32,
                 Humidity = 40,
                 Avatar = "savane.png",
-                userId = "2"
+                userId = "2",
+                Slug = "savane"
             },
             new BiodomeEntity
             {
@@ -350,7 +352,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 20,
                 Humidity = 55,
                 Avatar = "prairie.png",
-                userId = "2"
+                userId = "2",
+                Slug = "prairie-temperee"
             },
             new BiodomeEntity
             {
@@ -359,7 +362,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Temperature = 22,
                 Humidity = 60,
                 Avatar = "labo.png",
-                userId = "1"
+                userId = "1",
+                Slug = "laboratoire-controle"
             }
         );
         modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(

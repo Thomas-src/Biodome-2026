@@ -5,17 +5,11 @@ using BioDomes.Infrastructures.entities;
 
 namespace BioDomes.Infrastructures.repository;
 
-public class SpeciesClassificationRepository : ISpeciesClassificationRepository
+public class SpeciesClassificationRepository(BioDomesDbContext context) : ISpeciesClassificationRepository
 {
-    private readonly BioDomesDbContext _context;
-
-    public SpeciesClassificationRepository(BioDomesDbContext context)
-    {
-        _context = context;
-    }
 
     public IReadOnlyList<SpeciesClassification> GetAllSpeciesClassifications()
     {
-        return _context.SpeciesTypes.Select(st => Enum.Parse<SpeciesClassification>(st.Name)).Distinct().ToList();
+        return context.SpeciesTypes.Select(st => Enum.Parse<SpeciesClassification>(st.Name)).Distinct().ToList();
     }
 }

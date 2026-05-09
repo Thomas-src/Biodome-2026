@@ -15,12 +15,12 @@ public interface IBiodomeService
 
     void Save(Biodome created, Stream openReadStream);
 
-    Biodome? GetBiodomeById(int biodomeId);
+    Biodome? GetBiodomeBySlug(string biodomeSlug);
     void Update(Biodome created);
     void Update(Biodome created, string fileName, Stream openReadStream);
-    void AddSpeciesTo(int biomeId, string speciesName, int quantity);
-    void AddEquipementTo(int biomeId, string equipementName);
-    void RemoveSpeciesFrom(int biomeId, string speciesName);
-    void RemoveEquipementFrom(int biomeId, string equipementName);
-    void DeleteBiodome(int biomeId);
+    void AddSpeciesTo(string biodomeSlug, string speciesName, int quantity);
+    void AddEquipementTo(string biodomeSlug, string equipementName);
+    void RemoveSpeciesFrom(string biodomeSlug, string speciesName);
+    void RemoveEquipementFrom(string biodomeSlug, string equipementName);
+    void DeleteBiodome(string biodomeSlug);
 }

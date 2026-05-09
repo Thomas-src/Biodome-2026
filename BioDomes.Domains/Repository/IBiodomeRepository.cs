@@ -5,13 +5,13 @@ namespace BioDomes.Domains.Repository;
 public interface IBiodomeRepository
 {
     IReadOnlyList<Biodome> GetAllBiodomes();
-    
+
     void Create(Biodome biodome);
     void Update(Biodome biodome);
-    void AddSpeciesInBiome(int biomeId, string speciesName, int quantity);
-    void AddEquipementInBiome(int biomeId, string equipementName);
-    void RemoveSpeciesInBiome(int biomeId, string speciesName);
-    void RemoveEquipementInBiome(int biomeId, string equipementName);
-    
-    void DeleteBiodome(int  biomeId);
+    void AddSpeciesInBiome(string biodomeSlug, string speciesName, int quantity);
+    void AddEquipementInBiome(string biodomeSlug, string equipementName);
+    void RemoveSpeciesInBiome(string biodomeSlug, string speciesName);
+    void RemoveEquipementInBiome(string biodomeSlug, string equipementName);
+    Biodome? FindBiodome(string biodomeSlug);
+    void DeleteBiodome(string biodomeSlug);
 }

@@ -7,7 +7,7 @@ public class BiodomeEntity
     public double Temperature { get; set; }
     public double Humidity { get; set; }
     public string Avatar  { get; set; } = string.Empty;
-
+    public string Slug { get; set; }
     // Lien avec User
     public string? userId { get; set; }
     public UserEntity? user { get; set; }

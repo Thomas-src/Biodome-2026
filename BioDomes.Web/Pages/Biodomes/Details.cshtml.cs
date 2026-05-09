@@ -14,6 +14,7 @@ public class DetailsModel : PageModel
     private readonly IEquipementRepository _equipementRepository;
     private readonly ISpeciesRepository _speciesRepository;
     private readonly IStatsService _statsService;
+    private readonly ILogger<DetailsModel> _logger;
     public Biodome Biodome { get; set; }
 
     public bool Owner { get; set; } = false;
@@ -36,22 +37,26 @@ public class DetailsModel : PageModel
     public FoodChain FoodChain { get; set; } = new();
 
     public DetailsModel(IBiodomeService service, ISpeciesRepository speciesRepository,
-        IEquipementRepository equipementRepository, IStatsService statsService)
+        IEquipementRepository equipementRepository, IStatsService statsService, ILogger<DetailsModel> logger)
     {
         _service = service;
         _speciesRepository = speciesRepository;
         _equipementRepository = equipementRepository;
         _statsService = statsService;
+        _logger = logger;
     }
 
-    public IActionResult OnGet(int id)
+    public IActionResult OnGet(string id)
     {
-        var biodome = _service.GetBiodomeById(id);
+        _logger.LogInformation("Getting details for {id}", id);
+        var biodome = _service.GetBiodomeBySlug(id);
 
         if (biodome == null)
         {
+            _logger.LogInformation("No biodome found for {id}", id);
             return NotFound();
         }
+
         Biodome = biodome;
 
         LoadStats();
@@ -90,28 +95,28 @@ public class DetailsModel : PageModel
     }
 
 
-    public IActionResult OnPostAddSpecies(int biomeId, string speciesName, int quantity = 1)
+    public IActionResult OnPostAddSpecies(string biomeId, string speciesName, int quantity = 1)
     {
         _service.AddSpeciesTo(biomeId, speciesName, quantity);
 
         return RedirectToPage(new { id = biomeId });
     }
 
-    public IActionResult OnPostAddEquipement(int biomeId, string equipementName)
+    public IActionResult OnPostAddEquipement(string biomeId, string equipementName)
     {
         _service.AddEquipementTo(biomeId, equipementName);
 
         return RedirectToPage(new { id = biomeId });
     }
 
-    public IActionResult OnPostRemoveSpecies(int biomeId, string speciesName)
+    public IActionResult OnPostRemoveSpecies(string biomeId, string speciesName)
     {
         _service.RemoveSpeciesFrom(biomeId, speciesName);
         // TempData["SuccessMessage"] = $"L'espèce {speciesName} a été retirée du biodome.";
         return RedirectToPage(new { id = biomeId });
     }
 
-    public IActionResult OnPostRemoveEquipement(int biomeId, string equipementName)
+    public IActionResult OnPostRemoveEquipement(string biomeId, string equipementName)
     {
         _service.RemoveEquipementFrom(biomeId, equipementName);
         // TempData["SuccessMessage"] = $"L'équipement {equipementName} a été retiré du biodome.";
@@ -123,12 +128,11 @@ public class DetailsModel : PageModel
         int Quantity
     );
 
-    public IActionResult OnPostDelete(int biomeId)
+    public IActionResult OnPostDelete(string biomeId)
     {
         try
         {
-        _service.DeleteBiodome(biomeId);
-
+            _service.DeleteBiodome(biomeId);
         }
         catch (Exception e)
         {

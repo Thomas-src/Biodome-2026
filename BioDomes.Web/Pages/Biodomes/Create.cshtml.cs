@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Web.Validators;
@@ -26,24 +27,32 @@ public class Create : PageModel
 
     public IActionResult OnPost()
     {
+        var name = _service.GetBiodomeBySlug(Biome.Name.ToKebabCase());
+
+        if (name != null)
+        {
+            ModelState.AddModelError("Name","Ce nom de biodome est déjà réservé");
+        }
+        
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
         var created = new Biodome(
-            -1,
             Biome.Name,
             Biome.temperature,
             Biome.humidite,
             Biome.Avatar.FileName,
             new List<Domains.Core.Species>(),
             new List<Equipement>(),
-            User.Identity.Name
+            User.Identity.Name,
+            Biome.Name.ToKebabCase()
         );
         
         try
         {
+           
             _service.Save(created, Biome.Avatar.OpenReadStream());
         }
         catch (ArgumentException e)

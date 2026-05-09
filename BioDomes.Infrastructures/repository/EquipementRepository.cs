@@ -8,20 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
 
-public class EquipementRepository : IEquipementRepository
+public class EquipementRepository(BioDomesDbContext dbContext) : IEquipementRepository
 {
-    readonly BioDomesDbContext _dbContext;
-
-    public EquipementRepository(BioDomesDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public IReadOnlyList<Equipement> GetAllEquipements()
     {
         try
         {
-            return _dbContext.Equipment
+            return dbContext.Equipment
                 .Include(e => e.Consumption)
                 .Include(e => e.Production)
                 .Include(e => e.User)
@@ -45,14 +38,14 @@ public class EquipementRepository : IEquipementRepository
 
     public void Save(Equipement created)
     {
-        var u = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == created.OwnerName.ToLower());
+        var u = dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == created.OwnerName.ToLower());
 
         if (u == null)
         {
             throw new ReadUserException("Utilisateur introuvable !");
         }
 
-        string userId = u.Id;
+        var userId = u.Id;
         EquipmentEntity entity;
 
         if (created.Consumption == Consumptions.None)
@@ -63,7 +56,7 @@ public class EquipementRepository : IEquipementRepository
                 Avatar = created.Avatar,
                 UserId = userId,
                 Visible = created.Visibility,
-                ProductionId = _dbContext.productions.FirstOrDefault(e => e.Name == created.Production.ToString())
+                ProductionId = dbContext.Productions.FirstOrDefault(e => e.Name == created.Production.ToString())
                     .ProductionId
             };
         }
@@ -75,17 +68,17 @@ public class EquipementRepository : IEquipementRepository
                 Avatar = created.Avatar,
                 UserId = userId,
                 Visible = created.Visibility,
-                ProductionId = _dbContext.productions.FirstOrDefault(e => e.Name == created.Production.ToString())
+                ProductionId = dbContext.Productions.FirstOrDefault(e => e.Name == created.Production.ToString())
                     .ProductionId,
-                ConsumptionId = _dbContext.consumptions.FirstOrDefault(c => c.Name == created.Consumption.ToString())
+                ConsumptionId = dbContext.Consumptions.FirstOrDefault(c => c.Name == created.Consumption.ToString())
                     .ConsumptionId
             };
         }
 
         try
         {
-            _dbContext.Add(entity);
-            _dbContext.SaveChanges();
+            dbContext.Add(entity);
+            dbContext.SaveChanges();
         }
         catch (Exception e)
         {
@@ -95,7 +88,7 @@ public class EquipementRepository : IEquipementRepository
 
     public void Delete(string name, string ownerName)
     {
-        var entity = _dbContext.Equipment.FirstOrDefault(e =>
+        var entity = dbContext.Equipment.FirstOrDefault(e =>
             e.Name.ToLower() == name.ToLower() && e.User.UserName.ToLower() == ownerName.ToLower());
 
         if (entity is null)
@@ -103,13 +96,13 @@ public class EquipementRepository : IEquipementRepository
             return;
         }
 
-        _dbContext.Equipment.Remove(entity);
-        _dbContext.SaveChanges();
+        dbContext.Equipment.Remove(entity);
+        dbContext.SaveChanges();
     }
 
     public void Update(string name, string ownerName, Equipement update)
     {
-        var entity = _dbContext.Equipment
+        var entity = dbContext.Equipment
             .Include(e => e.Consumption)
             .Include(e => e.Production)
             .Include(e => e.User)
@@ -126,14 +119,14 @@ public class EquipementRepository : IEquipementRepository
         entity.Visible = update.Visibility;
 
         // User
-        var user = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == update.OwnerName.ToLower());
+        var user = dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == update.OwnerName.ToLower());
 
         if (user != null)
         {
             entity.UserId = user.Id;
         }
 
-        var production = _dbContext.productions.FirstOrDefault(p => p.Name == update.Production.ToString());
+        var production = dbContext.Productions.FirstOrDefault(p => p.Name == update.Production.ToString());
 
         if (production != null)
         {
@@ -142,7 +135,7 @@ public class EquipementRepository : IEquipementRepository
 
         if (update.Consumption != Consumptions.None)
         {
-            var consumption = _dbContext.consumptions.FirstOrDefault(c => c.Name == update.Consumption.ToString());
+            var consumption = dbContext.Consumptions.FirstOrDefault(c => c.Name == update.Consumption.ToString());
 
             if (consumption != null)
             {
@@ -154,6 +147,6 @@ public class EquipementRepository : IEquipementRepository
             entity.ConsumptionId = null;
         }
 
-        _dbContext.SaveChanges();
+        dbContext.SaveChanges();
     }
 }

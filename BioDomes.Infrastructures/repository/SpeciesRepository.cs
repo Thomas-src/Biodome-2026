@@ -9,22 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Infrastructures.Repository;
 
-public class SpeciesRepository : ISpeciesRepository
+public class SpeciesRepository(BioDomesDbContext context, ILogger<SpeciesRepository> logger) : ISpeciesRepository
 {
-    private readonly BioDomesDbContext _context;
-    private readonly ILogger<SpeciesRepository> _logger;
-
-    public SpeciesRepository(BioDomesDbContext context, ILogger<SpeciesRepository> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
+    private readonly ILogger<SpeciesRepository> _logger = logger;
 
     public IReadOnlyList<Species> GetAllSpecies()
     {
         try
         {
-            return _context.Species.Select(s => new Species(s.Name,
+            return context.Species.Select(s => new Species(s.Name,
                 s.Size,
                 s.Weight,
                 Enum.Parse<DietType>(s.Regim.Name),
@@ -43,7 +36,7 @@ public class SpeciesRepository : ISpeciesRepository
     public void Save(Species created)
     {
         // 1. Récuperer l'id de l'utilisateur
-        var u = _context.Users.FirstOrDefault(u => u.UserName == created.OwnerName);
+        var u = context.Users.FirstOrDefault(u => u.UserName == created.OwnerName);
         if (u is null)
         {
             throw new ReadUserException("Utilisateur introuvable");
@@ -60,38 +53,38 @@ public class SpeciesRepository : ISpeciesRepository
             Size = (int)created.Taille,
             Weight = created.Poids,
             UserId = userId,
-            RegimId = _context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime,
-            TypeId = _context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString())
+            RegimId = context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime,
+            TypeId = context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString())
                 .IdType,
             Visible = created.IsVisible
         };
 
         try
         {
-        _context.Species.Add(entity);
-        _context.SaveChanges();
+            context.Species.Add(entity);
+            context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new WriteSpeciesException($"Erreur lors de l'ajout de l'espece {entity.Name} en base de données !",
                 e);
         }
-
     }
 
-  
-    public void Update(string name,string ownerName, Species species)
+
+    public void Update(string name, string ownerName, Species species)
     {
-        var oldSpecies = _context.Species
+        var oldSpecies = context.Species
             .Include(s => s.Regim)
             .Include(s => s.TypeEntity)
             .Include(s => s.User)
-            .FirstOrDefault(s => s.Name.ToLower() == name.ToLower() && s.User.UserName.ToLower() == ownerName.ToLower());
+            .FirstOrDefault(s =>
+                s.Name.ToLower() == name.ToLower() && s.User.UserName.ToLower() == ownerName.ToLower());
         if (oldSpecies is null)
         {
             throw new ArgumentException("Espèce introuvable");
         }
-        
+
         oldSpecies.Size = (int)species.Taille;
         oldSpecies.Weight = species.Poids;
         oldSpecies.Regim = FindRegime(species.DietType);
@@ -99,13 +92,13 @@ public class SpeciesRepository : ISpeciesRepository
         oldSpecies.Visible = species.IsVisible;
         oldSpecies.Avatar = species.Avatar;
 
-        _context.Species.Update(oldSpecies);
-        _context.SaveChanges();
+        context.Species.Update(oldSpecies);
+        context.SaveChanges();
     }
 
     public void Delete(string name)
     {
-        var entity = _context.Species
+        var entity = context.Species
             .FirstOrDefault(s => s.Name == name);
 
         if (entity is null)
@@ -113,20 +106,20 @@ public class SpeciesRepository : ISpeciesRepository
             return;
         }
 
-        _context.Species.Remove(entity);
-        _context.SaveChanges();
+        context.Species.Remove(entity);
+        context.SaveChanges();
     }
-    
+
     private SpeciesRegimeEntity FindRegime(DietType dietType)
     {
-        return _context.SpeciesRegimes
+        return context.SpeciesRegimes
                    .FirstOrDefault(r => r.Name == dietType.ToString())
                ?? throw new ArgumentException($"Régime '{dietType}' introuvable");
     }
 
     private SpeciesTypeEntity FindType(SpeciesClassification classification)
     {
-        return _context.SpeciesTypes
+        return context.SpeciesTypes
                    .FirstOrDefault(t => t.Name == classification.ToString())
                ?? throw new ArgumentException($"Type '{classification}' introuvable");
     }

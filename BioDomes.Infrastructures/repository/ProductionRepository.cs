@@ -4,17 +4,10 @@ using BioDomes.Infrastructures.context;
 
 namespace BioDomes.Infrastructures.repository;
 
-public class ProductionRepository : IProductionRepository
+public class ProductionRepository(BioDomesDbContext context) : IProductionRepository
 {
-    private readonly BioDomesDbContext _context;
-    
-    public ProductionRepository(BioDomesDbContext context)
-    {
-        _context = context;
-    }
-    
     public IReadOnlyList<Production> GetAllProductions()
     {
-        return _context.productions.Select(p => Enum.Parse<Production>(p.Name)).ToList();
+        return context.Productions.Select(p => Enum.Parse<Production>(p.Name)).ToList();
     }
 }

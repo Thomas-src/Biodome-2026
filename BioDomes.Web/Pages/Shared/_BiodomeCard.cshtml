@@ -5,7 +5,7 @@
         <img src="~/images/biodomes/@Model.Image" alt="Biodome de @Model.Nom"
              style="width: 100%; height: 100%;" />
     </div>
-    <a class="text-center text-decoration-none text-black mt-2" href="biodomes/@Model.Id">
+    <a class="text-center text-decoration-none text-black mt-2" href="biodomes/@Model.Slug">
         <h5 class="card-title mb-1">@Model.Nom</h5>
     </a>
     <p class="card-text text-start flex-grow-1" style="font-size: 0.875rem;">
@@ -15,6 +15,6 @@
         <strong>Etat :</strong> @Model.Etat <br/>
     </p>
     <div class="d-flex justify-content-center mt-auto">
-        <a href="~/biodomes/details/@Model.Id" class="btn btn-sm btn-outline-secondary px-4">Voir</a>
+        <a href="~/biodomes/details/@Model.Slug" class="btn btn-sm btn-outline-secondary px-4">Voir</a>
     </div>
 </article>

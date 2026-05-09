@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using BioDomes.Domains.Constants;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Web.Validators;
@@ -25,9 +26,9 @@ public class Edit : PageModel
         _service = service;
     }
 
-    public IActionResult OnGet(int id)
+    public IActionResult OnGet(string id)
     {
-        var biodome = _service.GetBiodomeById(id);
+        var biodome = _service.GetBiodomeBySlug(id);
         if (biodome == null)
         {
             return NotFound();
@@ -44,9 +45,9 @@ public class Edit : PageModel
         return Page();
     }
 
-    public IActionResult OnPost(int id)
+    public IActionResult OnPost(string id)
     {
-        var biodome = _service.GetBiodomeById(id);
+        var biodome = _service.GetBiodomeBySlug(id);
         if (biodome == null)
         {
             return NotFound();
@@ -62,14 +63,14 @@ public class Edit : PageModel
         var fileName = Biome.Avatar != null ? Biome.Avatar.FileName : Biodome.Image;
 
         var created = new Biodome(
-            Biodome.Id,
             Biome.Name,
             Biome.Temperature,
             Biome.Humidite,
             fileName,
             Biodome.Species,
             Biodome.Equipements,
-            User.Identity.Name
+            User.Identity.Name,
+            Biodome.Nom.ToKebabCase()
         );
 
         try
@@ -89,7 +90,7 @@ public class Edit : PageModel
             return Page();
         }
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
-        return RedirectToPage("/biodomes/details", new { id = Biodome.Id });
+        return RedirectToPage("/biodomes/details", new { id = Biodome.Slug });
     }
 
     public class InputModel

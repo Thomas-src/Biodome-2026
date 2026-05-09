@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page "{id:slug}"
 @using System.Text.Json
 @using BioDomes.Domains.Extensions
 @using Microsoft.IdentityModel.Tokens
@@ -32,10 +32,10 @@
                 @if (Model.Owner)
                 {
                     <div class="d-flex gap-3 align-items-center">
-                        <a href="/biodomes/edit/@Model.Biodome.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <a href="/biodomes/edit/@Model.Biodome.Slug" class="btn btn-sm btn-outline-primary">Modifier</a>
                         <form method="post" asp-page-handler="Delete">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id" />
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Slug" />
                             <button type="submit" class="btn btn-sm btn-danger">
                                 Supprimer
                             </button>
@@ -122,7 +122,7 @@
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveSpecies" class="d-inline">
                                         @Html.AntiForgeryToken()
-                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
                                         <input type="hidden" name="speciesName" value="@specy.Nom"/>
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0 lh-1"
@@ -144,7 +144,7 @@
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddSpecies">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="speciesName" class="form-select form-select-sm"
                                         asp-items="@(new SelectList(Model.AvailableSpecies, "Nom", "Nom"))">
@@ -199,7 +199,7 @@
                                 <td class="text-end">
                                     <form method="post" asp-page-handler="RemoveEquipement" class="d-inline">
                                         @Html.AntiForgeryToken()
-                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                                        <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
                                         <input type="hidden" name="equipementName" value="@equipement.Name"/>
                                         <button type="submit"
                                                 class="btn btn-link btn-sm text-danger p-0"
@@ -221,7 +221,7 @@
                     <div class="border rounded p-3 bg-light">
                         <form method="post" asp-page-handler="AddEquipement">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Id"/>
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
                             <div class="d-flex gap-2 align-items-center">
                                 <select name="equipementName" class="form-select form-select-sm" 
                                         asp-items="@(new SelectList(Model.AvailableEquipements, "Name", "Name"))">>
