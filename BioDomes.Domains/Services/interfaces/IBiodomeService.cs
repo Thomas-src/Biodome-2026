@@ -4,6 +4,7 @@ namespace BioDomes.Domains.Services.interfaces;
 
 public interface IBiodomeService
 {
+    
     IReadOnlyList<Biodome> GetBestThreeBiodome();
     IReadOnlyList<Biodome> GetAllStableBiodomes();
     IReadOnlyList<Biodome> HasSpecies(string speciesName, string ownerName);
@@ -23,4 +24,5 @@ public interface IBiodomeService
     void RemoveSpeciesFrom(string biodomeSlug, string speciesName);
     void RemoveEquipementFrom(string biodomeSlug, string equipementName);
     void DeleteBiodome(string biodomeSlug);
+    bool BiodomeExists(string biodomeSlug);
 }

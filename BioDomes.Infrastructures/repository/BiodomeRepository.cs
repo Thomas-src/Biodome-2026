@@ -53,10 +53,10 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
             context.Biodomes.Add(entity);
             context.SaveChanges();
         }
-        catch (Exception)
+        catch (Exception e)
         {
             throw new WriteBiodomeException(
-                "Impossible d'ajouter le biodome en base de donnée !");
+                "Impossible d'ajouter le biodome en base de donnée !",e);
         }
     }
 
@@ -152,7 +152,10 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
     }
 
     public Biodome? FindBiodome(string biodomeSlug)
-        => BiodomeMapper.BiodomeToDomain(GetBiodomeEntityBySlug(biodomeSlug));
+    {
+        var biodome = GetBiodomeEntityBySlug(biodomeSlug);
+        return BiodomeMapper.BiodomeToDomain(biodome);
+    }
 
     public void DeleteBiodome(string biomeSlug)
     {

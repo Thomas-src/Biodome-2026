@@ -34,7 +34,7 @@ public static class BiodomeMapper
                 e.User.UserName
             )).ToList(),
             entity.user.UserName,
-            entity.Name.ToKebabCase()
+            entity.Name.ToSlug()
         );
     }
 
@@ -46,7 +46,8 @@ public static class BiodomeMapper
             Temperature = biodome.Temperature,
             Humidity = biodome.Humidite,
             Avatar = biodome.Image,
-            userId = userId
+            userId = userId,
+            Slug = biodome.Slug,
         };
     }
 

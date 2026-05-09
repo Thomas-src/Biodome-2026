@@ -60,7 +60,7 @@
                 <div class="d-flex py-1 gap-2">
                     <span class="text-uppercase fw-bold" style="min-width: 120px;">Créateur</span>
                     <span>
-                        @if (Model.Biodome.CreatorName == null || Model.Biodome.CreatorName.IsNullOrEmpty())
+                        @if ( Model.Biodome.CreatorName.IsNullOrEmpty())
                         {
                             <text>Inconnu</text>
                         }
@@ -74,7 +74,7 @@
         </div>
 
         <div class="col-12 col-md-auto d-flex justify-content-center justify-content-md-start">
-            <img src="~/images/biodomes/@Model.Biodome.Image"class="img-fluid w-100" style="max-width: 220px; height: auto; object-fit: cover; display: block; min-height: 220px;" />
+            <img src="~/images/biodomes/@Model.Biodome.Image" class="img-fluid w-100" style="max-width: 220px; height: auto; object-fit: cover; display: block; min-height: 220px;"  alt="Biodome @Model.Biodome.Nom"/>
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                 }
             </div>
 
-            @if (Model.Biodome.Species == null || Model.Biodome.Species.Count < 1)
+            @if ( Model.Biodome.Species.Count < 1)
             {
                 <p class="text-muted small mb-0">Il n'y a aucune espèce dans ce biodome !</p>
             }
@@ -173,7 +173,7 @@
                 }
             </div>
 
-            @if (Model.Biodome.Equipements == null || Model.Biodome.Equipements.Count < 1)
+            @if ( Model.Biodome.Equipements.Count < 1)
             {
                 <p class="text-muted small mb-0">Il n'y a aucun équipement dans ce biodome !</p>
             }

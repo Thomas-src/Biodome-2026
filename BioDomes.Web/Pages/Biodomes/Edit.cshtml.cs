@@ -70,7 +70,7 @@ public class Edit : PageModel
             Biodome.Species,
             Biodome.Equipements,
             User.Identity.Name,
-            Biodome.Nom.ToKebabCase()
+            Biodome.Nom.ToSlug()
         );
 
         try

@@ -81,7 +81,7 @@ public class BiodomeService : IBiodomeService
         }
         catch (Exception e)
         {
-            throw new Exception("Création du biodome impossible !");
+            throw new Exception("Création du biodome impossible !",e);
         }
     }
 
@@ -155,6 +155,19 @@ public class BiodomeService : IBiodomeService
         {
             throw new Exception("Impossible du supprimer le biodome !");
         }
+    }
+
+    public bool BiodomeExists(string biodomeSlug)
+    {
+        try
+        {
+            return _repository.FindBiodome(biodomeSlug) != null;
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+        return false;
     }
 
     public void Update(Biodome created)

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Web.Pages.Biodomes;
+
 [ValidateAntiForgeryToken]
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 public class Create : PageModel
@@ -27,13 +28,11 @@ public class Create : PageModel
 
     public IActionResult OnPost()
     {
-        var name = _service.GetBiodomeBySlug(Biome.Name.ToKebabCase());
-
-        if (name != null)
+        if (_service.BiodomeExists(Biome.Name.ToSlug()))
         {
-            ModelState.AddModelError("Name","Ce nom de biodome est déjà réservé");
+            ModelState.AddModelError("Biome.Name", "Ce nom de biodome est déjà réservé");
         }
-        
+
         if (!ModelState.IsValid)
         {
             return Page();
@@ -47,19 +46,20 @@ public class Create : PageModel
             new List<Domains.Core.Species>(),
             new List<Equipement>(),
             User.Identity.Name,
-            Biome.Name.ToKebabCase()
+            Biome.Name.ToSlug()
         );
-        
         try
+
         {
-           
             _service.Save(created, Biome.Avatar.OpenReadStream());
         }
-        catch (ArgumentException e)
+        catch
+            (ArgumentException e)
         {
             ModelState.AddModelError("Biome.humidite", e.Message);
             return Page();
         }
+
         TempData["SuccessMessage"] = $"L'espèce {Biome.Name} a été ajoutée avec succès !";
         return RedirectToPage("UserBiodomes");
     }
@@ -67,7 +67,8 @@ public class Create : PageModel
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        [RegularExpression(@"^[a-zA-Z\s\-]+$", ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
+        [RegularExpression(@"^[a-zA-Z\s\-]+$",
+            ErrorMessage = "Le nom ne peut contenir que des lettres, espaces ou tirets")]
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "La temperature est obligatoire")]
