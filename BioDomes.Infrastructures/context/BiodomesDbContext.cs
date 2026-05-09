@@ -38,6 +38,8 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<ProductionEntity> Productions { get; set; }
     
     public DbSet<BiodomeSpeciesEntity> BiodomeSpecies { get; set; }
+    
+    public DbSet<BiodomeHistoryEntity> BiodomeHistory { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

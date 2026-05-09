@@ -1,0 +1,76 @@
+﻿using BioDomes.Domains.Core;
+using BioDomes.Domains.Extensions;
+using BioDomes.Domains.Repository;
+using BioDomes.Domains.Services;
+using BioDomes.Infrastructures.context;
+using BioDomes.Infrastructures.entities;
+using BioDomes.Infrastructures.Repository;
+
+namespace BioDomes.Infrastructures.repository;
+
+public class BiodomeHistoryRepository(BioDomesDbContext context,SpeciesService speciesService, BiodomeRepository biodomeRepository) : IBiodomeHistoryRepository
+{
+    public void Save(int biodomeId, int speciesId, int quantity)
+    {
+       var entry = new BiodomeHistoryEntity
+        {
+            BiodomeId = biodomeId,
+            SpeciesId = speciesId,
+            Delta = quantity,
+            UpdateAt = DateTime.UtcNow,
+        };
+
+        context.BiodomeHistory.Add(entry);
+        context.SaveChanges();
+    }
+    
+    public void Remove(int biodomeId, int speciesId)
+    {
+        var currentQuantity = context.BiodomeHistory
+            .Where(h => h.BiodomeId == biodomeId && h.SpeciesId == speciesId)
+            .Sum(h => h.Delta);
+
+        if (currentQuantity <= 0)
+        {
+            throw new Exception("Aucune quantité existante à supprimer");
+        }
+
+        var entry = new BiodomeHistoryEntity
+        {
+            BiodomeId = biodomeId,
+            SpeciesId = speciesId,
+            Delta = -currentQuantity,
+            UpdateAt = DateTime.UtcNow,
+        };
+
+        context.BiodomeHistory.Add(entry);
+        context.SaveChanges();
+    }
+    
+    public IReadOnlyList<BiodomeSpeciesHistory> GetHistory(int biodomeId, string username)
+    {
+        return context.BiodomeHistory
+            .Where(h => h.BiodomeId == biodomeId)
+            .OrderByDescending(h => h.UpdateAt)
+            .Select(h => new BiodomeSpeciesHistory
+            {
+                Species = speciesService.GetByKebabCase(h.Species.ToString().ToKebabCase(),username),
+                Delta = h.Delta,
+                UpdateAt = h.UpdateAt
+            })
+            .ToList();
+    }
+    public void DeleteHistory(int biodomeId)
+    {
+        var entries = context.BiodomeHistory
+            .Where(h => h.BiodomeId == biodomeId)
+            .ToList();
+
+        foreach (var entry in entries)
+        {
+            context.BiodomeHistory.Remove(entry);
+            context.SaveChanges();
+        }
+        
+    }
+}

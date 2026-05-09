@@ -9,10 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace BioDomes.Infrastructures.Repository;
 
-public class SpeciesRepository(BioDomesDbContext context, ILogger<SpeciesRepository> logger) : ISpeciesRepository
+public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
 {
-    private readonly ILogger<SpeciesRepository> _logger = logger;
-
+    public Species? FindSpecies(string speciesName, string username)
+    {
+        return GetAllSpecies().FirstOrDefault(s=>s.Nom.ToLower().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(username.ToLower()));
+    }
     public IReadOnlyList<Species> GetAllSpecies()
     {
         try

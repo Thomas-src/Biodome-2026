@@ -16,6 +16,7 @@ using BioDomes.Web.Transformers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +67,7 @@ builder.Services.AddTransient<IPictureRepository, PictureRepository>();
 builder.Services.AddTransient<IEquipementRepository, EquipementRepository>();
 builder.Services.AddTransient<IProductionRepository, ProductionRepository>();
 builder.Services.AddTransient<IConsumptionRepository, ConsumptionRepository>();
+builder.Services.AddTransient<IBiodomeHistoryRepository, BiodomeHistoryRepository>();
 // Services
 builder.Services.AddTransient<IBiodomeService, BiodomeService>();
 builder.Services.AddTransient<ISpeciesService, SpeciesService>();
@@ -73,7 +75,7 @@ builder.Services.AddTransient<IResearchService, ResearchOrganismService>();
 builder.Services.AddTransient<IEquipementService, EquipementService>();
 builder.Services.AddTransient<IStatsService, StatsService>();
 builder.Services.AddTransient<IFoodChainService, FoodChainService>();
-
+builder.Services.AddTransient<IHistoryService, HistoryService>();
 // Mail service
 builder.Services.AddSingleton(sp => builder.Configuration.GetSection("MailConfig").Get<MailConfig>());
 builder.Services.AddHttpClient<IMyEmailSender, ResendMailSender>();

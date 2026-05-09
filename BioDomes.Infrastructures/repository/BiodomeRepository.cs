@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
 
-public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
+public class BiodomeRepository(BioDomesDbContext context, IBiodomeHistoryRepository biodomeHistoryRepository) : IBiodomeRepository
 {
     public IReadOnlyList<Biodome> GetAllBiodomes()
     {
@@ -37,9 +37,7 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
         }
         catch (Exception e)
         {
-            throw new ReadBiodomesException(
-                "Lecture impossible des biodomes en base de données !",
-                e);
+            throw new ReadBiodomesException("Lecture impossible des biodomes en base de données !", e);
         }
     }
 
@@ -55,8 +53,7 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
         }
         catch (Exception e)
         {
-            throw new WriteBiodomeException(
-                "Impossible d'ajouter le biodome en base de donnée !",e);
+            throw new WriteBiodomeException("Impossible d'ajouter le biodome en base de donnée !",e);
         }
     }
 
@@ -83,9 +80,10 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
             throw new Exception("Espèce introuvable");
         }
 
-
         var biodome = GetBiodomeEntityBySlug(biomeSlug);
-
+       
+        biodomeHistoryRepository.Save(biodome.idBiodomes, specy.IdSpecies, quantity);
+       
         var existing = context.BiodomeSpecies
             .FirstOrDefault(bs => bs.BiodomeId == biodome.idBiodomes && bs.SpeciesId == specy.IdSpecies);
 
@@ -129,6 +127,7 @@ public class BiodomeRepository(BioDomesDbContext context) : IBiodomeRepository
         var biodome = context.Biodomes.FirstOrDefault(bs => bs.Slug == biomeSlug);
         if (biodome != null)
         {
+            biodomeHistoryRepository.Remove(biodome.idBiodomes, specy.IdSpecies);
             var existing = context.BiodomeSpecies
                 .FirstOrDefault(bs => bs.BiodomeId == biodome.idBiodomes && bs.SpeciesId == specy.IdSpecies);
             if (existing != null)
