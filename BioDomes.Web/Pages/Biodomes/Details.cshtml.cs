@@ -49,19 +49,19 @@ public class DetailsModel : PageModel
     public IActionResult OnGet(string id)
     {
         _logger.LogInformation("Getting details for {id}", id);
-        var biodome = _service.GetBiodomeBySlug(id);
+        try
+        {
+            var biodome = _service.GetBiodomeBySlug(id);
+            Biodome = biodome;
+            LoadStats();
 
-        if (biodome == null)
+            return Page();
+        }
+        catch (Exception e)
         {
             _logger.LogInformation("No biodome found for {id}", id);
             return NotFound();
         }
-
-        Biodome = biodome;
-
-        LoadStats();
-
-        return Page();
     }
 
     private void LoadStats()

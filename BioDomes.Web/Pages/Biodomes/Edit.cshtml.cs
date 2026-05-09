@@ -28,21 +28,23 @@ public class Edit : PageModel
 
     public IActionResult OnGet(string id)
     {
-        var biodome = _service.GetBiodomeBySlug(id);
-        if (biodome == null)
+        try
+        {
+            var biodome = _service.GetBiodomeBySlug(id);
+            Biodome = biodome;
+            Biome = new InputModel
+            {
+                Name = Biodome.Nom,
+                Temperature = Biodome.Temperature,
+                Humidite = Biodome.Humidite,
+                AvatarPath = Biodome.Image
+            };
+            return Page();
+        }
+        catch (Exception e)
         {
             return NotFound();
         }
-        Biodome = biodome;
-
-        Biome = new InputModel
-        {
-            Name = Biodome.Nom,
-            Temperature = Biodome.Temperature,
-            Humidite = Biodome.Humidite,
-            AvatarPath = Biodome.Image
-        };
-        return Page();
     }
 
     public IActionResult OnPost(string id)

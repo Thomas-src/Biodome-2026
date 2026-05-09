@@ -129,7 +129,7 @@ public class BiodomeService : IBiodomeService
 
     private double CalculateHumiditeMax(double temp) => HumidityCalculator.MaxHumidityOf(temp);
 
-    public Biodome? GetBiodomeBySlug(string biodomeSlug) => _repository.FindBiodome(biodomeSlug);
+    public Biodome GetBiodomeBySlug(string biodomeSlug) => _repository.FindBiodome(biodomeSlug);
 
 
     public void AddSpeciesTo(string biodomeSlug, string speciesName, int quantity) =>
