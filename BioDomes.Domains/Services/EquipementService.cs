@@ -1,4 +1,5 @@
 ﻿using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Domains.Services.interfaces;
@@ -58,12 +59,12 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
 
         equipement.Visibility = true;
 
-        repository.Update(equipementName, ownerName, equipement);
+        repository.Update(equipement.Name, ownerName, equipement);
         return true;
     }
 
     public Equipement? GetByKebabCase(string name, string ownerName) => repository.GetAllEquipements()
-        .FirstOrDefault(e => e.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
+        .FirstOrDefault(e => e.Name.ToSlug().Equals(name, StringComparison.CurrentCultureIgnoreCase)
                              && e.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
 
     public void Delete(string name, string ownerName)
@@ -80,7 +81,7 @@ public class EquipementService(IEquipementRepository repository, IPictureReposit
             pictureRepository.Delete(equipement.Avatar, EQUIPEMENT);
         }
 
-        repository.Delete(name, ownerName);
+        repository.Delete(equipement.Name, ownerName);
     }
 
     public IReadOnlyList<Equipement> GetAvailableEquipements() =>

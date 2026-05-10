@@ -1,4 +1,5 @@
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Infrastructures.context;
@@ -15,7 +16,7 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
     public Species? FindSpecies(string speciesName, string username)
     {
         return GetAllSpecies().FirstOrDefault(s =>
-            s.Nom.ToLower().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(username.ToLower()));
+            s.Nom.ToSlug().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(username.ToLower()));
     }
 
     public IReadOnlyList<Species> GetAllSpecies()

@@ -47,7 +47,7 @@ public class SpeciesService : ISpeciesService
         }
         species.IsVisible = true;
 
-        _repository.Update(name, ownerName, species);
+        _repository.Update(species.Nom, ownerName, species);
         return true;
     }
 

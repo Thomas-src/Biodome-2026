@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Web.Validators;
@@ -34,7 +35,7 @@ public class EditEquipementModel : PageModel
     public IActionResult OnGet(string slug, string ownerName)
     {
         LoadSelects();
-        slug = SanitizeInput(slug);
+        slug = SanitizeInput(slug).ToSlug();
         ownerName = SanitizeInput(ownerName);
         if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(ownerName))
         {

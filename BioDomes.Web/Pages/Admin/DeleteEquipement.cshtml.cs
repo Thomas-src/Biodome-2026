@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,7 +44,7 @@ public class DeleteEquipementModel : PageModel
     
     public IActionResult OnPostDelete(string slug, string ownerName)
     {
-        slug = SanitizeInput(slug);
+        slug = SanitizeInput(slug).ToSlug();
         ownerName = SanitizeInput(ownerName);
         if (string.IsNullOrEmpty(slug))
         {

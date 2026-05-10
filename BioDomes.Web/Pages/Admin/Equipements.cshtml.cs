@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +40,8 @@ public class EquipementsModel : PageModel
     
     public IActionResult OnPostMakePublic(string name, string ownerName)
     {
+        name = SanitizeInput(name).ToSlug();
+        ownerName =  SanitizeInput(ownerName);  
         if ( _service.MakePublic(name, ownerName))
         {
             TempData["SuccessMessage"] = $"L'équipement {name} de {ownerName} a été rendu publique avec succès";
@@ -48,5 +52,10 @@ public class EquipementsModel : PageModel
         }
         
         return RedirectToPage();
+    }
+    
+    private string SanitizeInput(string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
     }
 }
