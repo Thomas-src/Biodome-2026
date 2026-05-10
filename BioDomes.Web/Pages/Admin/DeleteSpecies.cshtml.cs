@@ -33,7 +33,7 @@ public class DeleteSpeciesModel : PageModel
         }
 
 
-        var species = _speciesService.GetByKebabCase(slug, ownerName);
+        var species = _speciesService.GetByKebabCase(slug.ToKebabCase(), ownerName);
 
         if (species is null)
         {

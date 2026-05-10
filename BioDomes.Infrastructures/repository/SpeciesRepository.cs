@@ -18,8 +18,14 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
     public IReadOnlyList<Species> GetAllSpecies()
     {
         try
+        
         {
-            return context.Species.Select(s => new Species(s.Name,
+            var entities = context.Species
+                .Include(s => s.Regim)
+                .Include(s => s.TypeEntity)
+                .Include(s => s.User)
+                .ToList();
+            return entities.Select(s => new Species(s.Name,
                 s.Size,
                 s.Weight,
                 Enum.Parse<DietType>(s.Regim.Name),

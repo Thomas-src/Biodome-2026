@@ -186,12 +186,12 @@ public class EditSpeciesModel : PageModel
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "Le type est obligatoire")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         [IsSpeciesClassification]
         public required string Type { get; set; }
 
         [Required(ErrorMessage = "Le régime est obligatoire")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         [IsSpeciesRegim]
         public required string Regime { get; set; }
 

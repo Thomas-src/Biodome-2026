@@ -11,8 +11,8 @@ public record StatsData(
     // chart 2
     Dictionary<string, List<Species>> QuantityByRegim,
     // chart 3 
-    FoodChain Foodchain
-    
-)
+    FoodChain Foodchain,
+    // chart 4
+    IReadOnlyList<BiodomeSpeciesHistory> HistoryDatas)
 {
 }

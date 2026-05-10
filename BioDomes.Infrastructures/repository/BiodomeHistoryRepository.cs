@@ -5,6 +5,7 @@ using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
 
@@ -47,18 +48,27 @@ public class BiodomeHistoryRepository(BioDomesDbContext context,ISpeciesService 
         context.SaveChanges();
     }
     
-    public IReadOnlyList<BiodomeSpeciesHistory> GetHistory(int biodomeId, string username)
+    public IReadOnlyList<BiodomeSpeciesHistory> GetHistory(string biodomeSlug, string username)
     {
-        return context.BiodomeHistory
+        var biodomeId = context.Biodomes
+            .Where(b => b.Slug == biodomeSlug)
+            .Select(b => b.idBiodomes)
+            .FirstOrDefault();
+
+        var history = context.BiodomeHistory
             .Where(h => h.BiodomeId == biodomeId)
-            .OrderByDescending(h => h.UpdateAt)
-            .Select(h => new BiodomeSpeciesHistory
-            {
-                Species = speciesService.GetByKebabCase(h.Species.ToString().ToKebabCase(),username),
-                Delta = h.Delta,
-                UpdateAt = h.UpdateAt
-            })
+            .OrderByDescending(h => h.UpdateAt).Include(biodomeHistoryEntity => biodomeHistoryEntity.Species)
             .ToList();
+
+        return history.Select(h => new BiodomeSpeciesHistory
+        {
+            Species = speciesService.GetByKebabCase(
+                h.Species.ToString().ToKebabCase(),
+                username
+            ),
+            Delta = h.Delta,
+            UpdateAt = h.UpdateAt
+        }).ToList();
     }
     public void DeleteHistory(int biodomeId)
     {

@@ -95,9 +95,7 @@ public class SpeciesService : ISpeciesService
             return null;
         }
 
-        return _repository.GetAllSpecies().FirstOrDefault(s =>
-            s.Nom.ToKebabCase().Equals(kebabCase, StringComparison.CurrentCultureIgnoreCase) &&
-            s.OwnerName.Equals(ownerName, StringComparison.CurrentCultureIgnoreCase));
+        return _repository.FindSpecies(kebabCase, ownerName);
     }
 
     public void Save(Species created, Stream? openReadStream)

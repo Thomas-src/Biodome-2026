@@ -206,18 +206,18 @@ public class EditModel : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire.")]
         [StringLength(50, MinimumLength = 5)]
         [Display(Name = "Votre nom")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public string Nom { get; set; } = string.Empty;
 
         [StringLength(100, MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Nouveau mot de passe")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public string? Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmer le mot de passe")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public string? ConfirmPassword { get; set; }
 
         [Required]

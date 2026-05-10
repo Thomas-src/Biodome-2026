@@ -36,7 +36,8 @@ public class DetailsModel : PageModel
 
     // chart 3
     public FoodChain FoodChain { get; set; } = new();
-
+    // chart 4
+    public IReadOnlyList<BiodomeSpeciesHistory>  SpeciesHistories { get; set; }
     public DetailsModel(IBiodomeService service, ISpeciesRepository speciesRepository,
         IEquipementRepository equipementRepository, IStatsService statsService, ILogger<DetailsModel> logger)
     {
@@ -92,6 +93,9 @@ public class DetailsModel : PageModel
             );
             // chart 3
             FoodChain = stats.Foodchain;
+            
+            // chart 4 
+           // SpeciesHistories = stats.HistoryDatas;
         }
     }
 

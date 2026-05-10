@@ -6,6 +6,7 @@ namespace BioDomes.Domains.Services;
 
 public class HistoryService(IBiodomeHistoryRepository biodomeSpeciesHistory) : IHistoryService
 {
-    public IReadOnlyList<BiodomeSpeciesHistory> BuildHistory(int biodomeId, string username) => biodomeSpeciesHistory.GetHistory(biodomeId, username);
+    public IReadOnlyList<BiodomeSpeciesHistory> Build(string biodomeSlug, string username) =>
+        biodomeSpeciesHistory.GetHistory(biodomeSlug, username);
 
 }

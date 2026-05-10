@@ -31,14 +31,30 @@ builder.Services.AddRazorPages(options => {
 builder.Services.AddScoped<LogOriginMiddleware>();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
  
-builder.Services.AddCors(options => 
+// Build cors
+if (builder.Environment.IsDevelopment())
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-        policy  =>
-        {
-            policy.WithOrigins("https://ue19.cg.helmo.be/q240075", "https://localhost:7108");
-        });
-});
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+            policy =>
+            {
+                policy.WithOrigins("https://localhost:7108");
+            });
+    });
+}
+else
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+            policy =>
+            {
+                policy.WithOrigins("https://ue19.cg.helmo.be/q240075");
+            });
+    });
+}
+
 var connectionString = builder.Environment.IsDevelopment()
     ? builder.Configuration.GetConnectionString("DevConnection")
     : builder.Configuration.GetConnectionString("ProdConnection");

@@ -27,7 +27,7 @@ public class ResendConfirmationEmailModel : PageModel
     }
 
     [BindProperty] 
-    [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+    [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
     public string Email { get; set; } = string.Empty;
 
     public string? StatusMessage { get; set; }

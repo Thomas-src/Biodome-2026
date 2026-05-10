@@ -18,13 +18,13 @@ public class LoginModel(
     [Required]
     [DataType(DataType.Text)]
     [MinLength(5)]
-    [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+    [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
     public string? EmailOrUsername { get; set; }
 
     [BindProperty]
     [Required]
     [DataType(DataType.Password)]
-    [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+    [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
     public string? Password { get; set; }
 
     [BindProperty] public bool RememberMe { get; set; }

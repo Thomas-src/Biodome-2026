@@ -176,15 +176,15 @@ public class EditEquipementModel : PageModel
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "La consommation est obligatoire")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public required string Consumption { get; set; }
 
         [Required(ErrorMessage = "La production est obligatoire")]
-        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+        [RegularExpression(@"^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisés")]
         public required string Production { get; set; }
 
         [IsImageValid] public IFormFile? Avatar { get; set; }
