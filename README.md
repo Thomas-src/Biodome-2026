@@ -66,10 +66,10 @@ Lien git : https://ue19.cg.helmo.be/q240075
 
 **Compte 1 :**
 
-Chercheur ayant crée un biome, une espèce et un équipement : 
+Chercheur ayant crée 4 biomes stables : 
 
 _Nom_ : `Darwin`
-
+_Mail_: `research@uliege.be`
 _MDP_ : `Dwin1859$$` 
 
 
@@ -78,7 +78,7 @@ _MDP_ : `Dwin1859$$`
 Compte vierge : 
 
 _Nom_ : `JohnDoe`
-
+_Mail_: `research@helmo.be`
 _MDP_ : `DoeJ1234!`
 
 
@@ -90,6 +90,11 @@ _MDP_ : `Test1234$`
 
 ## Éléments techniques notables
 
-Bibliothèque JS graphiques : Nous avons utiliser la bibliothèque chart.js
+Bibliothèque JS graphiques : Nous avons utiliser la bibliothèque chart.js via cdn pour réaliser différents graphes
+
+Resend : Nous avons utilisé l'outil resend pour envoyer des e-mails afin de vérifier lors de l'inscription d'un tuilisateur que cette adresse lui appartient.
 
 Protection DDOS : Nous avons mis en place du proctection Ddos qui peut être assez contraignante. Si vous faites vos tests assez rapidement, vous risquez de vous faire bloquer assez rapidement, afin de vous facilité la vie, les valeurs a modifier se trouvent ligne 94 et 95 du program.cs.  
+
+Protection CORS :
+

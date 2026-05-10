@@ -30,6 +30,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             EmailConfirmed = true, 
             UserName = "Admin",
             NormalizedUserName = "Admin".ToUpper(),
+            NormalizedEmail = "admin@company.com".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,11,1)),
             ResearchOrganismId = "1",
             Avatar = "3.png"
@@ -43,6 +44,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             EmailConfirmed = true, 
             UserName = "Darwin",
             NormalizedUserName = "Darwin".ToUpper(),
+            NormalizedEmail = "research@uliege.be".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2002,03,12)),
             ResearchOrganismId = "1",
             Avatar = "1.png"
@@ -56,6 +58,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             EmailConfirmed = true, 
             UserName = "JohnDoe",
             NormalizedUserName = "JohnDoe".ToUpper(),
+            NormalizedEmail = "research@helmo.be".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,12,21)),
             ResearchOrganismId = "3",
             Avatar = "4.png"
