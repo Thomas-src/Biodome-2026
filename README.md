@@ -13,6 +13,7 @@ La suite du document sera à compléter par vos soins.
 ## Membres de l'équipe
 
 **MAES Tibo** (Q240075) (Responsable du déploiement)
+
 **DERDEYN Thomas** (240206)
 
 Lien git : https://ue19.cg.helmo.be/q240075
