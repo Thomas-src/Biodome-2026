@@ -483,6 +483,26 @@ namespace BioDomes.Infrastructures.Migrations
                             ProductionId = 1,
                             UserId = "2",
                             Visible = true
+                        },
+                        new
+                        {
+                            IdEquipment = 2,
+                            Avatar = "gaz-extracteur.webp",
+                            ConsumptionId = 2,
+                            Name = "Extracteur de gaz",
+                            ProductionId = 3,
+                            UserId = "2",
+                            Visible = false
+                        },
+                        new
+                        {
+                            IdEquipment = 3,
+                            Avatar = "eau-extracteur.webp",
+                            ConsumptionId = 3,
+                            Name = "Extracteur d'eau",
+                            ProductionId = 2,
+                            UserId = "2",
+                            Visible = true
                         });
                 });
 
@@ -548,6 +568,21 @@ namespace BioDomes.Infrastructures.Migrations
                         {
                             ResearchOrganismId = "3",
                             Name = "HELMo"
+                        },
+                        new
+                        {
+                            ResearchOrganismId = "4",
+                            Name = "Hec Liège"
+                        },
+                        new
+                        {
+                            ResearchOrganismId = "5",
+                            Name = "Hénallux"
+                        },
+                        new
+                        {
+                            ResearchOrganismId = "6",
+                            Name = "HEPL"
                         });
                 });
 
@@ -980,17 +1015,17 @@ namespace BioDomes.Infrastructures.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             Avatar = "3.png",
-                            ConcurrencyStamp = "79cd8e7a-d9cc-4350-a653-448136225817",
+                            ConcurrencyStamp = "13c79dff-c3cb-4494-9a93-c4248965d536",
                             DateOfBirth = new DateOnly(2001, 11, 1),
                             Email = "admin@company.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@COMPANY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMy3l2qy83y6UVIs1HzTSEt0FMO5NEHwzVOFxQk0pj/Ui7bBF9U81RopTRfaM+xwcA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIjkMsR3Bw14t+kPbIokHmlRQEUrqgLdxZK8sHFJOrBFZfL/9tvccchV+l016eEDng==",
                             PhoneNumberConfirmed = false,
                             ResearchOrganismId = "1",
-                            SecurityStamp = "2c8b6245-0f92-4119-9551-9992d7eb6242",
+                            SecurityStamp = "d308d05c-1cfb-417b-86bc-cc0401a9346e",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
@@ -999,17 +1034,17 @@ namespace BioDomes.Infrastructures.Migrations
                             Id = "2",
                             AccessFailedCount = 0,
                             Avatar = "1.png",
-                            ConcurrencyStamp = "2a6c3f85-6d28-427c-b7b3-83c5edf997ac",
+                            ConcurrencyStamp = "184d84b6-935b-4d9b-ade1-2724d4edfde5",
                             DateOfBirth = new DateOnly(2002, 3, 12),
                             Email = "research@uliege.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "RESEARCH@ULIEGE.BE",
                             NormalizedUserName = "DARWIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKH7u3pnA6Z3clu5CfX07GkBsVw3a3T4WXmgEGG0U9tWWOD6e3mpR8wEQ6NoNDF9Ww==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECGTpbOPHql+gF30ycOlr+XrR1yNSJ5czf785a8wNX5Zj1yestqt3hlBAWb6lGZf/g==",
                             PhoneNumberConfirmed = false,
                             ResearchOrganismId = "1",
-                            SecurityStamp = "59250ed3-3fe8-4d8c-ae45-1e9aa5594655",
+                            SecurityStamp = "51dfb404-08c5-47f0-8eb2-8fd8885391f1",
                             TwoFactorEnabled = false,
                             UserName = "Darwin"
                         },
@@ -1018,17 +1053,17 @@ namespace BioDomes.Infrastructures.Migrations
                             Id = "3",
                             AccessFailedCount = 0,
                             Avatar = "4.png",
-                            ConcurrencyStamp = "8cfbeb6b-f450-411a-9588-1f522bba5501",
+                            ConcurrencyStamp = "9c0adac8-6b29-4473-9b25-c80b76951c06",
                             DateOfBirth = new DateOnly(2001, 12, 21),
                             Email = "research@helmo.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "RESEARCH@HELMO.BE",
                             NormalizedUserName = "JOHNDOE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMnZKcSFAAmI9Qwe3B4Y7HPbphCXMODJX6pzxQhqybTPHyzmP4mquLBlXSI17f7+jQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELlGwZQm0LajUmq4HgMt193w3LGUxtMJfIugIO0ewCWqcTLJsrAoakX02fOonBnp1A==",
                             PhoneNumberConfirmed = false,
                             ResearchOrganismId = "3",
-                            SecurityStamp = "36857c9a-5fa9-49da-9d58-46656b01f87c",
+                            SecurityStamp = "73148a07-bb71-4fe3-8984-f112e28397df",
                             TwoFactorEnabled = false,
                             UserName = "JohnDoe"
                         });

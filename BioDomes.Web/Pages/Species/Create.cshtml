@@ -28,7 +28,7 @@
                     <label asp-for="Species.Type" class="form-label">Type*</label>
                     <select asp-for="Species.Type" asp-items="@(new SelectList(Model.AllTypes))" class="form-control"
                             name="Species.Type">
-                        <option value="">-- Choisir un organisme --</option>
+                        <option value="">-- Choisir une classification --</option>
                     </select>
                     <span asp-validation-for="Species.Type" class="text-danger"></span>
 

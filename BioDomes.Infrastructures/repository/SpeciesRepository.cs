@@ -45,7 +45,7 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
             throw new ReadUserException("Utilisateur introuvable");
         }
 
-        string userId = u.Id;
+        var userId = u.Id;
 
         // 2. Enregistrer l'espece
         var TypeId = context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString()).IdType;

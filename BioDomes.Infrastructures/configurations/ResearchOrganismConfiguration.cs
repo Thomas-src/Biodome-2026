@@ -11,8 +11,10 @@ public class ResearchOrganismConfiguration : IEntityTypeConfiguration<ResearchOr
         builder.HasData(
             new ResearchOrganismEntity { ResearchOrganismId = "1", Name = "ULiege" },
             new ResearchOrganismEntity { ResearchOrganismId = "2", Name = "UCLouvain" },
-            new ResearchOrganismEntity { ResearchOrganismId = "3", Name = "HELMo" }
+            new ResearchOrganismEntity { ResearchOrganismId = "3", Name = "HELMo" },
+            new ResearchOrganismEntity { ResearchOrganismId = "4", Name = "Hec Liège" },
+            new ResearchOrganismEntity { ResearchOrganismId = "5", Name = "Hénallux" },
+            new ResearchOrganismEntity { ResearchOrganismId = "6", Name = "HEPL" }
         );
     }
-    
 }

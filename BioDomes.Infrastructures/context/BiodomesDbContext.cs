@@ -561,7 +561,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new EquipmentEntity
             {
-                IdEquipment = 1,
+                IdEquipment = 2,
                 Avatar = "gaz-extracteur.webp",
                 Name = "Extracteur de gaz",
                 ConsumptionId = 2,
@@ -571,7 +571,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             },
             new EquipmentEntity
             {
-                IdEquipment = 1,
+                IdEquipment = 3,
                 Avatar = "eau-extracteur.webp",
                 Name = "Extracteur d'eau",
                 ConsumptionId = 3,
