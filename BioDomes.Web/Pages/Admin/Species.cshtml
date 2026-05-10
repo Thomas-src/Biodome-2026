@@ -1,11 +1,12 @@
 @page "/Admin/species"
+@using BioDomes.Domains.Extensions
 @model BioDomes.Web.Pages.Admin.SpeciesAdminModel
 
 @{
     ViewData["Title"] = "Modification des espèces";
 }
-<partial name="Shared/_Toast" />
-<partial name="_PageHeader" model='("Modification des espèces", "/Species/Create")' />
+<partial name="Shared/_Toast"/>
+<partial name="_PageHeader" model='("Modification des espèces", "/Species/Create")'/>
 
 
 <div class="container mb-4">
@@ -36,8 +37,8 @@
                             </form>
                             @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
-                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50"                                  asp-page="/Admin/DeleteSpecies"
-                                   asp-route-slug="@espece.Nom"
+                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50" asp-page="/Admin/DeleteSpecies"
+                                   asp-route-slug="@espece.Nom.ToSlug()"
                                    asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
                                 </a>
@@ -50,7 +51,8 @@
     }
     else
     {
-        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce en attente de vérification.</p>    }
+        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce en attente de vérification.</p>
+    }
 
     <h2>Espèces vérifiées @Model.SpeciesVerified.Count</h2>
 
@@ -59,7 +61,7 @@
         <div class="row g-3 mb-4">
             @foreach (var espece in Model.SpeciesVerified)
             {
-               <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card shadow-sm h-100">
                         <partial name="_SpeciesCard" model="espece"/>
                         <div class="card-footer d-flex flex-column flex-md-row gap-2">
@@ -71,7 +73,7 @@
                             </a>
                             @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
-                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50"                                   asp-page="/Admin/DeleteSpecies"
+                                <a class="btn btn-sm btn-outline-danger w-100 w-md-50" asp-page="/Admin/DeleteSpecies"
                                    asp-route-slug="@espece.GetSlug()"
                                    asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
@@ -85,7 +87,8 @@
     }
     else
     {
-        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce vérifiée.</p>    }
+        <p class="text-muted mb-4 text-center text-md-start">Aucune espèce vérifiée.</p>
+    }
 </div>
 
 
