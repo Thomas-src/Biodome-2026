@@ -23,7 +23,7 @@
                         <div class="card-footer d-flex flex-column flex-md-row gap-2">
                             <a class="btn btn-sm btn-outline-primary w-100 w-md-50"
                                asp-page="/Admin/EditSpecies"
-                               asp-route-slug="@espece.Nom.ToSlug()"
+                               asp-route-slug="@espece.Nom"
                                asp-route-ownerName="@espece.OwnerName">
                                 Modifier
                             </a>
@@ -38,7 +38,7 @@
                             @if (Model.SpeciesBiodomeCount[(espece.Nom, espece.OwnerName)] == 0)
                             {
                                 <a class="btn btn-sm btn-outline-danger w-100 w-md-50" asp-page="/Admin/DeleteSpecies"
-                                   asp-route-slug="@espece.Nom.ToSlug()"
+                                   asp-route-slug="@espece.Nom"
                                    asp-route-ownerName="@espece.OwnerName">
                                     Supprimer
                                 </a>
