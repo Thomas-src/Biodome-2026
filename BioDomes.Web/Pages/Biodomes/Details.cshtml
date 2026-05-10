@@ -353,7 +353,7 @@
         id: n.Id,
         label: n.Label,
         color: n.Color,
-        image: `/images/species/${n.Image}`,
+        image: '@Url.Content("~/images/species/")' + n.Image,
         x: n.X * W,
         y: n.Y * H,
     }));

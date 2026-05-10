@@ -558,6 +558,26 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 ProductionId = 1,
                 Visible = true,
                 UserId = "2"
+            },
+            new EquipmentEntity
+            {
+                IdEquipment = 1,
+                Avatar = "gaz-extracteur.webp",
+                Name = "Extracteur de gaz",
+                ConsumptionId = 2,
+                ProductionId = 3,
+                Visible = false,
+                UserId = "2"
+            },
+            new EquipmentEntity
+            {
+                IdEquipment = 1,
+                Avatar = "eau-extracteur.webp",
+                Name = "Extracteur d'eau",
+                ConsumptionId = 3,
+                ProductionId = 2,
+                Visible = true,
+                UserId = "2"
             }
         );
     }

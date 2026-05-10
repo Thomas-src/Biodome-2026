@@ -26,7 +26,7 @@ Lien git : https://ue19.cg.helmo.be/q240075
 
 **Etape 3** : Vérifier la connexion internet à l'école ou depuis le VPN
 
-**Etape 4** : Démarrer le projet en https ou http
+**Etape 4** : Démarrer le projet en https ou http avec la commande dotnet run --project BioDomes.Web\BioDomes.Web.csproj
 
 ## Fonctionnalités implémentées
 
@@ -85,7 +85,7 @@ _MDP_ : `DoeJ1234!`
 **Compte Admin :**
 
 _Nom_ : `Admin`
-
+_Mail_: `admin@company.com`
 _MDP_ : `Test1234$`
 
 ## Éléments techniques notables

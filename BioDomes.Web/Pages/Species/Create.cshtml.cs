@@ -12,7 +12,7 @@ namespace BioDomes.Web.Pages.Species;
 
 [Authorize(Roles = AppRoles.Admin + "," + AppRoles.Research)]
 [ValidateAntiForgeryToken]
-public class Create : PageModel
+public class CreateModel : PageModel
 {
     private readonly ISpeciesClassificationRepository _repositoryClassification;
     private readonly IDietTypeRepository _dietTypeRepository;
@@ -23,7 +23,7 @@ public class Create : PageModel
     public IReadOnlyList<string> AllTypes { get; set; } = new List<string>();
     public IReadOnlyList<string> RegimeOptions { get; set; } = new List<string>();
 
-    public Create(ISpeciesService service, ISpeciesClassificationRepository repositoryClassification,
+    public CreateModel(ISpeciesService service, ISpeciesClassificationRepository repositoryClassification,
         IDietTypeRepository dietTypeRepository)
     {
         _speciesService = service;
