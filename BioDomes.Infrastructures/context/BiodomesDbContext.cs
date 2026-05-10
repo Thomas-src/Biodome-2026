@@ -32,19 +32,19 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
     public DbSet<ResearchOrganismEntity> ResearchOrganisms { get; set; }
     public DbSet<SpeciesTypeEntity> SpeciesTypes { get; set; }
     public DbSet<SpeciesRegimeEntity> SpeciesRegimes { get; set; }
-    
+
     public DbSet<ConsumptionEntity> Consumptions { get; set; }
-    
+
     public DbSet<ProductionEntity> Productions { get; set; }
-    
+
     public DbSet<BiodomeSpeciesEntity> BiodomeSpecies { get; set; }
-    
+
     public DbSet<BiodomeHistoryEntity> BiodomeHistory { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.ApplyConfiguration(new ResearchOrganismConfiguration());
         modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
@@ -68,7 +68,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
 
         modelBuilder.Entity<SpeciesTypeEntity>()
             .HasKey(r => r.IdType);
-        
+
         modelBuilder.Entity<ProductionEntity>()
             .HasKey(p => p.ProductionId);
 
@@ -88,7 +88,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
             .WithMany(u => u.Equipments)
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.SetNull);
-        
+
         modelBuilder.Entity<EquipmentEntity>()
             .HasOne(e => e.Production)
             .WithMany(p => p.Equipments)
@@ -111,14 +111,14 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
 
         // ResearchOrganism -> User
         /*
-         * 
+         *
          */
-     modelBuilder.Entity<UserEntity>()
+        modelBuilder.Entity<UserEntity>()
             .HasOne(u => u.ResearchOrganism)
             .WithMany(r => r.Users)
             //.HasForeignKey(u => u.ResearchOrganismId)
             .OnDelete(DeleteBehavior.Restrict);
-       
+
 
         // Biodomes <-> Species
         modelBuilder.Entity<BiodomeSpeciesEntity>()
@@ -313,7 +313,6 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 UserId = "2"
             },
             Souris
-            
         );
 
         modelBuilder.Entity<BiodomeEntity>().HasData(
@@ -362,72 +361,191 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 idBiodomes = 5,
                 Name = "Laboratoire Contrôlé",
                 Temperature = 22,
-                Humidity = 60,
+                Humidity = 18,
                 Avatar = "labo.png",
                 userId = "1",
                 Slug = "laboratoire-controle"
             }
         );
+
+        // biome prairie
         modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(
-            new BiodomeSpeciesEntity { BiodomeId = 2, SpeciesId = 10, Quantity = 3 }, // souris
-            new BiodomeSpeciesEntity { BiodomeId = 2, SpeciesId = 9, Quantity = 10 }
+            new BiodomeSpeciesEntity { BiodomeId = 4, SpeciesId = 10, Quantity = 3 }, // souris
+            new BiodomeSpeciesEntity { BiodomeId = 4, SpeciesId = 9, Quantity = 10 }
         );
-        
+        // laboratoire
+        modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(
+            new BiodomeSpeciesEntity { BiodomeId = 5, SpeciesId = 1, Quantity = 2 }, // 2 Lions
+            new BiodomeSpeciesEntity { BiodomeId = 5, SpeciesId = 8, Quantity = 75 }, // 75 Lièvres
+            new BiodomeSpeciesEntity { BiodomeId = 5, SpeciesId = 3, Quantity = 5 } // 5 Hêtres
+        );
+        // laboratoire
+        modelBuilder.Entity<BiodomeSpeciesEntity>().HasData(
+            new BiodomeSpeciesEntity { BiodomeId = 1, SpeciesId = 1, Quantity = 2 }, // 4 Lions
+            new BiodomeSpeciesEntity { BiodomeId = 1, SpeciesId = 8, Quantity = 75 }, // 150 Lièvres
+            new BiodomeSpeciesEntity { BiodomeId = 1, SpeciesId = 3, Quantity = 5 } // 10 Hêtres
+        );
+
         modelBuilder.Entity<BiodomeHistoryEntity>().HasData(
             new BiodomeHistoryEntity
             {
-                Id = 1,
-                BiodomeId = 2,
-                SpeciesId = 10,
-                Delta = 3,
-                UpdateAt = new DateTime(2026, 5, 10, 12, 0, 0, DateTimeKind.Utc)
+                Id = 1, BiodomeId = 4, SpeciesId = 10, Delta = 5,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
             },
             new BiodomeHistoryEntity
             {
-                Id = 2,
-                BiodomeId = 2,
-                SpeciesId = 9,
-                Delta = 10,
-                UpdateAt = new DateTime(2026, 5, 10, 12, 0, 0, DateTimeKind.Utc)
+                Id = 2, BiodomeId = 4, SpeciesId = 10, Delta = -3,
+                UpdateAt = new DateTime(2026, 4, 20, 10, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 3, BiodomeId = 4, SpeciesId = 10, Delta = 1,
+                UpdateAt = new DateTime(2026, 5, 5, 9, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 4, BiodomeId = 4, SpeciesId = 9, Delta = 15,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 5, BiodomeId = 4, SpeciesId = 9, Delta = -8,
+                UpdateAt = new DateTime(2026, 4, 22, 14, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 6, BiodomeId = 4, SpeciesId = 9, Delta = 3,
+                UpdateAt = new DateTime(2026, 5, 3, 11, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 7, BiodomeId = 5, SpeciesId = 1, Delta = 4,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 8, BiodomeId = 5, SpeciesId = 1, Delta = -3,
+                UpdateAt = new DateTime(2026, 4, 18, 9, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 9, BiodomeId = 5, SpeciesId = 1, Delta = 1,
+                UpdateAt = new DateTime(2026, 5, 2, 11, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 10, BiodomeId = 5, SpeciesId = 8, Delta = 90,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 11, BiodomeId = 5, SpeciesId = 8, Delta = -25,
+                UpdateAt = new DateTime(2026, 4, 25, 14, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 12, BiodomeId = 5, SpeciesId = 8, Delta = 10,
+                UpdateAt = new DateTime(2026, 5, 5, 9, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 13, BiodomeId = 5, SpeciesId = 3, Delta = 8,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 14, BiodomeId = 5, SpeciesId = 3, Delta = -4,
+                UpdateAt = new DateTime(2026, 4, 28, 16, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 15, BiodomeId = 5, SpeciesId = 3, Delta = 1,
+                UpdateAt = new DateTime(2026, 5, 7, 10, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 16, BiodomeId = 1, SpeciesId = 1, Delta = 4,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 17, BiodomeId = 1, SpeciesId = 1, Delta = -3,
+                UpdateAt = new DateTime(2026, 4, 18, 9, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 18, BiodomeId = 1, SpeciesId = 1, Delta = 1,
+                UpdateAt = new DateTime(2026, 5, 2, 11, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 19, BiodomeId = 1, SpeciesId = 8, Delta = 90,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 20, BiodomeId = 1, SpeciesId = 8, Delta = -25,
+                UpdateAt = new DateTime(2026, 4, 25, 14, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 21, BiodomeId = 1, SpeciesId = 8, Delta = 10,
+                UpdateAt = new DateTime(2026, 5, 5, 9, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 22, BiodomeId = 1, SpeciesId = 3, Delta = 8,
+                UpdateAt = new DateTime(2026, 4, 10, 8, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 23, BiodomeId = 1, SpeciesId = 3, Delta = -4,
+                UpdateAt = new DateTime(2026, 4, 28, 16, 0, 0, DateTimeKind.Utc)
+            },
+            new BiodomeHistoryEntity
+            {
+                Id = 24, BiodomeId = 1, SpeciesId = 3, Delta = 1,
+                UpdateAt = new DateTime(2026, 5, 7, 10, 0, 0, DateTimeKind.Utc)
             }
         );
-        
+
+
         // Prodution pour équipements 
         modelBuilder.Entity<ProductionEntity>().HasData(
-        new ProductionEntity
-        {
-            ProductionId = 1,
-            Name = "Lumière"
-        },
-        new ProductionEntity
-        {
-            ProductionId = 2,
-            Name = "Eau"
-        },
-        new ProductionEntity
-        {
-            ProductionId = 3,
-            Name = "Azote"
-        }
+            new ProductionEntity
+            {
+                ProductionId = 1,
+                Name = "Lumière"
+            },
+            new ProductionEntity
+            {
+                ProductionId = 2,
+                Name = "Eau"
+            },
+            new ProductionEntity
+            {
+                ProductionId = 3,
+                Name = "Azote"
+            }
         );
-        
+
         // Consommation pour équipements
         modelBuilder.Entity<ConsumptionEntity>().HasData(
-        new ConsumptionEntity
-        {
-            ConsumptionId = 1,
-            Name = "Hydrogène"
-        },
-        new ConsumptionEntity
-        {
-            ConsumptionId = 2,
-            Name = "Electricité"
-        },
-        new ConsumptionEntity
-        {
-            ConsumptionId = 3,
-            Name = "Essence"
-        }
+            new ConsumptionEntity
+            {
+                ConsumptionId = 1,
+                Name = "Hydrogène"
+            },
+            new ConsumptionEntity
+            {
+                ConsumptionId = 2,
+                Name = "Electricité"
+            },
+            new ConsumptionEntity
+            {
+                ConsumptionId = 3,
+                Name = "Essence"
+            }
         );
         // Equipements 
         modelBuilder.Entity<EquipmentEntity>().HasData(
@@ -441,7 +559,7 @@ public class BioDomesDbContext : IdentityDbContext<UserEntity>
                 Visible = true,
                 UserId = "2"
             }
-            );
+        );
     }
 
     private static void SeedUsersData(ModelBuilder modelBuilder)

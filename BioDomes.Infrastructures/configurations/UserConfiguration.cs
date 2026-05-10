@@ -39,7 +39,7 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
         var chercheurUliege = new UserEntity()
         {
             Id = ResearchId,
-            Email = "research@ulg.be",
+            Email = "research@uliege.be",
             EmailConfirmed = true, 
             UserName = "Darwin",
             NormalizedUserName = "Darwin".ToUpper(),

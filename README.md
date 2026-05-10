@@ -56,9 +56,9 @@ Lien git : https://ue19.cg.helmo.be/q240075
 
 **US-13** _(Rendre disponible un équipement)_ : Totalement achevée
 
-**US-14** _(BONUS : Aide à la création d’un réseau trophique)_ : non-faite
+**US-14** _(BONUS : Aide à la création d’un réseau trophique)_ : Non-réalisée
 
-**US-15** _(Statistiques et Graphiques)_ : partiellement achevée --> Il manque le diagramme par espèce
+**US-15** _(Statistiques et Graphiques)_ : partiellement achevée --> Totalement achevée
 
 **US-16** _(Modifier ou supprimer une espèce ou un équipement)_ : Totalement achevée
 
