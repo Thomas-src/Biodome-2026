@@ -1,4 +1,5 @@
 ﻿@page
+@using BioDomes.Domains.Extensions
 @model BioDomes.Web.Pages.Admin.DeleteSpeciesModel
 
 @{
@@ -41,7 +42,7 @@
                     </a>
                     <form method="post" asp-page-handler="Delete">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="slug" value="@Model.Species.Nom"/>
+                        <input type="hidden" name="slug" value="@Model.Species.Nom.ToKebabCase()"/>
                         <input type="hidden" name="ownerName" value="@Model.Species.OwnerName"/>
                         <button type="submit" class="btn btn-danger">
                             Supprimer définitivement

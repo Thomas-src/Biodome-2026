@@ -51,8 +51,7 @@ public class DeleteSpeciesModel : PageModel
             _logger.LogInformation("Slug: or owner is empty {} - {}", slug, ownerName);
             return NotFound();
         }
-        slug = slug.ToKebabCase();
-        var species = _speciesService.GetByKebabCase(slug, ownerName);
+        var species = _speciesService.GetByKebabCase(slug.ToKebabCase(), ownerName);
         if (species is null)
         {
             _logger.LogInformation("Species not found for owner: {} - {}", slug, ownerName);
@@ -64,7 +63,7 @@ public class DeleteSpeciesModel : PageModel
             TempData["ErrorMessage"] = "Impossible de supprimer : cette espèce est utilisée dans un ou plusieurs biodômes.";
             return RedirectToPage("/Admin/species");
         }
-        _speciesService.Delete(species.Nom, ownerName);
+        _speciesService.Delete(species.Nom.ToKebabCase(), ownerName);
         TempData["SuccessMessage"] = "Espèce supprimée avec succès";
         return RedirectToPage("/Admin/species");
     }
