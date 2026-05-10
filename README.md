@@ -13,6 +13,7 @@ La suite du document sera à compléter par vos soins.
 ## Membres de l'équipe
 
 **MAES Tibo** (Q240075) (Responsable du déploiement)
+
 **DERDEYN Thomas** (240206)
 
 Lien git : https://ue19.cg.helmo.be/q240075
@@ -63,16 +64,16 @@ Lien git : https://ue19.cg.helmo.be/q240075
 
 ## Données de connexion
 
-Compte 1 :
+**Compte 1 :**
 
 Chercheur ayant crée un biome, une espèce et un équipement : 
 
-_Nom_ : Darwin
+_Nom_ : `Darwin`
 
-_MDP_ : Dwin1859$$ 
+_MDP_ : `Dwin1859$$` 
 
 
-Compte 2 : 
+**Compte 2 : **
 
 Compte vierge : 
 
@@ -81,11 +82,11 @@ _Nom_ : JohnDoe
 _MDP_ : DoeJ1234!
 
 
-Compte Admin : 
+**Compte Admin : **
 
-_Nom_ : Admin
+_Nom_ : `Admin`
 
-_MDP_ : Test1234$
+_MDP_ : `Test1234$`
 
 ## Éléments techniques notables
 
