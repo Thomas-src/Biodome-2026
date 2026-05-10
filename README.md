@@ -73,7 +73,7 @@ _Nom_ : `Darwin`
 _MDP_ : `Dwin1859$$` 
 
 
-**Compte 2 : **
+**Compte 2 :**
 
 Compte vierge : 
 
@@ -82,7 +82,7 @@ _Nom_ : `JohnDoe`
 _MDP_ : `DoeJ1234!`
 
 
-**Compte Admin : **
+**Compte Admin :**
 
 _Nom_ : `Admin`
 
