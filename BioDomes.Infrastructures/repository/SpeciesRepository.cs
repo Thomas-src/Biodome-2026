@@ -51,7 +51,7 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
         // 2. Enregistrer l'espece
         var TypeId = context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString()).IdType;
         var RegimId = context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime;
-        var entity = SpeciesMapper.ToEntity(created, userId, TypeId, RegimId);
+        var entity = SpeciesMapper.ToEntity(created, userId, RegimId, TypeId);
         try
         {
             context.Species.Add(entity);
