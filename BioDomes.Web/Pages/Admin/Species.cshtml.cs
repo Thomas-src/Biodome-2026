@@ -1,3 +1,4 @@
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.entities;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +39,7 @@ public class SpeciesAdminModel : PageModel
 
     public IActionResult OnPostMakePublic(string name, string ownerName)
     {
-        if (_speciesService.MakePublic(name, ownerName))
+        if (_speciesService.MakePublic(name.ToKebabCase(), ownerName))
         {
             TempData["SuccessMessage"] = $"Espèce {name} de {ownerName} rendue publique avec succès";
         }

@@ -31,6 +31,7 @@ public class SpeciesService : ISpeciesService
         
         if (species is null)
         {
+            _logger.LogInformation("Species not found for {}, {}", name, ownerName);
             return false;
         }
         

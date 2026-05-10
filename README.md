@@ -52,7 +52,7 @@ Lien git : https://ue19.cg.helmo.be/q240075
 
 **US-11** _(Consultation des biomes en équilibre)_ : Totalement achevée
 
-**US-12** _(Rendre disponible une espèce )_ : #TODO
+**US-12** _(Rendre disponible une espèce )_ : Totalement achevée
 
 **US-13** _(Rendre disponible un équipement)_ : Totalement achevée
 
@@ -90,6 +90,6 @@ _MDP_ : `Test1234$`
 
 ## Éléments techniques notables
 
-Bibliothèque JS graphiques : Nous avons utiliser la bibliothèque Charts de google
+Bibliothèque JS graphiques : Nous avons utiliser la bibliothèque chart.js
 
-Protectio DDOS : Nous avons mis en place du proctection Ddos qui peut être assez contraignante. Si vous faites vos tests assez rapidement, vous risquez de vous faire boquer assez rapidement, afin de vous facilité la vie, les valeurs a modifier se trouvent ligne 94 et 95 du program.cs.  
+Protection DDOS : Nous avons mis en place du proctection Ddos qui peut être assez contraignante. Si vous faites vos tests assez rapidement, vous risquez de vous faire bloquer assez rapidement, afin de vous facilité la vie, les valeurs a modifier se trouvent ligne 94 et 95 du program.cs.  

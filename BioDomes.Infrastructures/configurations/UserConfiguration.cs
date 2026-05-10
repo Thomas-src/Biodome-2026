@@ -41,26 +41,26 @@ public class UserConfiguration  : IEntityTypeConfiguration<UserEntity>
             Id = ResearchId,
             Email = "research@ulg.be",
             EmailConfirmed = true, 
-            UserName = "Chercheur Liège",
-            NormalizedUserName = "Chercheur Liege".ToUpper(),
+            UserName = "Darwin",
+            NormalizedUserName = "Darwin".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2002,03,12)),
             ResearchOrganismId = "1",
             Avatar = "1.png"
         };
-        chercheurUliege.PasswordHash = ph.HashPassword(chercheurUliege, "Liege1234$");
+        chercheurUliege.PasswordHash = ph.HashPassword(chercheurUliege, "Dwin1859$$");
 
         var chercheurHelmo = new UserEntity()
         {
             Id = Research2Id,
             Email = "research@helmo.be",
             EmailConfirmed = true, 
-            UserName = "Chercheur Helmo",
-            NormalizedUserName = "Chercheur Helmo".ToUpper(),
+            UserName = "JohnDoe",
+            NormalizedUserName = "JohnDoe".ToUpper(),
             DateOfBirth = DateOnly.FromDateTime(new DateTime(2001,12,21)),
             ResearchOrganismId = "3",
             Avatar = "4.png"
         };
-        chercheurHelmo.PasswordHash = ph.HashPassword(chercheurHelmo, "Helmo1234$");
+        chercheurHelmo.PasswordHash = ph.HashPassword(chercheurHelmo, "DoeJ1234!");
 
         
         builder.HasData(admin,chercheurUliege,chercheurHelmo);
