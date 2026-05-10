@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using BioDomes.Domains.Core.Equipements;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
@@ -33,7 +34,12 @@ public class EditEquipementModel : PageModel
     public IActionResult OnGet(string slug, string ownerName)
     {
         LoadSelects();
-
+        slug = SanitizeInput(slug);
+        ownerName = SanitizeInput(ownerName);
+        if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(ownerName))
+        {
+            return NotFound();
+        }
         var existing = _equipementService.GetByKebabCase(slug, ownerName);
         if (existing == null)
         {
@@ -62,7 +68,7 @@ public class EditEquipementModel : PageModel
     public IActionResult OnPost(string confirm)
     {
         LoadSelects();
-
+        confirm = SanitizeInput(confirm);
         if (!ModelState.IsValid)
         {
             LogModelStateErrors();
@@ -170,12 +176,15 @@ public class EditEquipementModel : PageModel
     public class InputModel
     {
         [Required(ErrorMessage = "Le nom est obligatoire")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "La consommation est obligatoire")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public required string Consumption { get; set; }
 
         [Required(ErrorMessage = "La production est obligatoire")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public required string Production { get; set; }
 
         [IsImageValid] public IFormFile? Avatar { get; set; }
@@ -183,5 +192,9 @@ public class EditEquipementModel : PageModel
         public string? CurrentAvatarPath { get; set; }
 
         [BindProperty(SupportsGet = true)] public required string OwnerName { get; set; }
+    }
+    private string SanitizeInput(string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
     }
 }

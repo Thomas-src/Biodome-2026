@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 using BioDomes.Domains.Services.mail;
 using BioDomes.Infrastructures.entities;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,9 @@ public class ResendConfirmationEmailModel : PageModel
         _logger = logger;
     }
 
-    [BindProperty] public string Email { get; set; } = string.Empty;
+    [BindProperty] 
+    [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
+    public string Email { get; set; } = string.Empty;
 
     public string? StatusMessage { get; set; }
     public bool? IsSuccess { get; set; }

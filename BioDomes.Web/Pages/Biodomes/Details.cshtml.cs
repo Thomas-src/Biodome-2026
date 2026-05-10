@@ -1,4 +1,5 @@
-﻿using BioDomes.Domains.Core;
+﻿using System.Text.RegularExpressions;
+using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
@@ -48,7 +49,7 @@ public class DetailsModel : PageModel
 
     public IActionResult OnGet(string id)
     {
-        _logger.LogInformation("Getting details for {id}", id);
+        id = SanitizeInput(id);
         try
         {
             var biodome = _service.GetBiodomeBySlug(id);
@@ -97,30 +98,38 @@ public class DetailsModel : PageModel
 
     public IActionResult OnPostAddSpecies(string biomeId, string speciesName, int quantity = 1)
     {
-        _service.AddSpeciesTo(biomeId, speciesName, quantity);
+        var biomeSlug = SanitizeInput(biomeId);
+        var species = SanitizeInput(speciesName);
 
-        return RedirectToPage(new { id = biomeId });
+        _service.AddSpeciesTo(biomeSlug, species, quantity);
+
+        return RedirectToPage(new { id = biomeSlug });
     }
 
     public IActionResult OnPostAddEquipement(string biomeId, string equipementName)
     {
-        _service.AddEquipementTo(biomeId, equipementName);
+        var biomeSlug = SanitizeInput(biomeId);
+        var species = SanitizeInput(equipementName);
 
-        return RedirectToPage(new { id = biomeId });
+        _service.AddEquipementTo(biomeSlug, species);
+
+        return RedirectToPage(new { id = biomeSlug });
     }
 
     public IActionResult OnPostRemoveSpecies(string biomeId, string speciesName)
     {
-        _service.RemoveSpeciesFrom(biomeId, speciesName);
-        // TempData["SuccessMessage"] = $"L'espèce {speciesName} a été retirée du biodome.";
-        return RedirectToPage(new { id = biomeId });
+        var biomeSlug = SanitizeInput(biomeId);
+        var species = SanitizeInput(speciesName);
+
+        _service.RemoveSpeciesFrom(biomeSlug, species);
+        return RedirectToPage(new { id = biomeSlug });
     }
 
     public IActionResult OnPostRemoveEquipement(string biomeId, string equipementName)
     {
-        _service.RemoveEquipementFrom(biomeId, equipementName);
-        // TempData["SuccessMessage"] = $"L'équipement {equipementName} a été retiré du biodome.";
-        return RedirectToPage(new { id = biomeId });
+        var biomeSlug = SanitizeInput(biomeId);
+        _service.RemoveEquipementFrom(biomeSlug, equipementName);
+        return RedirectToPage(new { id = biomeSlug });
     }
 
     public record SpeciesChartDto(
@@ -130,9 +139,10 @@ public class DetailsModel : PageModel
 
     public IActionResult OnPostDelete(string biomeId)
     {
+        var biomeSlug = SanitizeInput(biomeId);
         try
         {
-            _service.DeleteBiodome(biomeId);
+            _service.DeleteBiodome(biomeSlug);
         }
         catch (Exception e)
         {
@@ -142,5 +152,10 @@ public class DetailsModel : PageModel
 
         TempData["SuccessMessage"] = $"Le biodome à bien été supprimé !";
         return RedirectToPage("Biodomes");
+    }
+
+    private string SanitizeInput(string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
     }
 }

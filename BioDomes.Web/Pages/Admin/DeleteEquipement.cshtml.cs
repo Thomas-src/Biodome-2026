@@ -1,4 +1,6 @@
-﻿using BioDomes.Domains.Services.interfaces;
+﻿using System.Text.RegularExpressions;
+using BioDomes.Domains.Core.Equipements;
+using BioDomes.Domains.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -16,11 +18,13 @@ public class DeleteEquipementModel : PageModel
         _biodomesService = biodomesService;
     }
 
-    public Domains.Core.Equipements.Equipement Equipement { get; set; }
+    public Equipement Equipement { get; set; }
 
     public IActionResult OnGet(string slug, string ownerName)
     {
-        if (string.IsNullOrEmpty(slug))
+        slug = SanitizeInput(slug);
+        ownerName = SanitizeInput(ownerName);
+        if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(ownerName))
         {
             return NotFound();
         }
@@ -39,6 +43,8 @@ public class DeleteEquipementModel : PageModel
     
     public IActionResult OnPostDelete(string slug, string ownerName)
     {
+        slug = SanitizeInput(slug);
+        ownerName = SanitizeInput(ownerName);
         if (string.IsNullOrEmpty(slug))
         {
             return NotFound();
@@ -55,4 +61,9 @@ public class DeleteEquipementModel : PageModel
         return RedirectToPage("/Admin/Equipements");
       
     }
+    private string SanitizeInput(string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
+    }
+    
 }

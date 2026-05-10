@@ -211,30 +211,36 @@ public class RegisterModel : PageModel
         [Required(ErrorMessage = "Le nom est obligatoire.")]
         [StringLength(50, MinimumLength = 5, ErrorMessage = "Le nom doit contenir entre 5 et 50 caractères.")]
         [Display(Name = "Nom du chercheur")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public string Nom { get; set; } = string.Empty;
 
-        [Display(Name = "Avatar prédéfini")] public string? SelectedAvatar { get; set; }
+        [Display(Name = "Avatar prédéfini")] 
+        public string? SelectedAvatar { get; set; }
 
         [Required(ErrorMessage = "L'adresse e-mail est obligatoire.")]
         [IsEmailValid]
         [Display(Name = "Email")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Le mot de passe est obligatoire.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Le mot de passe doit contenir au moins 6 caractères.")]
         [DataType(DataType.Password)]
         [Display(Name = "Mot de passe")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La confirmation du mot de passe est obligatoire.")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirmer le mot de passe")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         [Compare(nameof(Password), ErrorMessage = "Les mots de passe ne correspondent pas.")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La date de naissance est obligatoire.")]
         [DataType(DataType.Date)]
         [Display(Name = "Date de naissance")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         public required DateOnly DateNaissance { get; set; }
 
         [Display(Name = "Avatar")]

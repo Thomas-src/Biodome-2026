@@ -6,7 +6,7 @@ public class SlugTransformer : IOutboundParameterTransformer
 {
     public string? TransformOutbound(object? value)
     {
-        if (value == null) return null;
+        if (value is null) return null;
 
         return value.ToString().ToKebabCase();
     }

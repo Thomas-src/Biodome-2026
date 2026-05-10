@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using BioDomes.Domains.Core;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
@@ -42,7 +43,12 @@ public class EditSpeciesModel : PageModel
     public IActionResult OnGet(string slug, string ownerName)
     {
         LoadSelect();
-
+        slug = SanitizeInput(slug);
+        ownerName = SanitizeInput(ownerName);
+        if (string.IsNullOrEmpty(slug) || string.IsNullOrEmpty(ownerName))
+        {
+            return NotFound();
+        }
         var existing = _speciesService.GetByKebabCase(slug, ownerName);
         if (existing == null)
         {
@@ -79,6 +85,8 @@ public class EditSpeciesModel : PageModel
     public IActionResult OnPost(string confirm)
     {
         LoadSelect();
+        confirm = SanitizeInput(confirm);
+
 
         if (!ModelState.IsValid)
         {
@@ -178,10 +186,12 @@ public class EditSpeciesModel : PageModel
         public required string Name { get; set; }
 
         [Required(ErrorMessage = "Le type est obligatoire")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         [IsSpeciesClassification]
         public required string Type { get; set; }
 
         [Required(ErrorMessage = "Le régime est obligatoire")]
+        [RegularExpression("@”^[^<>&]*$", ErrorMessage = "Les tags HTML ne sont pas autorisé")]
         [IsSpeciesRegim]
         public required string Regime { get; set; }
 
@@ -197,5 +207,9 @@ public class EditSpeciesModel : PageModel
         public bool Confirmed { get; set; }
         public required string OwnerName { get; set; }
         public string? CurrentAvatarPath { get; set; }
+    }
+    private string SanitizeInput(string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
     }
 }
