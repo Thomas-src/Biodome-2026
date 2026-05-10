@@ -170,7 +170,7 @@ public class BiodomeService : IBiodomeService
         return false;
     }
 
-    public void Update(Biodome created)
+    public void Update(string oldSlug, Biodome created)
     {
         double humiditeMax = CalculateHumiditeMax(created.Temperature);
 
@@ -180,15 +180,15 @@ public class BiodomeService : IBiodomeService
                 $"Un biome avec une température de {created.Temperature}° peut avoir une humidité max de {Math.Round(humiditeMax, 2)} g/m³");
         }
         
-        var old = GetBiodomeBySlug(created.Slug);
-
+        var old = GetBiodomeBySlug(oldSlug);
+        
         if (old != null && !created.DeepEquals(old))
         {
-            _repository.Update(created);
+            _repository.Update(oldSlug, created);
         }
     }
 
-    public void Update(Biodome created, string fileName, Stream openReadStream)
+    public void Update(string oldSlug, Biodome created, string fileName, Stream openReadStream)
     {
         double humiditeMax = CalculateHumiditeMax(created.Temperature);
 
@@ -199,12 +199,12 @@ public class BiodomeService : IBiodomeService
         }
 
 
-        var old = GetBiodomeBySlug(created.Slug);
-
+        var old = GetBiodomeBySlug(oldSlug);
+        
         if (old != null && !created.DeepEquals(old))
         {
             created.Image = _pictureRepository.Save(fileName, openReadStream, "biodomes");
-            _repository.Update(created);
+            _repository.Update(oldSlug,created);
         }
     }
 }

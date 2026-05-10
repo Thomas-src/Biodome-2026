@@ -57,9 +57,9 @@ public class BiodomeRepository(BioDomesDbContext context, IBiodomeHistoryReposit
         }
     }
 
-    public void Update(Biodome biodome)
+    public void Update(string oldSlug, Biodome biodome)
     {
-        var old = context.Biodomes.FirstOrDefault(b => b.Slug.Equals(biodome.Slug));
+        var old = context.Biodomes.FirstOrDefault(b => b.Slug.Equals(oldSlug));
 
         if (old == null)
         {
@@ -67,6 +67,7 @@ public class BiodomeRepository(BioDomesDbContext context, IBiodomeHistoryReposit
         }
 
         BiodomeMapper.UpdateEntity(biodome, old);
+
         context.SaveChanges();
     }
 

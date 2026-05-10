@@ -26,11 +26,11 @@ public class Edit : PageModel
         _service = service;
     }
 
-    public IActionResult OnGet(string id)
+    public IActionResult OnGet(string slug)
     {
         try
         {
-            var biodome = _service.GetBiodomeBySlug(id);
+            var biodome = _service.GetBiodomeBySlug(slug);
             Biodome = biodome;
             Biome = new InputModel
             {
@@ -47,9 +47,9 @@ public class Edit : PageModel
         }
     }
 
-    public IActionResult OnPost(string id)
+    public IActionResult OnPost(string slug)
     {
-        var biodome = _service.GetBiodomeBySlug(id);
+        var biodome = _service.GetBiodomeBySlug(slug);
         if (biodome == null)
         {
             return NotFound();
@@ -61,7 +61,6 @@ public class Edit : PageModel
             return Page();
         }
         Biodome = biodome;
-        // TODO refactor ca dans le service + ajouter un bouton delete
         var fileName = Biome.Avatar != null ? Biome.Avatar.FileName : Biodome.Image;
 
         var created = new Biodome(
@@ -72,18 +71,18 @@ public class Edit : PageModel
             Biodome.Species,
             Biodome.Equipements,
             User.Identity.Name,
-            Biodome.Nom.ToSlug()
+            Biome.Name.ToSlug()
         );
 
         try
         {
             if (Biome.Avatar != null)
             {
-                _service.Update(created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
+                _service.Update(slug, created, Biome.Avatar.FileName, Biome.Avatar.OpenReadStream());
             }
             else
             {
-                _service.Update(created);
+                _service.Update(slug, created);
             }
         }
         catch (ArgumentException e)
@@ -92,7 +91,7 @@ public class Edit : PageModel
             return Page();
         }
         TempData["SuccessMessage"] = $"Le {Biome.Name} a été modifié avec succès !";
-        return RedirectToPage("/biodomes/details", new { id = Biodome.Slug });
+        return RedirectToPage("/biodomes/details", new { id = created.Slug });
     }
 
     public class InputModel

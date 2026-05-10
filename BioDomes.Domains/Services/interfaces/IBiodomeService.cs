@@ -17,8 +17,8 @@ public interface IBiodomeService
     void Save(Biodome created, Stream openReadStream);
 
     Biodome GetBiodomeBySlug(string biodomeSlug);
-    void Update(Biodome created);
-    void Update(Biodome created, string fileName, Stream openReadStream);
+    void Update(string olg, Biodome created);
+    void Update(string old, Biodome created, string fileName, Stream openReadStream);
     void AddSpeciesTo(string biodomeSlug, string speciesName, int quantity);
     void AddEquipementTo(string biodomeSlug, string equipementName);
     void RemoveSpeciesFrom(string biodomeSlug, string speciesName);

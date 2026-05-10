@@ -1,4 +1,4 @@
-@page "{id:int}"
+@page "{slug}"
 @model BioDomes.Web.Pages.Biodomes.Edit
 
 @{
@@ -13,7 +13,7 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
 
-            <form method="post" enctype="multipart/form-data" asp-route-id="@Model.Biodome.Slug">
+            <form method="post" enctype="multipart/form-data" asp-route-slug="@Model.Biodome.Slug">
                 @Html.AntiForgeryToken()
                 @if (!ViewData.ModelState.IsValid)
                 {

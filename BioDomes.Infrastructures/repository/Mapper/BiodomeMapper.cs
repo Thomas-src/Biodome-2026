@@ -53,6 +53,7 @@ public static class BiodomeMapper
 
     public static void UpdateEntity(Biodome biodome, BiodomeEntity entity)
     {
+        entity.Name = biodome.Nom;
         entity.Temperature = biodome.Temperature;
         entity.Humidity = biodome.Humidite;
         entity.Avatar = biodome.Image;
