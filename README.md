@@ -14,9 +14,11 @@ La suite du document sera à compléter par vos soins.
 
 **MAES Tibo** (Q240075) (Responsable du déploiement)
 
-**DERDEYN Thomas** (240206)
+**DERDEYN Thomas** (Q240206)
 
-Lien git : https://ue19.cg.helmo.be/q240075
+Url du projet en production : https://ue19.cg.helmo.be/q240075
+
+Url du répertoire git : https://git.helmo.be/students/info/q240075/biodomes
 
 ## Construction de la solution
 
@@ -96,5 +98,4 @@ Resend : Nous avons utilisé l'outil resend pour envoyer des e-mails afin de vé
 
 Protection DDOS : Nous avons mis en place du proctection Ddos qui peut être assez contraignante. Si vous faites vos tests assez rapidement, vous risquez de vous faire bloquer assez rapidement, afin de vous facilité la vie, les valeurs a modifier se trouvent ligne 94 et 95 du program.cs.  
 
-Protection CORS :
 
