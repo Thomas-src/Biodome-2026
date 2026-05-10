@@ -8,6 +8,6 @@ public class SlugTransformer : IOutboundParameterTransformer
     {
         if (value is null) return null;
 
-        return value.ToString().ToKebabCase();
+        return value.ToString().ToSlug();
     }
 }
