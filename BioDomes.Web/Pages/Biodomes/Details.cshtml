@@ -23,7 +23,7 @@
                 @if (Model.Owner)
                 {
                     <div class="d-flex gap-3 align-items-center">
-                        <a href="/biodomes/edit/@Model.Biodome.Slug" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <a href="~/biodomes/edit/@Model.Biodome.Slug" class="btn btn-sm btn-outline-primary">Modifier</a>
                         <form method="post" asp-page-handler="Delete">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
