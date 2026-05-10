@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
+using BioDomes.Domains;
 using BioDomes.Domains.Core;
+using BioDomes.Domains.Extensions;
 using BioDomes.Domains.Repository;
 using BioDomes.Domains.Services;
 using BioDomes.Domains.Services.interfaces;
@@ -37,7 +39,8 @@ public class DetailsModel : PageModel
     // chart 3
     public FoodChain FoodChain { get; set; } = new();
     // chart 4
-    public IReadOnlyList<BiodomeSpeciesHistory>  SpeciesHistories { get; set; }
+    public SpeciesEvolutionData SpeciesEvolution { get; set; }  = new();
+
     public DetailsModel(IBiodomeService service, ISpeciesRepository speciesRepository,
         IEquipementRepository equipementRepository, IStatsService statsService, ILogger<DetailsModel> logger)
     {
@@ -50,7 +53,7 @@ public class DetailsModel : PageModel
 
     public IActionResult OnGet(string id)
     {
-        id = SanitizeInput(id);
+        id = SanitizeInput(id).ToSlug();
         try
         {
             var biodome = _service.GetBiodomeBySlug(id);
@@ -61,7 +64,7 @@ public class DetailsModel : PageModel
         }
         catch (Exception e)
         {
-            _logger.LogInformation("No biodome found for {id}", id);
+            _logger.LogError(e, "No biodome found for {id}", id);
             return NotFound();
         }
     }
@@ -95,14 +98,14 @@ public class DetailsModel : PageModel
             FoodChain = stats.Foodchain;
             
             // chart 4 
-           // SpeciesHistories = stats.HistoryDatas;
+            SpeciesEvolution = stats.SpeciesEvolution;
         }
     }
 
 
     public IActionResult OnPostAddSpecies(string biomeId, string speciesName, int quantity = 1)
     {
-        var biomeSlug = SanitizeInput(biomeId);
+        var biomeSlug = SanitizeInput(biomeId).ToSlug();
         var species = SanitizeInput(speciesName);
 
         _service.AddSpeciesTo(biomeSlug, species, quantity);
@@ -112,7 +115,7 @@ public class DetailsModel : PageModel
 
     public IActionResult OnPostAddEquipement(string biomeId, string equipementName)
     {
-        var biomeSlug = SanitizeInput(biomeId);
+        var biomeSlug = SanitizeInput(biomeId).ToSlug();
         var species = SanitizeInput(equipementName);
 
         _service.AddEquipementTo(biomeSlug, species);
@@ -122,7 +125,7 @@ public class DetailsModel : PageModel
 
     public IActionResult OnPostRemoveSpecies(string biomeId, string speciesName)
     {
-        var biomeSlug = SanitizeInput(biomeId);
+        var biomeSlug = SanitizeInput(biomeId).ToSlug();
         var species = SanitizeInput(speciesName);
 
         _service.RemoveSpeciesFrom(biomeSlug, species);
@@ -131,7 +134,7 @@ public class DetailsModel : PageModel
 
     public IActionResult OnPostRemoveEquipement(string biomeId, string equipementName)
     {
-        var biomeSlug = SanitizeInput(biomeId);
+        var biomeSlug = SanitizeInput(biomeId).ToSlug();
         _service.RemoveEquipementFrom(biomeSlug, equipementName);
         return RedirectToPage(new { id = biomeSlug });
     }

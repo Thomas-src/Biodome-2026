@@ -26,7 +26,7 @@
                         <a href="/biodomes/edit/@Model.Biodome.Slug" class="btn btn-sm btn-outline-primary">Modifier</a>
                         <form method="post" asp-page-handler="Delete">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="biomeId" value="@Model.Biodome.Slug" />
+                            <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
                             <button type="submit" class="btn btn-sm btn-danger">
                                 Supprimer
                             </button>
@@ -51,7 +51,7 @@
                 <div class="d-flex py-1 gap-2">
                     <span class="text-uppercase fw-bold" style="min-width: 120px;">Créateur</span>
                     <span>
-                        @if ( Model.Biodome.CreatorName.IsNullOrEmpty())
+                        @if (Model.Biodome.CreatorName.IsNullOrEmpty())
                         {
                             <text>Inconnu</text>
                         }
@@ -65,7 +65,9 @@
         </div>
 
         <div class="col-12 col-md-auto d-flex justify-content-center justify-content-md-start">
-            <img src="~/images/biodomes/@Model.Biodome.Image" class="img-fluid w-100" style="max-width: 220px; height: auto; object-fit: cover; display: block; min-height: 220px;"  alt="Biodome @Model.Biodome.Nom"/>
+            <img src="~/images/biodomes/@Model.Biodome.Image" class="img-fluid w-100"
+                 style="max-width: 220px; height: auto; object-fit: cover; display: block; min-height: 220px;"
+                 alt="Biodome @Model.Biodome.Nom"/>
         </div>
     </div>
 
@@ -84,7 +86,7 @@
                 }
             </div>
 
-            @if ( Model.Biodome.Species.Count < 1)
+            @if (Model.Biodome.Species.Count < 1)
             {
                 <p class="text-muted small mb-0">Il n'y a aucune espèce dans ce biodome !</p>
             }
@@ -127,7 +129,7 @@
                         }
                         </tbody>
                     </table>
-                </div> 
+                </div>
             }
 
             @if (Model.Owner)
@@ -137,7 +139,8 @@
                         <form method="post" asp-page-handler="AddSpecies">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
-                            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch align-items-md-center">                                <select name="speciesName" class="form-select form-select-sm"
+                            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch align-items-md-center">
+                                <select name="speciesName" class="form-select form-select-sm"
                                         asp-items="@(new SelectList(Model.AvailableSpecies, "Nom", "Nom"))">
                                 </select>
                                 <input type="number" name="quantity" value="1" min="1"
@@ -164,7 +167,7 @@
                 }
             </div>
 
-            @if ( Model.Biodome.Equipements.Count < 1)
+            @if (Model.Biodome.Equipements.Count < 1)
             {
                 <p class="text-muted small mb-0">Il n'y a aucun équipement dans ce biodome !</p>
             }
@@ -205,7 +208,7 @@
                         }
                         </tbody>
                     </table>
-                    </div>
+                </div>
             }
 
             @if (Model.Owner)
@@ -215,7 +218,8 @@
                         <form method="post" asp-page-handler="AddEquipement">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="biomeId" value="@Model.Biodome.Slug"/>
-                            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch align-items-md-center">                                <select name="equipementName" class="form-select form-select-sm" 
+                            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch align-items-md-center">
+                                <select name="equipementName" class="form-select form-select-sm"
                                         asp-items="@(new SelectList(Model.AvailableEquipements, "Name", "Name"))">>
                                 </select>
                                 <button type="post" class="btn btn-sm btn-primary text-nowrap">Confirmer</button>
@@ -237,10 +241,14 @@
                         Exporter le rapport
                     </button>
                 </div>
-
-                <div style="width: 100%; max-width: 400px; margin: 30px auto;">                    <canvas id="classificationChart"></canvas>
+                <div style="width: 100%; max-width: 400px; margin: 30px auto;">
+                    <canvas id="speciesChart"></canvas>
                 </div>
-                <div style="width: 100%; max-width: 400px; margin: 30px auto;">                    <canvas id="regimChart"></canvas>
+                <div style="width: 100%; max-width: 400px; margin: 30px auto;">
+                    <canvas id="classificationChart"></canvas>
+                </div>
+                <div style="width: 100%; max-width: 400px; margin: 30px auto;">
+                    <canvas id="regimChart"></canvas>
                 </div>
                 <div style="width: 100%; height: 500px; margin: 30px auto;">
                     <canvas id="foodChainChart"></canvas>
@@ -297,7 +305,7 @@
             }
         }
     });
-
+    
     const regimeLabels = @Html.Raw(JsonSerializer.Serialize(Model.RegimeLabels));
     const regimeData = @Html.Raw(JsonSerializer.Serialize(Model.RegimeCounts));
     const regimeDetails = @Html.Raw(JsonSerializer.Serialize(Model.RegimeTooltipData));
@@ -567,6 +575,72 @@
         });
     }
 
+    const { Dates: allDates, QuantitiesBySpecies: quantitiesBySpecies } = @Html.Raw(JsonSerializer.Serialize(Model.SpeciesEvolution));
+
+    const datasets = Object.entries(quantitiesBySpecies).map(([speciesName, quantities]) => ({
+        label: speciesName,
+        data: quantities,
+        borderWidth: 2,
+        fill: false,
+        tension: 0.3
+    }));
+    
+    charts.chart4 = new Chart(document.querySelector('#speciesChart'), {
+        type: 'line',
+        data: {
+            labels: allDates,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des espèces dans le temps'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const speciesName = context.dataset.label;
+                            const quantity = context.raw;
+                            const date = context.label;
+
+                            // Trouver le delta à cette date
+                            const historyEntry = SpeciesHistories.find(h =>
+                                h.Species.Name === speciesName &&
+                                new Date(h.UpdateAt).toLocaleDateString('fr-FR') === date
+                            );
+
+                            const deltaText = historyEntry
+                                ? ` (${historyEntry.Delta >= 0 ? '+' : ''}${historyEntry.Delta})`
+                                : '';
+
+                            return `${speciesName} : ${quantity}${deltaText}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "Nombre d'espèces"
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
     /**
      * Généré par ia (chatgpt)
      */

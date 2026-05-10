@@ -13,6 +13,6 @@ public record StatsData(
     // chart 3 
     FoodChain Foodchain,
     // chart 4
-    IReadOnlyList<BiodomeSpeciesHistory> HistoryDatas)
+    SpeciesEvolutionData SpeciesEvolution)
 {
 }

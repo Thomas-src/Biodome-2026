@@ -9,7 +9,7 @@ public class StatsService(IFoodChainService foodChainService, IHistoryService hi
     public StatsData GetBiodomeStats(Biodome biodome)
     {
         var species = biodome.Species;
-        return new StatsData(biodome, GetNbByClassification(species), GetNbByRegim(species),foodChainService.Build(species), historyService.Build(biodome.Slug,biodome.CreatorName));
+        return new StatsData(biodome, GetNbByClassification(species), GetNbByRegim(species),foodChainService.Build(species), historyService.Buid(biodome.Slug,biodome.CreatorName));
     }
 
     private static Dictionary<string, List<Species>> GetNbByClassification(IReadOnlyList<Species> species)

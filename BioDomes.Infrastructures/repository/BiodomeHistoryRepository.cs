@@ -5,6 +5,7 @@ using BioDomes.Domains.Services.interfaces;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.Repository;
+using BioDomes.Infrastructures.repository.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace BioDomes.Infrastructures.repository;
@@ -56,16 +57,14 @@ public class BiodomeHistoryRepository(BioDomesDbContext context,ISpeciesService 
             .FirstOrDefault();
 
         var history = context.BiodomeHistory
+            .Include(h => h.Species) 
             .Where(h => h.BiodomeId == biodomeId)
             .OrderByDescending(h => h.UpdateAt).Include(biodomeHistoryEntity => biodomeHistoryEntity.Species)
             .ToList();
 
         return history.Select(h => new BiodomeSpeciesHistory
         {
-            Species = speciesService.GetByKebabCase(
-                h.Species.ToString().ToKebabCase(),
-                username
-            ),
+            Species = SpeciesMapper.ToDomain(h.Species),
             Delta = h.Delta,
             UpdateAt = h.UpdateAt
         }).ToList();

@@ -4,6 +4,7 @@ using BioDomes.Domains.Repository.Exceptions;
 using BioDomes.Infrastructures.context;
 using BioDomes.Infrastructures.entities;
 using BioDomes.Infrastructures.repository;
+using BioDomes.Infrastructures.repository.Mapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -13,27 +14,21 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
 {
     public Species? FindSpecies(string speciesName, string username)
     {
-        return GetAllSpecies().FirstOrDefault(s=>s.Nom.ToLower().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(username.ToLower()));
+        return GetAllSpecies().FirstOrDefault(s =>
+            s.Nom.ToLower().Equals(speciesName.ToLower()) && s.OwnerName.ToLower().Equals(username.ToLower()));
     }
+
     public IReadOnlyList<Species> GetAllSpecies()
     {
         try
-        
+
         {
             var entities = context.Species
                 .Include(s => s.Regim)
                 .Include(s => s.TypeEntity)
                 .Include(s => s.User)
                 .ToList();
-            return entities.Select(s => new Species(s.Name,
-                s.Size,
-                s.Weight,
-                Enum.Parse<DietType>(s.Regim.Name),
-                Enum.Parse<SpeciesClassification>(s.TypeEntity.Name),
-                s.Avatar,
-                s.Visible,
-                s.User.UserName)
-            ).ToList();
+            return entities.Select(SpeciesMapper.ToDomain).ToList();
         }
         catch (Exception e)
         {
@@ -53,20 +48,9 @@ public class SpeciesRepository(BioDomesDbContext context) : ISpeciesRepository
         string userId = u.Id;
 
         // 2. Enregistrer l'espece
-
-        var entity = new SpeciesEntity()
-        {
-            Avatar = created.Avatar,
-            Name = created.Nom,
-            Size = (int)created.Taille,
-            Weight = created.Poids,
-            UserId = userId,
-            RegimId = context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime,
-            TypeId = context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString())
-                .IdType,
-            Visible = created.IsVisible
-        };
-
+        var TypeId = context.SpeciesTypes.FirstOrDefault(r => r.Name == created.SpeciesClassification.ToString()).IdType;
+        var RegimId = context.SpeciesRegimes.FirstOrDefault(r => r.Name == created.DietType.ToString()).IdRegime;
+        var entity = SpeciesMapper.ToEntity(created, userId, TypeId, RegimId);
         try
         {
             context.Species.Add(entity);
